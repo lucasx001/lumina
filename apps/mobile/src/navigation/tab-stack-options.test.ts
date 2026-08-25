@@ -1,5 +1,6 @@
 import { colors } from '@/constants/theme';
 
+import { createTabBarStyle } from './tab-bar-options';
 import { createTabStackScreenOptions } from './tab-stack-options';
 
 describe('createTabStackScreenOptions', () => {
@@ -11,9 +12,17 @@ describe('createTabStackScreenOptions', () => {
       headerBackButtonDisplayMode: 'minimal',
       headerShadowVisible: false,
       headerShown: true,
-      headerStyle: { backgroundColor: colors.light.surface },
-      headerTintColor: colors.light.text,
+      headerStyle: { backgroundColor: colors.light.background },
+      headerTintColor: colors.light.primary,
       headerTitleStyle: { fontFamily: 'System' },
+    });
+  });
+
+  it('keeps the tab bar height consistent across tab screens', () => {
+    expect(createTabBarStyle({ ...colors.dark, fontFamily: 'System' })).toMatchObject({
+      height: 68,
+      paddingBottom: 8,
+      paddingTop: 8,
     });
   });
 });

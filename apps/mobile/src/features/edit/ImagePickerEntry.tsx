@@ -1,4 +1,4 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import { useState } from 'react';
@@ -7,6 +7,7 @@ import { View } from 'react-native';
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
+import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { uploadSourceImage } from '@/lib/api';
 
@@ -39,9 +40,7 @@ export function ImagePickerEntry({ onUploaded, sourceImageUrl }: ImagePickerEntr
       const asset = result.assets[0];
       const contentType = asset.mimeType ?? 'image/jpeg';
       if (!supportedContentTypes.has(contentType)) {
-        throw new Error(
-          t({ id: 'mobile.edit.image.unsupported', message: 'Choose a JPEG, PNG, or WebP image.' }),
-        );
+        throw new Error(t`Choose a JPEG, PNG, or WebP image.`);
       }
 
       setLocalUri(asset.uri);
@@ -54,22 +53,10 @@ export function ImagePickerEntry({ onUploaded, sourceImageUrl }: ImagePickerEntr
       );
     } catch (reason) {
       const nextError =
-        reason instanceof Error
-          ? reason
-          : new Error(
-              t({
-                id: 'mobile.edit.image.uploadFailed',
-                message: 'Image upload failed. Try again.',
-              }),
-            );
+        reason instanceof Error ? reason : new Error(t`Image upload failed. Try again.`);
       setError(
         nextError.message.includes('native module')
-          ? new Error(
-              t({
-                id: 'mobile.edit.image.moduleMissing',
-                message: 'The image module is incomplete. Install the latest development build.',
-              }),
-            )
+          ? new Error(t`The image module is incomplete. Install the latest development build.`)
           : nextError,
       );
     } finally {
@@ -78,41 +65,27 @@ export function ImagePickerEntry({ onUploaded, sourceImageUrl }: ImagePickerEntr
   }
 
   return (
-    <View style={{ gap: 10 }}>
+    <View style={{ gap: spacing.sm }}>
       <ThemedText variant="subtitle">
-        {t({ id: 'mobile.edit.image.title', message: 'Start with an image' })}
+        <Trans>Start with an image</Trans>
       </ThemedText>
       <ThemedText style={{ color: theme.mutedText }} variant="caption">
-        {t({
-          id: 'mobile.edit.image.description',
-          message: 'Choose an image to extend, enhance, edit, or turn into a reusable style.',
-        })}
+        <Trans>Choose an image to extend, enhance, edit, or turn into a reusable style.</Trans>
       </ThemedText>
       {localUri || sourceImageUrl ? (
         <Image
-          accessibilityLabel={t({
-            id: 'mobile.edit.image.selected',
-            message: 'Selected source image',
-          })}
+          accessibilityLabel={t`Selected source image`}
           contentFit="cover"
           source={localUri ?? sourceImageUrl}
-          style={{ borderRadius: 14, height: 180, width: '100%' }}
+          style={{ borderRadius: radius.md, height: 180, width: '100%' }}
         />
       ) : null}
-      {isUploading ? (
-        <LoadingState
-          label={t({ id: 'mobile.edit.image.uploading', message: 'Uploading image securely…' })}
-        />
-      ) : null}
+      {isUploading ? <LoadingState label={t`Uploading image securely…`} /> : null}
       {error ? <ErrorState message={error.message} onRetry={() => void chooseImage()} /> : null}
       <Button
         disabled={isUploading}
         icon="upload"
-        label={
-          sourceImageUrl
-            ? t({ id: 'mobile.edit.image.change', message: 'Change image' })
-            : t({ id: 'mobile.edit.image.choose', message: 'Choose image' })
-        }
+        label={sourceImageUrl ? t`Change image` : t`Choose image`}
         loading={isUploading}
         onPress={() => void chooseImage()}
         testID="pick-source-image"

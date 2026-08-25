@@ -28,6 +28,10 @@ describe('ResultView', () => {
     const screen = render(<ResultView job={job} onRegenerate={onRegenerate} />);
 
     expect(screen.getByLabelText('Lock screen wallpaper preview')).toBeTruthy();
+    expect(screen.getByTestId('preview-mode-lock-screen')).toHaveStyle({
+      alignItems: 'center',
+      justifyContent: 'center',
+    });
     fireEvent.press(screen.getByTestId('preview-mode-home-screen'));
     expect(screen.getByLabelText('Home screen wallpaper preview')).toBeTruthy();
     fireEvent.press(screen.getByTestId('regenerate-button'));

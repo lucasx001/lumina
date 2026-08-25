@@ -26,6 +26,7 @@ describe('WallpaperGrid', () => {
     const screen = render(<WallpaperGrid {...commonProps} items={[]} onCreate={onCreate} />);
 
     expect(screen.getByText('No wallpapers yet')).toBeTruthy();
+    expect(screen.getByTestId('create-wallpaper-button')).toHaveStyle({ alignSelf: 'center' });
     fireEvent.press(screen.getByTestId('create-wallpaper-button'));
     expect(onCreate).toHaveBeenCalledTimes(1);
   });

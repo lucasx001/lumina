@@ -8,12 +8,12 @@ import { downloadWallpaper } from './local-wallpaper';
 export function useApplyWallpaper(imageUrl: string) {
   const { t } = useLingui();
   const [error, setError] = useState<Error>();
-  const [isApplying, setIsApplying] = useState(false);
+  const [applyingTarget, setApplyingTarget] = useState<WallpaperTarget>();
 
   const applyWallpaper = useCallback(
     async (target: WallpaperTarget) => {
       setError(undefined);
-      setIsApplying(true);
+      setApplyingTarget(target);
 
       try {
         const localUri = await downloadWallpaper(imageUrl);
@@ -22,20 +22,15 @@ export function useApplyWallpaper(imageUrl: string) {
         const nextError =
           cause instanceof Error
             ? cause
-            : new Error(
-                t({
-                  id: 'mobile.apply.failed',
-                  message: 'Could not apply the wallpaper. Try again later.',
-                }),
-              );
+            : new Error(t`Could not apply the wallpaper. Try again later.`);
         setError(nextError);
         throw nextError;
       } finally {
-        setIsApplying(false);
+        setApplyingTarget(undefined);
       }
     },
     [imageUrl, t],
   );
 
-  return { applyWallpaper, error, isApplying };
+  return { applyingTarget, applyWallpaper, error };
 }

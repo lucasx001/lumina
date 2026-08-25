@@ -4,6 +4,7 @@ import { View } from 'react-native';
 import { HomeIconsOverlay } from '@/components/preview/home-icons-overlay';
 import { LockClockOverlay } from '@/components/preview/lock-clock-overlay';
 import { StatusBarOverlay } from '@/components/preview/status-bar-overlay';
+import { radius, shadows } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type WallpaperPreviewMode = 'home-screen' | 'lock-screen';
@@ -37,9 +38,9 @@ export function WallpaperPreview({
         backgroundColor: theme.background,
         borderColor: theme.border,
         borderCurve: 'continuous',
-        borderRadius: cornerRadius + 4,
+        borderRadius: cornerRadius + radius.sm,
         borderWidth: 1,
-        boxShadow: '0 12px 32px rgba(0, 0, 0, 0.16)',
+        boxShadow: shadows.raised,
         height: previewHeight + 4,
         overflow: 'hidden',
         padding: 2,

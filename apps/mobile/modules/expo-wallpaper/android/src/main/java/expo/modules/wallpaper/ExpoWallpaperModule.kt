@@ -10,6 +10,7 @@ import android.os.Build
 import expo.modules.kotlin.modules.Module
 import expo.modules.kotlin.modules.ModuleDefinition
 import java.io.File
+import java.io.FileInputStream
 import java.io.IOException
 
 class ExpoWallpaperModule : Module() {
@@ -67,9 +68,24 @@ class ExpoWallpaperModule : Module() {
       ?: throw IOException("The image at $uri could not be decoded.")
   }
 
-  private fun decodeStream(resolver: ContentResolver, uri: Uri, options: BitmapFactory.Options): Bitmap? =
-    resolver.openInputStream(uri)?.use { input -> BitmapFactory.decodeStream(input, null, options) }
-      ?: throw IOException("The image at $uri could not be opened.")
+  private fun decodeStream(resolver: ContentResolver, uri: Uri, options: BitmapFactory.Options): Bitmap? {
+    val input = if (uri.scheme == "file") {
+      // ContentResolver.openInputStream does not reliably open file:// URIs on all
+      // Android versions. The downloaded wallpaper lives in the app cache, so read
+      // it directly when the native module receives a local file URI.
+      FileInputStream(uri.path ?: throw IOException("The image at $uri could not be opened."))
+    } else {
+      resolver.openInputStream(uri)
+    }
+
+    if (input == null) {
+      throw IOException("The image at $uri could not be opened.")
+    }
+
+    // BitmapFactory.decodeStream returns null when inJustDecodeBounds is enabled.
+    // That is expected during the first pass, where only the image dimensions are read.
+    return input.use { BitmapFactory.decodeStream(it, null, options) }
+  }
 
   private fun calculateInSampleSize(
     sourceWidth: Int,

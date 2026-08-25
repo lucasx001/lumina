@@ -1,7 +1,8 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Pressable, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { GenerationQuality } from '@/lib/api';
 
@@ -19,29 +20,23 @@ export function QualitySelector({ onChange, value }: QualitySelectorProps) {
     value: GenerationQuality;
   }> = [
     {
-      description: t({
-        id: 'mobile.create.quality.draft.description',
-        message: 'Faster and lower resolution, ideal for iterating on ideas',
-      }),
-      label: t({ id: 'mobile.create.quality.draft', message: 'Quick preview' }),
+      description: t`Faster and lower resolution, ideal for iterating on ideas`,
+      label: t`Quick preview`,
       value: 'draft',
     },
     {
-      description: t({
-        id: 'mobile.create.quality.hd.description',
-        message: 'Full 2K+ resolution, ideal for saving and applying',
-      }),
-      label: t({ id: 'mobile.create.quality.hd', message: 'High resolution' }),
+      description: t`Full 2K+ resolution, ideal for saving and applying`,
+      label: t`High resolution`,
       value: 'hd',
     },
   ];
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{ gap: spacing.sm }}>
       <ThemedText variant="subtitle">
-        {t({ id: 'mobile.create.quality', message: 'Output quality' })}
+        <Trans>Output quality</Trans>
       </ThemedText>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <View style={{ flexDirection: 'row', gap: spacing.sm }}>
         {qualityOptions.map((option) => {
           const selected = option.value === value;
           return (
@@ -50,26 +45,29 @@ export function QualitySelector({ onChange, value }: QualitySelectorProps) {
               accessibilityRole="button"
               accessibilityState={{ selected }}
               onPress={() => onChange(option.value)}
-              style={{
-                backgroundColor: selected ? theme.accent : theme.surface,
-                borderColor: selected ? theme.accent : theme.border,
+              style={({ pressed }) => ({
+                backgroundColor: selected ? theme.primary : theme.surface,
+                borderColor: selected ? theme.primary : theme.border,
                 borderCurve: 'continuous',
-                borderRadius: 11,
-                borderWidth: 1,
+                borderRadius: radius.md,
+                borderWidth: selected ? 2 : 1,
                 flex: 1,
-                gap: 3,
-                padding: 12,
-              }}
+                gap: spacing.xs,
+                minHeight: 92,
+                opacity: pressed ? 0.86 : 1,
+                padding: spacing.md,
+                transform: [{ scale: pressed ? 0.985 : 1 }],
+              })}
               testID={`quality-${option.value}`}
             >
               <ThemedText
-                style={{ color: selected ? theme.accentForeground : theme.text }}
+                style={{ color: selected ? theme.primaryForeground : theme.text }}
                 variant="body"
               >
                 {option.label}
               </ThemedText>
               <ThemedText
-                style={{ color: selected ? theme.accentForeground : theme.mutedText }}
+                style={{ color: selected ? theme.primaryForeground : theme.mutedText }}
                 variant="caption"
               >
                 {option.description}

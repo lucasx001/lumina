@@ -20,12 +20,7 @@ export function useSaveAndShare(imageUrl: string) {
     try {
       const permission = await requestPermissionsAsync();
       if (permission.status !== 'granted') {
-        throw new Error(
-          t({
-            id: 'mobile.apply.photoPermission',
-            message: 'Photo library permission is required to save wallpapers.',
-          }),
-        );
+        throw new Error(t`Photo library permission is required to save wallpapers.`);
       }
 
       const localUri = await downloadWallpaper(imageUrl);
@@ -34,12 +29,7 @@ export function useSaveAndShare(imageUrl: string) {
       const nextError =
         cause instanceof Error
           ? cause
-          : new Error(
-              t({
-                id: 'mobile.apply.saveFailed',
-                message: 'Could not save the wallpaper. Try again later.',
-              }),
-            );
+          : new Error(t`Could not save the wallpaper. Try again later.`);
       setError(nextError);
       throw nextError;
     } finally {
@@ -53,12 +43,7 @@ export function useSaveAndShare(imageUrl: string) {
 
     try {
       if (!(await isAvailableAsync())) {
-        throw new Error(
-          t({
-            id: 'mobile.apply.shareUnavailable',
-            message: 'Sharing is unavailable on this device.',
-          }),
-        );
+        throw new Error(t`Sharing is unavailable on this device.`);
       }
 
       const localUri = await downloadWallpaper(imageUrl);
@@ -67,12 +52,7 @@ export function useSaveAndShare(imageUrl: string) {
       const nextError =
         cause instanceof Error
           ? cause
-          : new Error(
-              t({
-                id: 'mobile.apply.shareFailed',
-                message: 'Could not share the wallpaper. Try again later.',
-              }),
-            );
+          : new Error(t`Could not share the wallpaper. Try again later.`);
       setError(nextError);
       throw nextError;
     } finally {

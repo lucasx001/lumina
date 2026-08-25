@@ -1,13 +1,13 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { ActivityIndicator, type DimensionValue, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { AppIcon } from '@/components/ui/app-icon';
 import { Button } from '@/components/ui/button';
+import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export function LoadingState({ label }: { label?: string }) {
-  const { t } = useLingui();
   const theme = useTheme();
 
   return (
@@ -16,15 +16,15 @@ export function LoadingState({ label }: { label?: string }) {
         alignItems: 'center',
         backgroundColor: theme.muted,
         borderCurve: 'continuous',
-        borderRadius: 10,
+        borderRadius: radius.md,
         flexDirection: 'row',
-        gap: 10,
-        padding: 12,
+        gap: spacing.sm,
+        padding: spacing.md,
       }}
     >
-      <ActivityIndicator color={theme.accent} />
+      <ActivityIndicator color={theme.primary} />
       <ThemedText selectable variant="body">
-        {label ?? t({ id: 'mobile.common.loading', message: 'Loading…' })}
+        {label ?? <Trans>Loading…</Trans>}
       </ThemedText>
     </View>
   );
@@ -40,22 +40,20 @@ export function ErrorState({ message, onRetry }: { message: string; onRetry?: ()
         backgroundColor: theme.muted,
         borderColor: theme.border,
         borderCurve: 'continuous',
-        borderRadius: 10,
+        borderRadius: radius.md,
         borderWidth: 1,
-        gap: 10,
-        padding: 12,
+        gap: spacing.sm,
+        padding: spacing.md,
       }}
     >
-      <ThemedText selectable style={{ color: theme.error }} variant="caption">
-        {message}
-      </ThemedText>
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
+        <AppIcon color={theme.error} name="close" size={16} />
+        <ThemedText selectable style={{ color: theme.error, flex: 1 }} variant="caption">
+          {message}
+        </ThemedText>
+      </View>
       {onRetry ? (
-        <Button
-          icon="refresh"
-          label={t({ id: 'mobile.common.retry', message: 'Retry' })}
-          onPress={onRetry}
-          variant="secondary"
-        />
+        <Button icon="refresh" label={t`Retry`} onPress={onRetry} variant="secondary" />
       ) : null}
     </View>
   );
@@ -82,10 +80,10 @@ export function EmptyState({
         style={{
           alignItems: 'center',
           backgroundColor: theme.muted,
-          borderRadius: 999,
-          height: 52,
+          borderRadius: radius.full,
+          height: 56,
           justifyContent: 'center',
-          width: 52,
+          width: 56,
         }}
       >
         <AppIcon color={theme.mutedText} name="image" size={24} />
@@ -101,6 +99,7 @@ export function EmptyState({
           icon="sparkles"
           label={actionLabel}
           onPress={onAction}
+          style={{ alignSelf: 'center' }}
           testID={actionTestId ?? 'empty-state-action'}
         />
       ) : null}
@@ -120,10 +119,7 @@ export function Skeleton({
 
   return (
     <View
-      accessibilityLabel={t({
-        id: 'mobile.common.loadingPlaceholder',
-        message: 'Loading placeholder',
-      })}
+      accessibilityLabel={t`Loading placeholder`}
       style={{
         backgroundColor: theme.muted,
         borderCurve: 'continuous',

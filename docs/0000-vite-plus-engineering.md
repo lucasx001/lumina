@@ -104,9 +104,9 @@ into one root application tsconfig.
 
 | User-facing command    | Owner     | Behavior                                                                  | Caching                                                 |
 | ---------------------- | --------- | ------------------------------------------------------------------------- | ------------------------------------------------------- |
-| `vp check`             | Vite+     | Oxfmt + Oxlint + TypeScript checks across both apps                       | N/A                                                     |
+| `vp check`             | Vite+     | Oxfmt + Oxlint + TypeScript checks across the workspace                   | N/A                                                     |
 | `vp fmt` / `vp lint`   | Vite+     | Focused formatter or linter run                                           | N/A                                                     |
-| `vp run dev:all`       | Vite Task | Runs mobile `expo start` and server `tsx watch` in parallel               | Disabled                                                |
+| `bun run dev`          | Turbo TUI | Runs mobile, server, and landing dev services in switchable panes         | Disabled                                                |
 | `vp run test:all`      | Vite Task | Runs server/shared Vitest tests and mobile Jest tests                     | Enabled after stable verification                       |
 | `vp run build:all`     | Vite Task | Runs server TypeScript build plus mobile production JS export in parallel | Server build cached; Expo export intentionally uncached |
 | `vp run build:android` | Expo/EAS  | Starts Android EAS Build; not a reusable local-cache task                 | Disabled                                                |
@@ -116,9 +116,13 @@ Package-owned scripts remain the actual runtime commands:
 
 - `@lumina/mobile`: `dev`, `start`, `android`, `ios`, `web`, `test`, `build`, `build:android`.
 - `@lumina/server`: `dev`, `build`, `start`, `test`.
+- `@lumina/landing`: `dev`, `build`, `start`, `test`, `typecheck`.
 
-The root task selects the two application packages explicitly with Vite+'s parallel runner. This
-avoids recursive invocation of the root `dev` script. The development task is always uncached. Cache
+The root `bun run dev` script selects the three application packages explicitly and delegates their
+long-running `dev` scripts directly to Turborepo. Running Turbo directly is required because Vite
+Task captures child-process output, which prevents a nested terminal UI from owning the terminal.
+The direct entry point keeps each service's logs in a separate pane; use `Up`/`Down` to change the
+selected service and `Enter` to interact with it. Development tasks are always uncached. Cache
 deterministic tests and server builds; never cache EAS builds, database migrations, deployments, or
 tasks using secret-backed external services. Expo export rewrites its own `dist` input, so Vite+
 correctly declines to cache that package build.
@@ -204,8 +208,8 @@ All nine steps are complete.
 - [x] Root `bun install --frozen-lockfile` succeeds after the workspace migration.
 - [x] `bun --filter=@lumina/mobile run dev` starts Expo successfully.
 - [x] `bun --filter=@lumina/server run dev` starts Hono successfully.
-- [x] `vp run dev:all` starts Expo Metro on `8081` and Hono on `3000` in parallel with caching
-      disabled.
+- [x] `bun run dev` starts Expo Metro on `8081`, Hono on `3000`, and Next.js on `3001` in a
+      switchable Turbo TUI with caching disabled.
 - [x] `vp check` passes formatter, lint, and type checks.
 - [x] `vp run test:all` runs server Vitest and mobile Jest suites.
 - [x] `vp run build:all` builds the server and verifies the mobile production export in parallel.

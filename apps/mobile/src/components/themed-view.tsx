@@ -1,5 +1,6 @@
 import { View, type ViewProps } from 'react-native';
 
+import { radius, shadows, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 export type ThemedViewProps = ViewProps & {
@@ -19,10 +20,10 @@ export function ThemedView({ style, variant = 'surface', ...props }: ThemedViewP
           ...(variant === 'card'
             ? {
                 borderColor: theme.border,
-                borderRadius: 16,
+                borderRadius: radius.md,
                 borderWidth: 1,
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.035)',
-                padding: 18,
+                boxShadow: shadows.card,
+                padding: spacing.lg,
               }
             : {}),
         },

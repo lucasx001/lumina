@@ -1,9 +1,10 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { Modal, Platform, Pressable, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Button } from '@/components/ui/button';
+import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 import { useApplyWallpaper } from './useApplyWallpaper';
@@ -18,7 +19,7 @@ export type ApplySheetProps = {
 export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
   const { t } = useLingui();
   const theme = useTheme();
-  const { applyWallpaper, error: applyError, isApplying } = useApplyWallpaper(imageUrl);
+  const { applyingTarget, applyWallpaper, error: applyError } = useApplyWallpaper(imageUrl);
   const {
     activeAction,
     error: saveAndShareError,
@@ -37,14 +38,17 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
     }
   }
 
-  const disabled = isApplying || Boolean(activeAction);
+  const disabled = Boolean(applyingTarget || activeAction);
 
   return (
     <Modal animationType="slide" onRequestClose={onDismiss} transparent visible={visible}>
-      <View
-        style={{ backgroundColor: theme.overlay, flex: 1, justifyContent: 'flex-end' }}
-        testID="apply-sheet-backdrop"
-      >
+      <View style={{ backgroundColor: theme.overlay, flex: 1 }} testID="apply-sheet-backdrop">
+        <Pressable
+          accessibilityLabel={t`Cancel`}
+          accessibilityRole="button"
+          onPress={onDismiss}
+          style={{ flex: 1 }}
+        />
         <ThemedView
           variant="card"
           style={{
@@ -52,35 +56,42 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
             borderBottomRightRadius: 0,
             borderLeftWidth: 0,
             borderRightWidth: 0,
-            borderTopLeftRadius: 24,
-            borderTopRightRadius: 24,
-            gap: 14,
-            padding: 24,
+            borderTopLeftRadius: radius.xl,
+            borderTopRightRadius: radius.xl,
+            gap: spacing.md,
+            padding: spacing.lg,
             paddingBottom: 36,
           }}
         >
+          <View
+            style={{
+              alignSelf: 'center',
+              backgroundColor: theme.primary,
+              borderRadius: radius.full,
+              height: 4,
+              width: 40,
+            }}
+          />
           <ThemedText variant="subtitle">
-            {t({ id: 'mobile.apply.title', message: 'Apply wallpaper' })}
+            <Trans>Apply wallpaper</Trans>
           </ThemedText>
           {isAndroid ? (
             <>
               <ThemedText style={{ color: theme.mutedText }} variant="caption">
-                {t({ id: 'mobile.apply.chooseTarget', message: 'Choose where to apply it.' })}
+                <Trans>Choose where to apply it.</Trans>
               </ThemedText>
               {(
                 [
-                  ['home', t({ id: 'mobile.apply.home', message: 'Set as home screen' })],
-                  ['lock', t({ id: 'mobile.apply.lock', message: 'Set as lock screen' })],
-                  ['both', t({ id: 'mobile.apply.both', message: 'Set as both' })],
+                  ['home', t`Set as home screen`],
+                  ['lock', t`Set as lock screen`],
+                  ['both', t`Set as both`],
                 ] as const
               ).map(([target, label]) => (
                 <Button
                   disabled={disabled}
                   fullWidth
-                  label={
-                    isApplying ? t({ id: 'mobile.apply.applying', message: 'Applying…' }) : label
-                  }
-                  loading={isApplying}
+                  label={applyingTarget === target ? t`Applying…` : label}
+                  loading={applyingTarget === target}
                   key={target}
                   onPress={() => void runAction(() => applyWallpaper(target))}
                   testID={`apply-wallpaper-${target}`}
@@ -91,11 +102,7 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
                 disabled={disabled}
                 fullWidth
                 icon="share"
-                label={
-                  activeAction === 'share'
-                    ? t({ id: 'mobile.apply.openingShare', message: 'Opening share…' })
-                    : t({ id: 'mobile.apply.share', message: 'Share' })
-                }
+                label={activeAction === 'share' ? t`Opening share…` : t`Share`}
                 loading={activeAction === 'share'}
                 onPress={() => void runAction(shareWallpaper)}
                 testID="share-wallpaper"
@@ -103,23 +110,22 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
               />
             </>
           ) : (
-            <ThemedText style={{ color: theme.mutedText }} variant="caption">
-              {t({
-                id: 'mobile.apply.iosHint',
-                message:
-                  'iOS does not allow apps to set system wallpaper directly. Save it, then set it from Photos.',
-              })}
+            <ThemedText
+              style={{ color: theme.mutedText }}
+              testID="apply-ios-hint"
+              variant="caption"
+            >
+              <Trans>
+                iOS does not allow apps to set system wallpaper directly. Save it, then set it from
+                Photos.
+              </Trans>
             </ThemedText>
           )}
           <Button
             disabled={disabled}
             fullWidth
             icon="download"
-            label={
-              activeAction === 'save'
-                ? t({ id: 'mobile.apply.saving', message: 'Saving…' })
-                : t({ id: 'mobile.apply.save', message: 'Save to Photos' })
-            }
+            label={activeAction === 'save' ? t`Saving…` : t`Save to Photos`}
             loading={activeAction === 'save'}
             onPress={() => void runAction(saveWallpaper)}
             testID="save-wallpaper"
@@ -133,10 +139,15 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
           <Pressable
             accessibilityRole="button"
             onPress={onDismiss}
-            style={{ alignItems: 'center', padding: 10 }}
+            style={({ pressed }) => ({
+              alignItems: 'center',
+              minHeight: 44,
+              opacity: pressed ? 0.65 : 1,
+              padding: spacing.sm,
+            })}
           >
             <ThemedText style={{ color: theme.mutedText }} variant="body">
-              {t({ id: 'mobile.common.cancel', message: 'Cancel' })}
+              <Trans>Cancel</Trans>
             </ThemedText>
           </Pressable>
         </ThemedView>

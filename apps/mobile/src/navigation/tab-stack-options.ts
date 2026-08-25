@@ -8,8 +8,9 @@ export function createTabStackScreenOptions(theme: AppTheme): NativeStackNavigat
     headerBackButtonDisplayMode: 'minimal',
     headerShadowVisible: false,
     headerShown: true,
-    headerStyle: { backgroundColor: theme.surface },
-    headerTintColor: theme.text,
-    headerTitleStyle: { fontFamily: theme.fontFamily },
+    headerStyle: { backgroundColor: theme.background },
+    headerTintColor: theme.primary,
+    headerTitleAlign: 'center',
+    headerTitleStyle: { color: theme.text, fontFamily: theme.fontFamily, fontWeight: '600' },
   };
 }

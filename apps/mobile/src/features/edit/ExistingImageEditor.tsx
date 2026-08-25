@@ -1,4 +1,4 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useQueryClient } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { TextInput, View } from 'react-native';
@@ -7,6 +7,7 @@ import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
 import { Button } from '@/components/ui/button';
+import { radius, spacing } from '@/constants/theme';
 import { ResultView } from '@/features/create/result-view';
 import { useGenerate } from '@/hooks/use-generate';
 import { useTheme } from '@/hooks/use-theme';
@@ -69,19 +70,16 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   if (hasResult && generation.job) {
     if (isStyleComplete) {
       return (
-        <ThemedView variant="card" style={{ gap: 10 }}>
+        <ThemedView variant="card" style={{ gap: spacing.sm }}>
           <ThemedText variant="subtitle">
-            {t({ id: 'mobile.edit.presetSaved', message: 'Custom preset saved' })}
+            <Trans>Custom preset saved</Trans>
           </ThemedText>
           <ThemedText style={{ color: theme.mutedText }} variant="body">
-            {t({
-              id: 'mobile.edit.presetSaved.description',
-              message: 'Select it from the preset list above to generate another wallpaper.',
-            })}
+            <Trans>Select it from the preset list above to generate another wallpaper.</Trans>
           </ThemedText>
           <Button
             icon="refresh"
-            label={t({ id: 'mobile.edit.extractAnotherStyle', message: 'Extract another style' })}
+            label={t`Extract another style`}
             onPress={generation.regenerate}
             variant="secondary"
           />
@@ -92,36 +90,33 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   }
 
   return (
-    <ThemedView variant="card" style={{ gap: 16 }}>
+    <ThemedView variant="card" style={{ gap: spacing.lg }}>
       <ImagePickerEntry onUploaded={setSourceImageUrl} sourceImageUrl={sourceImageUrl} />
       {sourceImageUrl ? <EditModePicker onSelect={setMode} selectedMode={mode} /> : null}
       {mode === 'edit' ? (
-        <View style={{ gap: 10 }}>
+        <View style={{ gap: spacing.sm }}>
           <ThemedText variant="subtitle">
-            {t({ id: 'mobile.edit.instructions', message: 'What would you like to change?' })}
+            <Trans>What would you like to change?</Trans>
           </ThemedText>
           <TextInput
             multiline
             onChangeText={setInstruction}
-            placeholder={t({
-              id: 'mobile.edit.instructions.placeholder',
-              message: 'For example: turn the sky into a sunset and keep the people and buildings',
-            })}
+            placeholder={t`For example: turn the sky into a sunset and keep the people and buildings`}
             placeholderTextColor={theme.mutedText}
             style={{
               borderColor: theme.border,
               borderCurve: 'continuous',
-              borderRadius: 11,
+              borderRadius: radius.md,
               borderWidth: 1,
               color: theme.text,
-              minHeight: 80,
-              padding: 12,
+              minHeight: 96,
+              padding: spacing.md,
             }}
             value={instruction}
           />
           <ActionButton
             disabled={!instruction.trim() || generation.isGenerating}
-            label={t({ id: 'mobile.edit.start', message: 'Start editing' })}
+            label={t`Start editing`}
             onPress={() => run('edit')}
           />
         </View>
@@ -137,19 +132,11 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
       {mode === 'outpaint' || mode === 'upscale' ? (
         <ActionButton
           disabled={generation.isGenerating}
-          label={
-            mode === 'outpaint'
-              ? t({ id: 'mobile.edit.extendToScreen', message: 'Extend to screen ratio' })
-              : t({ id: 'mobile.edit.enhanceWallpaper', message: 'Enhance wallpaper' })
-          }
+          label={mode === 'outpaint' ? t`Extend to screen ratio` : t`Enhance wallpaper`}
           onPress={() => run(mode)}
         />
       ) : null}
-      {generation.isGenerating ? (
-        <LoadingState
-          label={t({ id: 'mobile.edit.processing', message: 'Processing your image…' })}
-        />
-      ) : null}
+      {generation.isGenerating ? <LoadingState label={t`Processing your image…`} /> : null}
       {generation.error ? (
         <ErrorState message={generation.error.message} onRetry={generation.retry} />
       ) : null}

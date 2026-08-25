@@ -102,11 +102,6 @@ export default defineConfig({
       tasks: true,
     },
     tasks: {
-      'dev:all': {
-        command:
-          'vp run --parallel --log labeled --no-cache --filter=@lumina/mobile --filter=@lumina/server --filter=@lumina/landing dev',
-        cache: false,
-      },
       'test:all': {
         command: 'bun --filter=@lumina/mobile run test && vp test run',
         input: [

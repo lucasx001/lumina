@@ -5,5 +5,5 @@ import { TabStack } from '@/navigation/tab-stack';
 export default function LibraryStackLayout() {
   const { t } = useLingui();
 
-  return <TabStack title={t({ id: 'mobile.tab.library', message: 'Library' })} />;
+  return <TabStack title={t`Library`} />;
 }

@@ -1,5 +1,6 @@
 import { useAuth as useClerkAuth, useSSO, useUser } from '@clerk/expo';
 import * as WebBrowser from 'expo-web-browser';
+import Toast from 'react-native-toast-message';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { bindDevice } from '@/lib/api';
@@ -60,7 +61,9 @@ export function useAuth() {
 
       await setActive({ session: createdSessionId });
     } catch (reason) {
-      setAuthError(normalizeAuthError(reason));
+      const error = normalizeAuthError(reason);
+      setAuthError(error);
+      Toast.show({ text1: error.message, type: 'error' });
     } finally {
       setIsSigningIn(false);
     }
@@ -73,7 +76,9 @@ export function useAuth() {
       lastBoundUserId.current = null;
       setBindError(undefined);
     } catch (reason) {
-      setAuthError(normalizeAuthError(reason));
+      const error = normalizeAuthError(reason);
+      setAuthError(error);
+      Toast.show({ text1: error.message, type: 'error' });
     }
   }, [signOut]);
 

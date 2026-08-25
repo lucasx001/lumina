@@ -10,11 +10,17 @@ export type AppIconName =
   | 'edit'
   | 'favorite'
   | 'favorite-filled'
+  | 'home'
   | 'image'
+  | 'info'
   | 'language'
   | 'library'
+  | 'lock'
+  | 'moon'
+  | 'privacy'
   | 'profile'
   | 'refresh'
+  | 'search'
   | 'share'
   | 'sparkles'
   | 'upload';
@@ -28,11 +34,17 @@ const iconNames = {
   edit: { android: 'edit', ios: 'pencil', web: 'edit' },
   favorite: { android: 'favorite', ios: 'heart', web: 'favorite' },
   'favorite-filled': { android: 'favorite', ios: 'heart.fill', web: 'favorite' },
+  home: { android: 'home', ios: 'house.fill', web: 'home' },
   image: { android: 'image', ios: 'photo', web: 'image' },
+  info: { android: 'info', ios: 'info.circle.fill', web: 'info' },
   language: { android: 'language', ios: 'globe', web: 'language' },
   library: { android: 'photo_library', ios: 'photo.on.rectangle', web: 'photo_library' },
+  lock: { android: 'lock', ios: 'lock.fill', web: 'lock' },
+  moon: { android: 'dark_mode', ios: 'moon.fill', web: 'dark_mode' },
+  privacy: { android: 'shield', ios: 'hand.raised.fill', web: 'shield' },
   profile: { android: 'account_circle', ios: 'person.crop.circle', web: 'account_circle' },
   refresh: { android: 'refresh', ios: 'arrow.clockwise', web: 'refresh' },
+  search: { android: 'search', ios: 'magnifyingglass', web: 'search' },
   share: { android: 'share', ios: 'square.and.arrow.up', web: 'share' },
   sparkles: { android: 'auto_awesome', ios: 'sparkles', web: 'auto_awesome' },
   upload: { android: 'upload', ios: 'arrow.up.circle', web: 'upload' },

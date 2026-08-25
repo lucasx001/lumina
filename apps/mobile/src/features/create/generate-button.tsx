@@ -16,11 +16,7 @@ export function GenerateButton({ disabled, isGenerating, onPress }: GenerateButt
       disabled={disabled}
       fullWidth
       icon="sparkles"
-      label={
-        isGenerating
-          ? t({ id: 'mobile.create.generatingShort', message: 'Generating…' })
-          : t({ id: 'mobile.create.generate', message: 'Generate wallpaper' })
-      }
+      label={isGenerating ? t`Generating…` : t`Generate wallpaper`}
       loading={isGenerating}
       onPress={onPress}
       testID="generate-button"

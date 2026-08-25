@@ -10,7 +10,8 @@
     "check": "vp run --filter=@lumina/i18n compile && vp check",
     "fmt": "vp fmt",
     "lint": "vp lint",
-    "dev": "vp run dev:all",
+    "dev": "turbo run dev --filter=@lumina/mobile --filter=@lumina/server --filter=@lumina/landing",
+    "mobile:android": "bun --cwd=apps/mobile run android",
     "test": "vp run test:all",
     "test:server": "vp test run apps/server/src",
     "build": "vp run build:all",
@@ -35,6 +36,7 @@
   },
   "devDependencies": {
     "@voidzero-dev/vite-plus-core": "^0.2.6",
+    "turbo": "^2.10.11",
     "vite-plus": "^0.2.6",
     "vitest": "4.1.10"
   },

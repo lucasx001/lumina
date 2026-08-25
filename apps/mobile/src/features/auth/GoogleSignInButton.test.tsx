@@ -22,7 +22,7 @@ describe('GoogleSignInButton', () => {
 
     fireEvent.press(screen.getByRole('button'));
 
-    expect(screen.getByText('正在打开 Google…')).toBeTruthy();
+    expect(screen.getByText('Opening Google…')).toBeTruthy();
     expect(onPress).not.toHaveBeenCalled();
   });
 });

@@ -3,6 +3,7 @@ import { Tabs } from 'expo-router';
 
 import { AppIcon } from '@/components/ui/app-icon';
 import { useTheme } from '@/hooks/use-theme';
+import { createTabBarItemStyle, createTabBarStyle } from '@/navigation/tab-bar-options';
 import { tabIcons } from '@/navigation/tab-icons';
 
 export default function TabLayout() {
@@ -15,11 +16,12 @@ export default function TabLayout() {
       screenOptions={{
         headerShown: false,
         sceneStyle: { backgroundColor: theme.background },
-        tabBarActiveTintColor: theme.text,
+        tabBarActiveTintColor: theme.primary,
         tabBarHideOnKeyboard: true,
         tabBarInactiveTintColor: theme.mutedText,
-        tabBarLabelStyle: { fontFamily: theme.fontFamily, fontSize: 11 },
-        tabBarStyle: { backgroundColor: theme.surface, borderTopColor: theme.border },
+        tabBarLabelStyle: { fontFamily: theme.fontFamily, fontSize: 11, fontWeight: '600' },
+        tabBarStyle: createTabBarStyle(theme),
+        tabBarItemStyle: createTabBarItemStyle(),
       }}
     >
       <Tabs.Screen
@@ -28,7 +30,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <AppIcon color={color} name={tabIcons.create} size={size} />
           ),
-          title: t({ id: 'mobile.tab.create', message: 'Create' }),
+          title: t`Create`,
         }}
       />
       <Tabs.Screen
@@ -37,7 +39,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <AppIcon color={color} name={tabIcons.library} size={size} />
           ),
-          title: t({ id: 'mobile.tab.library', message: 'Library' }),
+          title: t`Library`,
         }}
       />
       <Tabs.Screen
@@ -46,7 +48,7 @@ export default function TabLayout() {
           tabBarIcon: ({ color, size }) => (
             <AppIcon color={color} name={tabIcons.profile} size={size} />
           ),
-          title: t({ id: 'mobile.tab.profile', message: 'Profile' }),
+          title: t`Profile`,
         }}
       />
     </Tabs>

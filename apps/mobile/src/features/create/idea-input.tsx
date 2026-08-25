@@ -1,6 +1,8 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
+import { useState } from 'react';
 import { TextInput, View } from 'react-native';
 
+import { radius, spacing } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
 import { useTheme } from '@/hooks/use-theme';
 
@@ -12,12 +14,13 @@ type IdeaInputProps = {
 export function IdeaInput({ onChangeText, value }: IdeaInputProps) {
   const { t } = useLingui();
   const theme = useTheme();
+  const [isFocused, setIsFocused] = useState(false);
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{ gap: spacing.sm }}>
       <View style={{ alignItems: 'center', flexDirection: 'row', justifyContent: 'space-between' }}>
         <ThemedText variant="subtitle">
-          {t({ id: 'mobile.create.idea', message: 'Describe your idea' })}
+          <Trans>Describe your idea</Trans>
         </ThemedText>
         <ThemedText
           style={{ color: theme.mutedText, fontVariant: ['tabular-nums'] }}
@@ -27,33 +30,30 @@ export function IdeaInput({ onChangeText, value }: IdeaInputProps) {
         </ThemedText>
       </View>
       <TextInput
-        accessibilityLabel={t({
-          id: 'mobile.create.idea.accessibility',
-          message: 'Wallpaper idea',
-        })}
+        accessibilityLabel={t`Wallpaper idea`}
         maxLength={1_000}
+        onBlur={() => setIsFocused(false)}
         onChangeText={onChangeText}
-        placeholder={t({
-          id: 'mobile.create.idea.placeholder',
-          message: 'For example: a neon city on a rainy night',
-        })}
+        onFocus={() => setIsFocused(true)}
+        placeholder={t`For example: a neon city on a rainy night`}
         placeholderTextColor={theme.mutedText}
         multiline
         returnKeyType="default"
+        selectionColor={theme.primary}
         textAlignVertical="top"
         style={{
-          backgroundColor: theme.card,
-          borderColor: theme.border,
+          backgroundColor: theme.surface,
+          borderColor: isFocused ? theme.primary : theme.border,
           borderCurve: 'continuous',
-          borderRadius: 11,
-          borderWidth: 1,
+          borderRadius: radius.md,
+          borderWidth: isFocused ? 2 : 1,
           color: theme.text,
           fontFamily: theme.fontFamily,
           fontSize: 16,
           lineHeight: 23,
-          minHeight: 108,
-          paddingHorizontal: 16,
-          paddingVertical: 14,
+          minHeight: 120,
+          paddingHorizontal: spacing.md,
+          paddingVertical: spacing.md,
         }}
         value={value}
       />

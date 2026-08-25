@@ -1,10 +1,13 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useQuery } from '@tanstack/react-query';
 import { Image } from 'expo-image';
-import { Pressable, View } from 'react-native';
+import { useCallback } from 'react';
+import { FlatList, Pressable, View } from 'react-native';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
+import { AppIcon } from '@/components/ui/app-icon';
+import { radius, shadows, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { getPresets } from '@/lib/api';
 
@@ -19,109 +22,135 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
   const theme = useTheme();
   const builtInPresetCopy: Partial<Record<string, { category: string; name: string }>> = {
     preset_builtin_abstract: {
-      category: t({
-        id: 'mobile.create.preset.abstract.category',
-        message: 'Abstract art',
-      }),
-      name: t({ id: 'mobile.create.preset.abstract.name', message: 'Abstract' }),
+      category: t`Abstract art`,
+      name: t`Abstract`,
     },
     preset_builtin_anime: {
-      category: t({ id: 'mobile.create.preset.anime.category', message: 'Anime art' }),
-      name: t({ id: 'mobile.create.preset.anime.name', message: 'Anime' }),
+      category: t`Anime art`,
+      name: t`Anime`,
     },
     preset_builtin_cinematic: {
-      category: t({
-        id: 'mobile.create.preset.cinematic.category',
-        message: 'Cinematic art',
-      }),
-      name: t({ id: 'mobile.create.preset.cinematic.name', message: 'Cinematic' }),
+      category: t`Cinematic art`,
+      name: t`Cinematic`,
     },
     preset_builtin_cyberpunk: {
-      category: t({
-        id: 'mobile.create.preset.cyberpunk.category',
-        message: 'Cyberpunk art',
-      }),
-      name: t({ id: 'mobile.create.preset.cyberpunk.name', message: 'Cyberpunk' }),
+      category: t`Cyberpunk art`,
+      name: t`Cyberpunk`,
     },
     preset_builtin_editorial: {
-      category: t({
-        id: 'mobile.create.preset.editorial.category',
-        message: 'Editorial art',
-      }),
-      name: t({ id: 'mobile.create.preset.editorial.name', message: 'Editorial' }),
+      category: t`Editorial art`,
+      name: t`Editorial`,
     },
     preset_builtin_minimal: {
-      category: t({ id: 'mobile.create.preset.minimal.category', message: 'Minimal art' }),
-      name: t({ id: 'mobile.create.preset.minimal.name', message: 'Minimal' }),
+      category: t`Minimal art`,
+      name: t`Minimal`,
     },
     preset_builtin_nature: {
-      category: t({ id: 'mobile.create.preset.nature.category', message: 'Nature art' }),
-      name: t({ id: 'mobile.create.preset.nature.name', message: 'Nature' }),
+      category: t`Nature art`,
+      name: t`Nature`,
     },
   };
+  const presets =
+    presetsQuery.data?.presets.map((preset) => ({
+      ...preset,
+      category: builtInPresetCopy[preset.id]?.category ?? preset.category,
+      name: builtInPresetCopy[preset.id]?.name ?? preset.name,
+    })) ?? [];
+  const renderPreset = useCallback(
+    ({ item: preset }: { item: (typeof presets)[number] }) => {
+      const selected = preset.id === selectedPresetId;
+
+      return (
+        <Pressable
+          accessibilityRole="button"
+          accessibilityState={{ selected }}
+          onPress={() => onSelect(preset.id)}
+          style={({ pressed }) => ({
+            backgroundColor: theme.card,
+            borderColor: selected ? theme.primary : theme.border,
+            borderCurve: 'continuous',
+            borderRadius: radius.md,
+            borderWidth: selected ? 2 : 1,
+            boxShadow: selected ? shadows.raised : shadows.card,
+            gap: spacing.sm,
+            minHeight: 184,
+            opacity: pressed ? 0.88 : 1,
+            overflow: 'hidden',
+            padding: spacing.sm,
+            transform: [{ scale: pressed ? 0.985 : 1 }],
+            width: 172,
+          })}
+          testID={`preset-${preset.id}`}
+        >
+          {preset.coverImageUrl ? (
+            <Image
+              accessibilityLabel={t`${preset.name} preset cover`}
+              contentFit="cover"
+              source={preset.coverImageUrl}
+              style={{ borderRadius: radius.sm, height: 112, width: '100%' }}
+            />
+          ) : (
+            <View
+              style={{
+                alignItems: 'center',
+                backgroundColor: theme.muted,
+                borderRadius: radius.sm,
+                height: 112,
+                justifyContent: 'center',
+              }}
+            >
+              <AppIcon color={theme.mutedText} name="sparkles" size={24} />
+            </View>
+          )}
+          {selected ? (
+            <View
+              style={{
+                alignItems: 'center',
+                backgroundColor: theme.primary,
+                borderRadius: radius.full,
+                height: 28,
+                justifyContent: 'center',
+                position: 'absolute',
+                right: spacing.md,
+                top: spacing.md,
+                width: 28,
+              }}
+            >
+              <AppIcon color={theme.primaryForeground} name="check" size={15} />
+            </View>
+          ) : null}
+          <ThemedText numberOfLines={1} variant="body">
+            {preset.name}
+          </ThemedText>
+          <ThemedText numberOfLines={1} style={{ color: theme.mutedText }} variant="caption">
+            {preset.category}
+          </ThemedText>
+        </Pressable>
+      );
+    },
+    [onSelect, presets, selectedPresetId, t, theme],
+  );
 
   return (
-    <View style={{ gap: 10 }}>
+    <View style={{ gap: spacing.md }}>
       <ThemedText variant="subtitle">
-        {t({ id: 'mobile.create.selectPreset', message: 'Choose a preset' })}
+        <Trans>Choose a preset</Trans>
       </ThemedText>
       {presetsQuery.isPending ? (
-        <LoadingState
-          label={t({ id: 'mobile.create.loadingPresets', message: 'Loading presets…' })}
-        />
+        <LoadingState label={t`Loading presets…`} />
       ) : presetsQuery.isError ? (
         <ErrorState
           message={presetsQuery.error.message}
           onRetry={() => void presetsQuery.refetch()}
         />
       ) : (
-        <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 10 }}>
-          {presetsQuery.data.presets.map((preset) => {
-            const copy = builtInPresetCopy[preset.id];
-            const category = copy?.category ?? preset.category;
-            const name = copy?.name ?? preset.name;
-            const selected = preset.id === selectedPresetId;
-
-            return (
-              <Pressable
-                key={preset.id}
-                accessibilityRole="button"
-                accessibilityState={{ selected }}
-                onPress={() => onSelect(preset.id)}
-                style={{
-                  backgroundColor: theme.card,
-                  borderColor: selected ? theme.accent : theme.border,
-                  borderCurve: 'continuous',
-                  borderRadius: 12,
-                  borderWidth: selected ? 2 : 1,
-                  gap: 8,
-                  overflow: 'hidden',
-                  padding: 7,
-                  width: '48%',
-                }}
-                testID={`preset-${preset.id}`}
-              >
-                {preset.coverImageUrl ? (
-                  <Image
-                    accessibilityLabel={t({
-                      id: 'mobile.create.presetCover',
-                      message: `${name} preset cover`,
-                    })}
-                    contentFit="cover"
-                    source={preset.coverImageUrl}
-                    style={{ borderRadius: 8, height: 96, width: '100%' }}
-                  />
-                ) : null}
-                <ThemedText numberOfLines={1} variant="body">
-                  {name}
-                </ThemedText>
-                <ThemedText style={{ color: theme.mutedText }} variant="caption">
-                  {category}
-                </ThemedText>
-              </Pressable>
-            );
-          })}
-        </View>
+        <FlatList
+          contentContainerStyle={{ gap: spacing.sm, paddingRight: spacing.sm }}
+          data={presets}
+          horizontal
+          keyExtractor={(preset) => preset.id}
+          renderItem={renderPreset}
+        />
       )}
     </View>
   );

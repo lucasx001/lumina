@@ -2,6 +2,7 @@ import { useLingui } from '@lingui/react/macro';
 import { Pressable, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
+import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import type { GenerationUserInputs } from '@/lib/api';
 
@@ -23,54 +24,54 @@ export function ChipsSelector({ onChange, values }: ChipsSelectorProps) {
   }> = [
     {
       field: 'theme',
-      label: t({ id: 'mobile.create.theme', message: 'Theme' }),
+      label: t`Theme`,
       options: [
-        { label: t({ id: 'mobile.create.theme.nature', message: 'Nature' }), value: 'nature' },
-        { label: t({ id: 'mobile.create.theme.city', message: 'City' }), value: 'city' },
-        { label: t({ id: 'mobile.create.theme.space', message: 'Space' }), value: 'space' },
+        { label: t`Nature`, value: 'nature' },
+        { label: t`City`, value: 'city' },
+        { label: t`Space`, value: 'space' },
         {
-          label: t({ id: 'mobile.create.theme.abstract', message: 'Abstract' }),
+          label: t`Abstract`,
           value: 'abstract',
         },
       ],
     },
     {
       field: 'tone',
-      label: t({ id: 'mobile.create.tone', message: 'Color tone' }),
+      label: t`Color tone`,
       options: [
-        { label: t({ id: 'mobile.create.tone.warm', message: 'Warm' }), value: 'warm' },
-        { label: t({ id: 'mobile.create.tone.cool', message: 'Cool' }), value: 'cool' },
-        { label: t({ id: 'mobile.create.tone.soft', message: 'Soft' }), value: 'soft' },
+        { label: t`Warm`, value: 'warm' },
+        { label: t`Cool`, value: 'cool' },
+        { label: t`Soft`, value: 'soft' },
         {
-          label: t({ id: 'mobile.create.tone.highContrast', message: 'High contrast' }),
+          label: t`High contrast`,
           value: 'high-contrast',
         },
       ],
     },
     {
       field: 'mood',
-      label: t({ id: 'mobile.create.mood', message: 'Mood' }),
+      label: t`Mood`,
       options: [
-        { label: t({ id: 'mobile.create.mood.calm', message: 'Calm' }), value: 'calm' },
+        { label: t`Calm`, value: 'calm' },
         {
-          label: t({ id: 'mobile.create.mood.mysterious', message: 'Mysterious' }),
+          label: t`Mysterious`,
           value: 'mysterious',
         },
         {
-          label: t({ id: 'mobile.create.mood.energetic', message: 'Energetic' }),
+          label: t`Energetic`,
           value: 'energetic',
         },
-        { label: t({ id: 'mobile.create.mood.dreamy', message: 'Dreamy' }), value: 'dreamy' },
+        { label: t`Dreamy`, value: 'dreamy' },
       ],
     },
   ];
 
   return (
-    <View style={{ gap: 14 }}>
+    <View style={{ gap: spacing.lg }}>
       {chipGroups.map(({ field, label, options }) => (
-        <View key={field} style={{ gap: 8 }}>
+        <View key={field} style={{ gap: spacing.sm }}>
           <ThemedText variant="subtitle">{label}</ThemedText>
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
             {options.map((option) => {
               const selected = values[field] === option.value;
 
@@ -80,19 +81,23 @@ export function ChipsSelector({ onChange, values }: ChipsSelectorProps) {
                   accessibilityRole="button"
                   accessibilityState={{ selected }}
                   onPress={() => onChange(field, selected ? undefined : option.value)}
-                  style={{
-                    backgroundColor: selected ? theme.accent : theme.surface,
-                    borderColor: selected ? theme.accent : theme.border,
+                  style={({ pressed }) => ({
+                    alignItems: 'center',
+                    backgroundColor: selected ? theme.primary : theme.surface,
+                    borderColor: selected ? theme.primary : theme.border,
                     borderCurve: 'continuous',
-                    borderRadius: 9,
+                    borderRadius: radius.full,
                     borderWidth: 1,
-                    paddingHorizontal: 14,
-                    paddingVertical: 9,
-                  }}
+                    justifyContent: 'center',
+                    minHeight: 44,
+                    opacity: pressed ? 0.84 : 1,
+                    paddingHorizontal: spacing.md,
+                    transform: [{ scale: pressed ? 0.97 : 1 }],
+                  })}
                   testID={`chip-${field}-${option.value}`}
                 >
                   <ThemedText
-                    style={{ color: selected ? theme.accentForeground : theme.text }}
+                    style={{ color: selected ? theme.primaryForeground : theme.text }}
                     variant="caption"
                   >
                     {option.label}

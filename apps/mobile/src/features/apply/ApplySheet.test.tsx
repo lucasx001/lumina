@@ -1,4 +1,4 @@
-import { fireEvent, render, waitFor } from '@testing-library/react-native';
+import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
 import { ApplySheet } from './ApplySheet';
@@ -70,6 +70,37 @@ describe('ApplySheet', () => {
     );
   });
 
+  it('only shows loading on the selected target while disabling the other actions', async () => {
+    let resolveSetWallpaper!: () => void;
+    mockSetWallpaper.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSetWallpaper = resolve;
+        }),
+    );
+    const screen = render(
+      <ApplySheet imageUrl="https://images.example/wallpaper.jpg" onDismiss={jest.fn()} visible />,
+    );
+
+    fireEvent.press(screen.getByTestId('apply-wallpaper-home'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('apply-wallpaper-home').props.accessibilityState).toEqual(
+        expect.objectContaining({ busy: true, disabled: true }),
+      );
+      expect(screen.getByTestId('apply-wallpaper-lock').props.accessibilityState).toEqual(
+        expect.objectContaining({ busy: false, disabled: true }),
+      );
+      expect(screen.getByTestId('apply-wallpaper-both').props.accessibilityState).toEqual(
+        expect.objectContaining({ busy: false, disabled: true }),
+      );
+    });
+
+    await act(async () => {
+      resolveSetWallpaper();
+    });
+  });
+
   it('requests library permission before saving and shares a local file', async () => {
     const screen = render(
       <ApplySheet imageUrl="https://images.example/wallpaper.jpg" onDismiss={jest.fn()} visible />,
@@ -108,8 +139,6 @@ describe('ApplySheet', () => {
     expect(screen.getByTestId('save-wallpaper')).toBeTruthy();
     expect(screen.queryByTestId('apply-wallpaper-home')).toBeNull();
     expect(screen.queryByTestId('share-wallpaper')).toBeNull();
-    expect(
-      screen.getByText(/iOS does not allow apps to set system wallpaper directly/),
-    ).toBeTruthy();
+    expect(screen.getByTestId('apply-ios-hint')).toBeTruthy();
   });
 });

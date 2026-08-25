@@ -5,5 +5,5 @@ import { TabStack } from '@/navigation/tab-stack';
 export default function ProfileStackLayout() {
   const { t } = useLingui();
 
-  return <TabStack title={t({ id: 'mobile.tab.profile', message: 'Profile' })} />;
+  return <TabStack title={t`Profile`} />;
 }

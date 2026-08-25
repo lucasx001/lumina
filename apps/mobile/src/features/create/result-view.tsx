@@ -1,10 +1,11 @@
-import { useLingui } from '@lingui/react/macro';
+import { Trans, useLingui } from '@lingui/react/macro';
 import { useState } from 'react';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 
 import { WallpaperPreview, type WallpaperPreviewMode } from '@/components/WallpaperPreview';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui/button';
+import { radius, spacing } from '@/constants/theme';
 import { ApplySheet } from '@/features/apply/ApplySheet';
 import { useTheme } from '@/hooks/use-theme';
 import type { GenerationJob } from '@/lib/api';
@@ -29,28 +30,22 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
   const previewHeight = Math.round(previewWidth * ((job.height ?? 2) / (job.width ?? 1)));
 
   return (
-    <View style={{ alignItems: 'center', gap: 18 }}>
-      <View style={{ alignItems: 'center', gap: 4 }}>
+    <View style={{ alignItems: 'center', gap: spacing.lg }}>
+      <View style={{ alignItems: 'center', gap: spacing.xs }}>
         <ThemedText variant="title">
-          {t({ id: 'mobile.create.result.ready', message: 'Your wallpaper is ready' })}
+          <Trans>Your wallpaper is ready</Trans>
         </ThemedText>
         <ThemedText selectable style={{ color: theme.mutedText }} variant="caption">
           {job.quality === 'draft'
-            ? t({
-                id: 'mobile.create.result.draft',
-                message: 'Quick preview · Low resolution',
-              })
-            : t({
-                id: 'mobile.create.result.hd',
-                message: 'High resolution · Full 2K+',
-              })}
+            ? t`Quick preview · Low resolution`
+            : t`High resolution · Full 2K+`}
         </ThemedText>
       </View>
-      <View style={{ flexDirection: 'row', gap: 8 }}>
+      <View style={{ flexDirection: 'row', gap: spacing.sm }}>
         {(
           [
-            ['lock-screen', t({ id: 'mobile.preview.lockScreen', message: 'Lock screen' })],
-            ['home-screen', t({ id: 'mobile.preview.homeScreen', message: 'Home screen' })],
+            ['lock-screen', t`Lock screen`],
+            ['home-screen', t`Home screen`],
           ] as const
         ).map(([nextMode, label]) => {
           const selected = mode === nextMode;
@@ -61,19 +56,23 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
               accessibilityRole="button"
               accessibilityState={{ selected }}
               onPress={() => setMode(nextMode)}
-              style={{
-                backgroundColor: selected ? theme.accent : theme.surface,
-                borderColor: selected ? theme.accent : theme.border,
+              style={({ pressed }) => ({
+                alignItems: 'center',
+                backgroundColor: selected ? theme.primary : theme.surface,
+                borderColor: selected ? theme.primary : theme.border,
                 borderCurve: 'continuous',
-                borderRadius: 9,
+                borderRadius: radius.full,
                 borderWidth: 1,
-                paddingHorizontal: 16,
-                paddingVertical: 9,
-              }}
+                justifyContent: 'center',
+                minHeight: 44,
+                opacity: pressed ? 0.84 : 1,
+                paddingHorizontal: spacing.md,
+                transform: [{ scale: pressed ? 0.97 : 1 }],
+              })}
               testID={`preview-mode-${nextMode}`}
             >
               <ThemedText
-                style={{ color: selected ? theme.accentForeground : theme.text }}
+                style={{ color: selected ? theme.primaryForeground : theme.text }}
                 variant="caption"
               >
                 {label}
@@ -88,17 +87,24 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
         mode={mode}
         width={previewWidth}
       />
-      <View style={{ flexDirection: 'row', gap: 10 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          gap: spacing.sm,
+          justifyContent: 'center',
+        }}
+      >
         <Button
           icon="refresh"
-          label={t({ id: 'mobile.create.regenerate', message: 'Regenerate' })}
+          label={t`Regenerate`}
           onPress={onRegenerate}
           testID="regenerate-button"
           variant="secondary"
         />
         <Button
           icon="download"
-          label={t({ id: 'mobile.create.applyAndSave', message: 'Apply and save' })}
+          label={t`Apply and save`}
           onPress={() => setIsApplySheetVisible(true)}
           testID="open-apply-sheet"
         />
