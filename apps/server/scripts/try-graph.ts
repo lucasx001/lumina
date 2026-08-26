@@ -59,6 +59,7 @@ const dependencies: WallpaperGraphDependencies = {
 
 const result = await runWallpaperGraph(
   {
+    category: 'demo',
     height: 2400,
     mode: 'text2img',
     presetId: 'demo-preset',

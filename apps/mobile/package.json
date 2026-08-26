@@ -21,6 +21,7 @@
     "@babel/runtime": "^7",
     "@clerk/expo": "^4.0.3",
     "@expo/ui": "~56.0.24",
+    "@gorhom/bottom-sheet": "^5.2.14",
     "@lingui/core": "^6.6.0",
     "@lingui/react": "^6.6.0",
     "@lumina/i18n": "workspace:*",

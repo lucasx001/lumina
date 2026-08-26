@@ -163,7 +163,7 @@ export function WallpaperDetail({
           testID="wallpaper-information"
         >
           <ThemedText style={{ color: '#FFFFFF' }} variant="subtitle">
-            {wallpaper.category ?? t`Uncategorized`}
+            {wallpaper.category}
           </ThemedText>
           <InformationRow label={t`Mode`} value={generatedLabel} />
           <InformationRow label={t`Size`} value={resolution} />

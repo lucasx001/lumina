@@ -7,6 +7,7 @@ import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
 type StyleToPresetFormProps = {
+  disabled: boolean;
   instruction: string;
   isSubmitting: boolean;
   onChangeInstruction: (instruction: string) => void;
@@ -14,6 +15,7 @@ type StyleToPresetFormProps = {
 };
 
 export function StyleToPresetForm({
+  disabled,
   instruction,
   isSubmitting,
   onChangeInstruction,
@@ -49,7 +51,7 @@ export function StyleToPresetForm({
         value={instruction}
       />
       <Button
-        disabled={isSubmitting}
+        disabled={disabled || isSubmitting}
         label={isSubmitting ? t`Extracting…` : t`Save custom preset`}
         loading={isSubmitting}
         onPress={() =>

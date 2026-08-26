@@ -5,7 +5,11 @@ import { createTabStackScreenOptions } from './tab-stack-options';
 
 describe('createTabStackScreenOptions', () => {
   it('enables a themed native header for tab stacks', () => {
-    const options = createTabStackScreenOptions({ ...colors.light, fontFamily: 'System' });
+    const options = createTabStackScreenOptions({
+      ...colors.light,
+      displayFontFamily: 'Georgia',
+      fontFamily: 'System',
+    });
 
     expect(options).toMatchObject({
       contentStyle: { backgroundColor: colors.light.background },
@@ -19,7 +23,13 @@ describe('createTabStackScreenOptions', () => {
   });
 
   it('keeps the tab bar height consistent across tab screens', () => {
-    expect(createTabBarStyle({ ...colors.dark, fontFamily: 'System' })).toMatchObject({
+    expect(
+      createTabBarStyle({
+        ...colors.dark,
+        displayFontFamily: 'Georgia',
+        fontFamily: 'System',
+      }),
+    ).toMatchObject({
       height: 68,
       paddingBottom: 8,
       paddingTop: 8,

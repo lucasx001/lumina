@@ -34,6 +34,7 @@ describe('WallpaperGrid', () => {
   it('renders saved wallpapers and opens the selected item', () => {
     const onSelect = jest.fn();
     const wallpaper = {
+      category: 'Nature',
       createdAt: '2026-07-26T00:00:00.000Z',
       height: 2400,
       id: 'wallpaper-1',

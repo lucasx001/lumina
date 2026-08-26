@@ -17,6 +17,7 @@ export type AppIconName =
   | 'library'
   | 'lock'
   | 'moon'
+  | 'plus'
   | 'privacy'
   | 'profile'
   | 'refresh'
@@ -41,6 +42,7 @@ const iconNames = {
   library: { android: 'photo_library', ios: 'photo.on.rectangle', web: 'photo_library' },
   lock: { android: 'lock', ios: 'lock.fill', web: 'lock' },
   moon: { android: 'dark_mode', ios: 'moon.fill', web: 'dark_mode' },
+  plus: { android: 'add', ios: 'plus', web: 'add' },
   privacy: { android: 'shield', ios: 'hand.raised.fill', web: 'shield' },
   profile: { android: 'account_circle', ios: 'person.crop.circle', web: 'account_circle' },
   refresh: { android: 'refresh', ios: 'arrow.clockwise', web: 'refresh' },

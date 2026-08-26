@@ -13,6 +13,7 @@ export type GenerationUserInputs = {
 };
 
 export type GenerateRequest = {
+  category: string;
   deviceId?: string;
   height: number;
   mode: GenerationMode;
@@ -52,7 +53,7 @@ export type PresetListItem = {
 export type PresetsResponse = { presets: PresetListItem[] };
 
 export type WallpaperListItem = {
-  category?: string | null;
+  category: string;
   createdAt: string;
   favorite?: boolean;
   height: number | null;

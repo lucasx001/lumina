@@ -18,12 +18,14 @@ export function SectionHeading({
   title,
 }: SectionHeadingProps): React.JSX.Element {
   return (
-    <div className="section-heading">
-      <p className="section-heading__eyebrow">
+    <div className="max-w-3xl">
+      <p className="mb-6 text-xs font-semibold tracking-[.16em] text-[#9b5b32]">
         <EnglishText>{englishEyebrow}</EnglishText> / {eyebrow}
       </p>
-      <h2>{title}</h2>
-      <p className="section-heading__summary">
+      <h2 className="font-serif text-[clamp(2.5rem,7vw,5rem)] leading-[1.05] font-normal tracking-[-.055em]">
+        {title}
+      </h2>
+      <p className="mt-6 max-w-2xl text-[#7a6d63]">
         {summary} <EnglishText>{englishSummary}</EnglishText>
       </p>
     </div>

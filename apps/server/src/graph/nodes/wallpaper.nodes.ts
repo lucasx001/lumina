@@ -21,6 +21,7 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
         await dependencies.wallpapers.update(wallpaperId, { prompt, status: 'processing' });
       } else {
         const wallpaper = await dependencies.wallpapers.create({
+          category: state.category,
           deviceId: state.deviceId,
           height: state.height,
           mode: state.mode,

@@ -182,7 +182,7 @@ const WallpaperGridItem = memo(function WallpaperGridItem({
         </Pressable>
       </View>
       <ThemedText numberOfLines={1} variant="body">
-        {item.category ?? t`Uncategorized`}
+        {item.category}
       </ThemedText>
       <ThemedText numberOfLines={1} style={{ color: theme.mutedText }} variant="caption">
         {item.quality === 'draft' ? t`Preview` : t`HD`} ·{' '}

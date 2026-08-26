@@ -15,6 +15,7 @@ export type WallpaperUserInputs = {
 };
 
 export type WallpaperGraphInput = {
+  category: string;
   clerkUserId?: string;
   deviceId?: string;
   height: number;
@@ -39,6 +40,7 @@ export type WallpaperGraphState = WallpaperGraphInput & {
 };
 
 export const WallpaperGraphAnnotation = Annotation.Root({
+  category: Annotation<string>,
   clerkUserId: Annotation<string | undefined>,
   deviceId: Annotation<string | undefined>,
   presetId: Annotation<string | undefined>,

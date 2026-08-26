@@ -13,11 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Close creation panel"
+msgstr "关闭创作面板"
+
 #: apps/mobile/src/features/library/WallpaperDetail.tsx
 msgid "Style transfer"
 msgstr "风格迁移"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "New password"
 msgstr "设置新密码"
 
@@ -45,7 +49,7 @@ msgstr "动漫艺术"
 msgid "Anime"
 msgstr "动漫"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "We sent a verification code to {emailAddress}."
 msgstr "验证码已发送至 {emailAddress}。"
 
@@ -53,15 +57,23 @@ msgstr "验证码已发送至 {emailAddress}。"
 msgid "Save custom preset"
 msgstr "保存自定义预设"
 
+#: apps/mobile/src/screens/home.tsx
+msgid "Start with an idea you cannot quite explain."
+msgstr "从一个还说不太清楚的想法开始。"
+
 #: apps/mobile/src/features/library/WallpaperDetail.tsx
 msgid "Apply and share coming soon"
 msgstr "应用和分享功能即将推出"
+
+#: apps/mobile/src/screens/category-detail.tsx
+msgid "Loading wallpapers…"
+msgstr "正在加载壁纸…"
 
 #: apps/mobile/src/features/create/chips-selector.tsx
 msgid "City"
 msgstr "城市"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Verify code"
 msgstr "验证验证码"
 
@@ -75,8 +87,8 @@ msgid "Extend"
 msgstr "扩展"
 
 #: apps/mobile/src/screens/home.tsx
-msgid "Make your screen yours"
-msgstr "让屏幕成为你的作品"
+#~ msgid "Make your screen yours"
+#~ msgstr "让屏幕成为你的作品"
 
 #: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 msgid "What would you like to change?"
@@ -106,13 +118,13 @@ msgstr "重试"
 msgid "Completing Google sign-in…"
 msgstr "正在完成 Google 登录…"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Enter your email and password."
 msgstr "请输入邮箱和密码。"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Use a different email"
 msgstr "使用其他邮箱"
 
@@ -124,17 +136,23 @@ msgstr "极简"
 msgid "Apply wallpaper"
 msgstr "应用壁纸"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Password"
 msgstr "密码"
 
+#: apps/mobile/src/screens/home.tsx
+msgid "Wallpaper preview"
+msgstr "壁纸预览"
+
 #: apps/mobile/src/features/library/WallpaperGrid.tsx
+#: apps/mobile/src/screens/create-wallpaper.tsx
+#: apps/mobile/src/screens/home.tsx
 msgid "Create wallpaper"
 msgstr "创建壁纸"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "We sent a password reset code to {emailAddress}."
 msgstr "我们已将密码重置验证码发送至 {emailAddress}。"
 
@@ -142,13 +160,12 @@ msgstr "我们已将密码重置验证码发送至 {emailAddress}。"
 msgid "Choose an action"
 msgstr "选择操作"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Verification code"
 msgstr "验证码"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Sign up with Google"
 msgstr "使用 Google 注册"
 
@@ -162,6 +179,7 @@ msgstr "正在生成…"
 
 #: apps/mobile/src/features/library/WallpaperDetail.tsx
 #: apps/mobile/src/features/library/WallpaperGrid.tsx
+#: apps/mobile/src/screens/home.tsx
 msgid "Uncategorized"
 msgstr "未分类"
 
@@ -178,14 +196,14 @@ msgid "Output quality"
 msgstr "输出质量"
 
 #: apps/mobile/src/app/(auth)/sign-in.tsx
-msgid "This account requires a sign-in method that is not available in the app."
-msgstr "此账号需要的登录验证方式当前应用暂不支持。"
+#~ msgid "This account requires a sign-in method that is not available in the app."
+#~ msgstr "此账号需要的登录验证方式当前应用暂不支持。"
 
 #: apps/mobile/src/screens/profile.tsx
 msgid "Syncing device history…"
 msgstr "正在同步设备历史…"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Enter your email address and we’ll send you a password reset code."
 msgstr "输入邮箱地址，我们会向你发送密码重置验证码。"
 
@@ -201,6 +219,10 @@ msgstr "用 Lumina 创作个性壁纸。"
 msgid "Processing your image…"
 msgstr "正在处理图片…"
 
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "For example: Quiet nights"
+msgstr "例如：静谧夜晚"
+
 #: apps/mobile/src/features/edit/EditModePicker.tsx
 msgid "Change with a prompt"
 msgstr "使用提示词修改"
@@ -208,6 +230,11 @@ msgstr "使用提示词修改"
 #: apps/mobile/src/features/apply/ApplySheet.tsx
 msgid "Opening share…"
 msgstr "正在打开分享…"
+
+#: apps/mobile/src/screens/wallpaper-preview.tsx
+#: apps/mobile/src/screens/wallpaper-preview.web.tsx
+msgid "Wallpaper unavailable"
+msgstr "壁纸暂不可用"
 
 #: apps/mobile/src/features/library/WallpaperDetail.tsx
 msgid "Created"
@@ -225,8 +252,13 @@ msgstr "取消"
 msgid "High resolution · Full 2K+"
 msgstr "高清 · 完整 2K+"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#. placeholder {0}: generation.cooldownSeconds
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Try again in {0} seconds."
+msgstr "请在 {0} 秒后重试。"
+
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Sign up"
 msgstr "注册"
 
@@ -259,7 +291,6 @@ msgstr "编辑"
 msgid "View wallpaper details"
 msgstr "查看壁纸详情"
 
-#: apps/mobile/src/app/(tabs)/_layout.tsx
 #: apps/mobile/src/app/(tabs)/library/_layout.tsx
 msgid "Library"
 msgstr "壁纸库"
@@ -277,7 +308,7 @@ msgstr "锁屏"
 msgid "Sign out"
 msgstr "退出登录"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Passwords do not match."
 msgstr "两次输入的密码不一致。"
 
@@ -297,7 +328,11 @@ msgstr "完整 2K+ 分辨率，适合保存和应用"
 msgid "High contrast"
 msgstr "高对比度"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
+#: apps/mobile/src/screens/home.tsx
+msgid "My categories"
+msgstr "我的分类"
+
+#: apps/mobile/src/screens/sign-in.tsx
 msgid "Or login with"
 msgstr "或使用以下方式登录"
 
@@ -337,13 +372,13 @@ msgstr "增强壁纸"
 msgid "Loading placeholder"
 msgstr "加载占位内容"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Password reset failed."
 msgstr "密码重置失败。"
 
 #: apps/mobile/src/app/(auth)/sign-in.tsx
-msgid "Enter the security code sent to your email."
-msgstr "请输入发送到邮箱的安全验证码。"
+#~ msgid "Enter the security code sent to your email."
+#~ msgstr "请输入发送到邮箱的安全验证码。"
 
 #: apps/mobile/src/features/apply/useSaveAndShare.ts
 msgid "Could not save the wallpaper. Try again later."
@@ -353,38 +388,61 @@ msgstr "无法保存壁纸，请稍后重试。"
 msgid "HD"
 msgstr "高清"
 
+#. placeholder {0}: category.name
+#: apps/mobile/src/screens/home.tsx
+msgid "Open {0}"
+msgstr "打开 {0}"
+
 #: apps/mobile/src/app/(tabs)/_layout.tsx
 #: apps/mobile/src/app/(tabs)/(create)/_layout.tsx
 #: apps/mobile/src/screens/home.tsx
-msgid "Create"
-msgstr "创作"
+#~ msgid "Create"
+#~ msgstr "创作"
 
 #: apps/mobile/src/features/library/WallpaperDetail.tsx
 #: apps/mobile/src/features/library/WallpaperGrid.tsx
 msgid "Remove wallpaper from favorites"
 msgstr "从收藏中移除壁纸"
 
+#: apps/mobile/src/app/(tabs)/_layout.tsx
+#: apps/mobile/src/app/(tabs)/(create)/_layout.tsx
+msgid "Home"
+msgstr "首页"
+
 #: apps/mobile/src/features/library/WallpaperGrid.tsx
+#: apps/mobile/src/screens/category-detail.tsx
 msgid "Generated wallpaper"
 msgstr "生成的壁纸"
+
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Choose a starting point, then describe what you want to see."
+msgstr "选择一个起点，再描述你想看到的画面。"
 
 #: apps/mobile/src/features/apply/ApplySheet.tsx
 msgid "Set as both"
 msgstr "同时设为锁屏和主屏幕"
 
 #: apps/mobile/src/screens/home.tsx
-msgid "Optimized for this device"
-msgstr "已针对当前设备优化"
+msgid "Preparing your wallpaper space…"
+msgstr "正在准备你的壁纸空间…"
+
+#: apps/mobile/src/screens/home.tsx
+#~ msgid "Optimized for this device"
+#~ msgstr "已针对当前设备优化"
 
 #: apps/mobile/src/screens/library.tsx
 msgid "Search by category, mode, or quality"
 msgstr "按分类、模式或画质搜索"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Your email address"
 msgstr "你的邮箱地址"
+
+#: apps/mobile/src/screens/home.tsx
+msgid "Create your first wallpaper"
+msgstr "创建你的第一张壁纸"
 
 #: apps/mobile/src/features/create/result-view.tsx
 msgid "Quick preview · Low resolution"
@@ -394,10 +452,14 @@ msgstr "快速预览 · 低分辨率"
 msgid "Apply and save"
 msgstr "应用并保存"
 
+#: apps/mobile/src/screens/home.tsx
+msgid "Tell Lumina a color, a mood, or a moment. We will shape it for this screen."
+msgstr "告诉 Lumina 一种颜色、一份心情或一个瞬间，我们会把它变成适合这块屏幕的画面。"
+
 #. placeholder {0}: generation.cooldownSeconds
 #: apps/mobile/src/screens/home.tsx
-msgid "To avoid duplicate requests, try again in {0} seconds."
-msgstr "为避免重复请求，请在 {0} 秒后重试。"
+#~ msgid "To avoid duplicate requests, try again in {0} seconds."
+#~ msgstr "为避免重复请求，请在 {0} 秒后重试。"
 
 #: apps/mobile/src/features/apply/ApplySheet.tsx
 msgid "Saving…"
@@ -433,29 +495,39 @@ msgid "Generated"
 msgstr "已生成"
 
 #: apps/mobile/src/screens/home.tsx
-msgid "Generating your wallpaper…"
-msgstr "正在生成壁纸…"
+#~ msgid "Generating your wallpaper…"
+#~ msgstr "正在生成壁纸…"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Enter code"
 msgstr "输入验证码"
+
+#: apps/mobile/src/screens/home.tsx
+msgid "Ideas, carefully kept."
+msgstr "好好收藏每一个灵感。"
 
 #: apps/mobile/src/features/edit/EditModePicker.tsx
 #: apps/mobile/src/features/edit/StyleToPresetForm.tsx
 msgid "Extract style"
 msgstr "提取风格"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/app/(tabs)/_layout.tsx
+msgid "Add"
+msgstr "添加"
+
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Verify email"
 msgstr "验证邮箱"
 
 #: apps/mobile/src/features/create/chips-selector.tsx
 msgid "Calm"
 msgstr "宁静"
+
+#: apps/mobile/src/screens/home.tsx
+msgid "Your wallpaper space"
+msgstr "你的壁纸空间"
 
 #. js-lingui-explicit-id
 #: apps/mobile/src/features/apply/ApplySheet.tsx
@@ -1558,7 +1630,7 @@ msgstr "宁静"
 #~ msgid "mobile.tab.profile"
 #~ msgstr "我的"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Save new password"
 msgstr "保存新密码"
 
@@ -1570,7 +1642,7 @@ msgstr "设为锁屏"
 msgid "All"
 msgstr "全部"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
+#: apps/mobile/src/screens/sign-in.tsx
 msgid "Don't have an account? "
 msgstr "还没有账号？"
 
@@ -1590,9 +1662,9 @@ msgstr "Lumina 将想法和个人照片变成适配设备的壁纸，并提供�
 msgid "Custom presets"
 msgstr "自定义预设"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Email"
 msgstr "邮箱"
 
@@ -1612,7 +1684,11 @@ msgstr "高清放大"
 msgid "Select it from the preset list above to generate another wallpaper."
 msgstr "可从上方预设列表中选择它，继续生成其他壁纸。"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Wallpaper category"
+msgstr "壁纸分类"
+
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Choose a new password for your account."
 msgstr "为你的账号设置一个新密码。"
 
@@ -1620,16 +1696,20 @@ msgstr "为你的账号设置一个新密码。"
 msgid "Cyberpunk art"
 msgstr "赛博朋克艺术"
 
-#: apps/mobile/src/screens/home.tsx
-msgid "Edit a photo"
-msgstr "编辑照片"
+#: apps/mobile/src/screens/category-detail.tsx
+msgid "Open wallpaper preview"
+msgstr "打开壁纸预览"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
+#: apps/mobile/src/screens/home.tsx
+#~ msgid "Edit a photo"
+#~ msgstr "编辑照片"
+
 #: apps/mobile/src/features/auth/GoogleSignInButton.tsx
+#: apps/mobile/src/screens/sign-in.tsx
 msgid "Continue with Google"
 msgstr "使用 Google 继续"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Already have an account? "
 msgstr "已有账号？"
 
@@ -1651,6 +1731,13 @@ msgstr "暂不登录"
 msgid "{0} preset cover"
 msgstr "{0} 预设封面"
 
+#. placeholder {0}: category.items.length
+#. placeholder {0}: wallpapers.wallpapers.length
+#: apps/mobile/src/screens/category-detail.tsx
+#: apps/mobile/src/screens/home.tsx
+msgid "{0} wallpapers"
+msgstr "{0} 张壁纸"
+
 #: apps/mobile/src/features/create/chips-selector.tsx
 #: apps/mobile/src/features/create/preset-grid.tsx
 msgid "Nature"
@@ -1659,6 +1746,10 @@ msgstr "自然"
 #: apps/mobile/src/features/edit/EditModePicker.tsx
 msgid "Save as a creative preset"
 msgstr "保存为创意预设"
+
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Put the idea into words."
+msgstr "把灵感写下来。"
 
 #: apps/mobile/src/features/create/chips-selector.tsx
 msgid "Space"
@@ -1700,7 +1791,7 @@ msgstr "电影感艺术"
 msgid "Lumina"
 msgstr "Lumina"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Repeat password"
 msgstr "再次输入密码"
 
@@ -1717,7 +1808,7 @@ msgstr "例如：雨夜中的霓虹都市"
 msgid "Preview"
 msgstr "预览"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Reset password"
 msgstr "重置密码"
 
@@ -1733,6 +1824,11 @@ msgstr "扩展到屏幕比例"
 msgid "Extracting…"
 msgstr "正在提取…"
 
+#: apps/mobile/src/screens/wallpaper-preview.tsx
+#: apps/mobile/src/screens/wallpaper-preview.web.tsx
+msgid "Loading wallpaper…"
+msgstr "正在加载壁纸…"
+
 #: apps/mobile/src/features/edit/ImagePickerEntry.tsx
 msgid "Choose image"
 msgstr "选择图片"
@@ -1745,13 +1841,17 @@ msgstr "创建和管理壁纸需要账号。登录后可在不同设备之间同
 msgid "Dreamy"
 msgstr "梦幻"
 
+#: apps/mobile/src/screens/category-detail.tsx
+msgid "Back to Home"
+msgstr "返回首页"
+
 #: apps/mobile/src/features/create/generate-button.tsx
 msgid "Generate wallpaper"
 msgstr "生成壁纸"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Log in"
 msgstr "登录"
 
@@ -1759,11 +1859,11 @@ msgstr "登录"
 msgid "Nature art"
 msgstr "自然艺术"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Remember your password? "
 msgstr "记得密码？"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Or sign up with"
 msgstr "或使用以下方式注册"
 
@@ -1797,12 +1897,17 @@ msgid "Abstract"
 msgstr "抽象"
 
 #: apps/mobile/src/screens/library.tsx
+#: apps/mobile/src/screens/wallpaper-preview.tsx
 msgid "Apply, save, or share"
 msgstr "应用、保存或分享"
 
 #: apps/mobile/src/features/create/preset-grid.tsx
 msgid "Abstract art"
 msgstr "抽象艺术"
+
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Save to category"
+msgstr "保存到分类"
 
 #: apps/mobile/src/features/apply/useSaveAndShare.ts
 msgid "Sharing is unavailable on this device."
@@ -1812,7 +1917,7 @@ msgstr "此设备不支持分享。"
 msgid "Start with an image"
 msgstr "从图片开始"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
+#: apps/mobile/src/screens/sign-in.tsx
 msgid "Forgot password?"
 msgstr "忘记密码？"
 
@@ -1824,8 +1929,7 @@ msgstr "自定义预设已保存"
 msgid "Profile photo"
 msgstr "个人头像"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Verify"
 msgstr "验证"
 
@@ -1850,7 +1954,7 @@ msgstr "我的"
 #~ msgid "Enter the password reset code sent to your email."
 #~ msgstr "请输入发送到邮箱的密码重置验证码。"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Create password"
 msgstr "创建密码"
 
@@ -1863,8 +1967,8 @@ msgid "Language"
 msgstr "语言"
 
 #: apps/mobile/src/screens/home.tsx
-msgid "Create a new wallpaper from an idea, or transform one of your photos."
-msgstr "从一个想法创作新壁纸，或重新演绎你的照片。"
+#~ msgid "Create a new wallpaper from an idea, or transform one of your photos."
+#~ msgstr "从一个想法创作新壁纸，或重新演绎你的照片。"
 
 #: apps/mobile/src/features/edit/ImagePickerEntry.tsx
 msgid "The image module is incomplete. Install the latest development build."
@@ -1902,6 +2006,11 @@ msgstr "高清"
 msgid "Saved on this device"
 msgstr "保存在此设备上"
 
+#. placeholder {0}: categories.length
+#: apps/mobile/src/screens/home.tsx
+msgid "{0} categories"
+msgstr "{0} 个分类"
+
 #: apps/mobile/src/features/create/quality-selector.tsx
 msgid "Quick preview"
 msgstr "快速预览"
@@ -1910,7 +2019,7 @@ msgstr "快速预览"
 msgid "Your wallpaper is ready"
 msgstr "你的壁纸已生成"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Confirm password"
 msgstr "确认密码"
 
@@ -1934,7 +2043,7 @@ msgstr "关闭登录"
 msgid "Energetic"
 msgstr "活力"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Send reset code"
 msgstr "发送重置验证码"
 
@@ -1942,7 +2051,7 @@ msgstr "发送重置验证码"
 msgid "Enhance"
 msgstr "增强"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
+#: apps/mobile/src/screens/sign-in.tsx
 msgid "Sign-in failed."
 msgstr "登录失败。"
 
@@ -1950,7 +2059,7 @@ msgstr "登录失败。"
 msgid "Mood"
 msgstr "氛围"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
+#: apps/mobile/src/screens/sign-in.tsx
 msgid "Login"
 msgstr "登录"
 
@@ -1962,11 +2071,11 @@ msgstr "分享"
 msgid "Search wallpapers"
 msgstr "搜索壁纸"
 
-#: apps/mobile/src/app/(auth)/password-reset.tsx
+#: apps/mobile/src/screens/password-reset.tsx
 msgid "Enter your email address first."
 msgstr "请先输入邮箱地址。"
 
-#: apps/mobile/src/app/(auth)/sign-up.tsx
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Sign-up failed."
 msgstr "注册失败。"
 

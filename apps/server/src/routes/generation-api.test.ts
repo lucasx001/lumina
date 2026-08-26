@@ -26,6 +26,7 @@ describe('generation API', () => {
 
     const response = await app.request('/generate', {
       body: JSON.stringify({
+        category: 'Quiet nights',
         deviceId: 'device-123',
         height: 2400,
         mode: 'text2img',
@@ -40,6 +41,7 @@ describe('generation API', () => {
     expect(response.status).toBe(202);
     await expect(response.json()).resolves.toEqual({ jobId: 'job-1' });
     expect(jobs.records[0]).toMatchObject({
+      category: 'Quiet nights',
       deviceId: 'device-123',
       height: 2400,
       prompt: 'a calm night sky',
@@ -49,6 +51,7 @@ describe('generation API', () => {
     });
     expect(inputs).toEqual([
       expect.objectContaining({
+        category: 'Quiet nights',
         deviceId: 'device-123',
         presetId: 'preset_builtin_minimal',
         wallpaperId: 'job-1',
@@ -91,6 +94,7 @@ describe('generation API', () => {
     const request = () =>
       app.request('/generate', {
         body: JSON.stringify({
+          category: 'drafts',
           deviceId: 'device-rate-limited',
           height: 2400,
           mode: 'text2img',
@@ -250,9 +254,11 @@ describe('generation API', () => {
 });
 
 function createJobRepository(initialRecords: JobRecord[] = []): GenerationJobRepository & {
-  records: Array<JobRecord & { prompt?: string }>;
+  records: Array<JobRecord & { category: string; prompt?: string }>;
 } {
-  const records: Array<JobRecord & { prompt?: string }> = [...initialRecords];
+  const records: Array<JobRecord & { category: string; prompt?: string }> = initialRecords.map(
+    (record) => ({ ...record, category: 'test' }),
+  );
 
   return {
     records,
@@ -268,7 +274,7 @@ function createJobRepository(initialRecords: JobRecord[] = []): GenerationJobRep
         status: data.status,
         width: data.width,
       };
-      records.push(job);
+      records.push({ ...job, category: data.category });
       return job;
     },
     async findById(id) {

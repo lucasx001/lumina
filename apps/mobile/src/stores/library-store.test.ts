@@ -3,6 +3,7 @@ import type { WallpaperListItem } from '@/lib/api';
 import { useLibraryStore } from './library-store';
 
 const wallpaper: WallpaperListItem = {
+  category: 'Nature',
   createdAt: '2026-08-01T00:00:00.000Z',
   height: 2400,
   id: 'wallpaper-1',

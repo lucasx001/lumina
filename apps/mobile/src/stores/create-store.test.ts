@@ -8,6 +8,7 @@ describe('useCreateStore', () => {
   it('keeps text generation and image editing drafts in one typed client store', () => {
     const store = useCreateStore.getState();
 
+    store.setCategory('Quiet places');
     store.setIdea('A quiet lake at sunrise');
     store.setPresetId('preset-1');
     store.setChip('mood', '平静');
@@ -17,6 +18,7 @@ describe('useCreateStore', () => {
     store.setSourceImageUrl('https://example.com/source.jpg');
 
     expect(useCreateStore.getState()).toMatchObject({
+      category: 'Quiet places',
       chipValues: { mood: '平静' },
       idea: 'A quiet lake at sunrise',
       instruction: 'Keep the mountain silhouette',
@@ -34,6 +36,7 @@ describe('useCreateStore', () => {
     useCreateStore.getState().reset();
 
     expect(useCreateStore.getState()).toMatchObject({
+      category: '',
       chipValues: {},
       idea: '',
       instruction: '',

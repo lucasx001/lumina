@@ -2,36 +2,36 @@ import { Platform } from 'react-native';
 
 export const colors = {
   dark: {
-    accent: '#DF1F5A',
+    accent: '#C9824D',
     accentForeground: '#FFFFFF',
-    background: '#131521',
-    border: 'rgba(255, 255, 255, 0.12)',
-    card: '#1B1D2A',
-    error: '#FF6B81',
-    muted: '#252736',
-    mutedText: '#B7B7C2',
-    overlay: 'rgba(7, 8, 15, 0.82)',
-    primary: '#DF1F5A',
+    background: '#211A16',
+    border: '#4A3B31',
+    card: '#2A211C',
+    error: '#E06B67',
+    muted: '#372B24',
+    mutedText: '#C5B7AA',
+    overlay: 'rgba(20, 14, 10, 0.78)',
+    primary: '#C9824D',
     primaryForeground: '#FFFFFF',
-    ring: '#DF1F5A',
-    surface: '#171925',
-    text: '#F8F7FB',
+    ring: '#C9824D',
+    surface: '#261E19',
+    text: '#FFF9F1',
   },
   light: {
-    accent: '#D81B55',
+    accent: '#9B5B32',
     accentForeground: '#FFFFFF',
-    background: '#FAF7F9',
-    border: '#E8DDE3',
-    card: '#FFFFFF',
-    error: '#C9143F',
-    muted: '#F4EAF0',
-    mutedText: '#74666D',
-    overlay: 'rgba(19, 21, 33, 0.56)',
-    primary: '#D81B55',
+    background: '#FBF6EE',
+    border: '#DED2C3',
+    card: '#FFFDF8',
+    error: '#B33A3A',
+    muted: '#F1E3CF',
+    mutedText: '#7A6D63',
+    overlay: 'rgba(32, 25, 20, 0.48)',
+    primary: '#9B5B32',
     primaryForeground: '#FFFFFF',
-    ring: '#D81B55',
-    surface: '#FFF9FC',
-    text: '#20171C',
+    ring: '#9B5B32',
+    surface: '#FFFDF8',
+    text: '#201914',
   },
 } as const;
 
@@ -45,16 +45,16 @@ export const spacing = {
 } as const;
 
 export const radius = {
-  sm: 8,
-  md: 12,
-  lg: 16,
+  sm: 10,
+  md: 16,
+  lg: 24,
   xl: 24,
   full: 999,
 } as const;
 
 export const shadows = {
-  card: '0 1px 2px rgba(33, 9, 20, 0.08)',
-  raised: '0 12px 32px rgba(223, 31, 90, 0.18)',
+  card: '0 0 0 1px rgba(222, 210, 195, 0.45)',
+  raised: '0 20px 52px rgba(32, 25, 20, 0.12)',
 } as const;
 
 export const motion = {
@@ -65,9 +65,19 @@ export const motion = {
 
 export const appFontFamily = Platform.select({
   android: 'sans-serif',
-  default: 'system-ui',
+  default: 'Segoe UI',
   ios: 'System',
-  web: 'system-ui',
+  web: 'Avenir Next',
 });
 
-export type AppTheme = (typeof colors)[keyof typeof colors] & { fontFamily: string };
+export const displayFontFamily = Platform.select({
+  android: 'serif',
+  default: 'Georgia',
+  ios: 'Georgia',
+  web: 'Georgia',
+});
+
+export type AppTheme = (typeof colors)[keyof typeof colors] & {
+  displayFontFamily: string;
+  fontFamily: string;
+};

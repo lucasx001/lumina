@@ -11,20 +11,23 @@ export type ThemedTextProps = TextProps & {
 const variantStyles: Record<TextVariant, TextStyle> = {
   body: { fontSize: 16, lineHeight: 24 },
   caption: { fontSize: 13, lineHeight: 18 },
-  display: { fontSize: 36, fontWeight: '700', letterSpacing: -1.2, lineHeight: 42 },
+  display: { fontSize: 38, fontWeight: '700', letterSpacing: -1.4, lineHeight: 42 },
   label: { fontSize: 12, fontWeight: '600', letterSpacing: 0.8, lineHeight: 16 },
-  subtitle: { fontSize: 17, fontWeight: '600', letterSpacing: -0.2, lineHeight: 23 },
-  title: { fontSize: 28, fontWeight: '700', letterSpacing: -0.8, lineHeight: 34 },
+  subtitle: { fontSize: 19, fontWeight: '600', letterSpacing: -0.3, lineHeight: 24 },
+  title: { fontSize: 30, fontWeight: '700', letterSpacing: -1, lineHeight: 34 },
 };
 
 export function ThemedText({ style, variant = 'body', ...props }: ThemedTextProps) {
   const theme = useTheme();
+  const fontFamily = ['display', 'subtitle', 'title'].includes(variant)
+    ? theme.displayFontFamily
+    : theme.fontFamily;
 
   return (
     <Text
       selectable
       {...props}
-      style={[{ color: theme.text, fontFamily: theme.fontFamily }, variantStyles[variant], style]}
+      style={[{ color: theme.text, fontFamily }, variantStyles[variant], style]}
     />
   );
 }

@@ -15,7 +15,7 @@ const querySchema = z.object({
 });
 
 export type WallpaperListItem = {
-  category: string | null;
+  category: string;
   createdAt: Date;
   favorite: boolean;
   height: number | null;
@@ -107,16 +107,12 @@ async function createPrismaWallpaperRepository(): Promise<WallpaperRepository> {
         skip: (page - 1) * limit,
         take: limit + 1,
         where: {
-          ...(category ? { preset: { category } } : {}),
+          ...(category ? { category } : {}),
           deviceId,
           ...(favorite === undefined ? {} : { favorite }),
         },
-        include: { preset: { select: { category: true } } },
       });
-      return wallpapers.map(({ preset, ...wallpaper }) => ({
-        ...wallpaper,
-        category: preset?.category ?? null,
-      }));
+      return wallpapers;
     },
     async setFavorite({ deviceId, favorite, id }) {
       const updated = await prisma.wallpaper.updateMany({
@@ -128,15 +124,13 @@ async function createPrismaWallpaperRepository(): Promise<WallpaperRepository> {
       }
 
       const wallpaper = await prisma.wallpaper.findUnique({
-        include: { preset: { select: { category: true } } },
         where: { id },
       });
       if (!wallpaper) {
         return null;
       }
 
-      const { preset, ...item } = wallpaper;
-      return { ...item, category: preset?.category ?? null };
+      return wallpaper;
     },
   };
 }

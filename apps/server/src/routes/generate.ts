@@ -21,6 +21,7 @@ const userInputsSchema = z.object({
 });
 
 const generateRequestSchema = z.object({
+  category: z.string().trim().min(1).max(100),
   deviceId: z.string().trim().min(1).max(200).optional(),
   height: z.number().int().min(256).max(8_192),
   mode: z.enum(wallpaperModes),
@@ -44,6 +45,7 @@ export type JobRecord = {
 
 export type GenerationJobRepository = {
   create(data: {
+    category: string;
     deviceId?: string;
     height: number;
     mode: string;
@@ -106,6 +108,7 @@ export function createGenerateRoutes(dependencies: GenerateRouteDependencies = {
       );
     }
     const job = await jobs.create({
+      category: input.category,
       deviceId: input.deviceId,
       height: input.height,
       mode: input.mode,

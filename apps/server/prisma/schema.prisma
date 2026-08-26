@@ -44,6 +44,7 @@ model Preset {
 
 model Wallpaper {
   id             String   @id @default(cuid()) @map("id")
+  category       String   @map("category")
   deviceId       String?  @map("device_id")
   userId         String?  @map("user_id")
   user           User?    @relation(fields: [userId], references: [id])
@@ -65,6 +66,7 @@ model Wallpaper {
 
   @@index([userId])
   @@index([deviceId])
+  @@index([deviceId, category])
   @@index([presetId])
   @@index([deviceId, favorite])
   @@map("wallpaper")

@@ -24,9 +24,11 @@ type ExistingImageEditorProps = {
 
 export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   const { t } = useLingui();
+  const category = useCreateStore((state) => state.category);
   const instruction = useCreateStore((state) => state.instruction);
   const mode = useCreateStore((state) => state.mode);
   const sourceImageUrl = useCreateStore((state) => state.sourceImageUrl);
+  const setCategory = useCreateStore((state) => state.setCategory);
   const setInstruction = useCreateStore((state) => state.setInstruction);
   const setMode = useCreateStore((state) => state.setMode);
   const setSourceImageUrl = useCreateStore((state) => state.setSourceImageUrl);
@@ -56,6 +58,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
             ? 'Extract a reusable wallpaper style from this image.'
             : instruction;
     generation.generate({
+      category: category.trim(),
       height: deviceSize.targetHeight,
       mode: modeToRun,
       quality: 'hd',
@@ -92,6 +95,27 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   return (
     <ThemedView variant="card" style={{ gap: spacing.lg }}>
       <ImagePickerEntry onUploaded={setSourceImageUrl} sourceImageUrl={sourceImageUrl} />
+      <View style={{ gap: spacing.sm }}>
+        <ThemedText variant="label">
+          <Trans>Save to category</Trans>
+        </ThemedText>
+        <TextInput
+          accessibilityLabel={t`Wallpaper category`}
+          maxLength={100}
+          onChangeText={setCategory}
+          placeholder={t`For example: Quiet nights`}
+          placeholderTextColor={theme.mutedText}
+          style={{
+            borderColor: theme.border,
+            borderRadius: radius.md,
+            borderWidth: 1,
+            color: theme.text,
+            minHeight: 50,
+            paddingHorizontal: spacing.md,
+          }}
+          value={category}
+        />
+      </View>
       {sourceImageUrl ? <EditModePicker onSelect={setMode} selectedMode={mode} /> : null}
       {mode === 'edit' ? (
         <View style={{ gap: spacing.sm }}>
@@ -115,7 +139,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
             value={instruction}
           />
           <ActionButton
-            disabled={!instruction.trim() || generation.isGenerating}
+            disabled={!category.trim() || !instruction.trim() || generation.isGenerating}
             label={t`Start editing`}
             onPress={() => run('edit')}
           />
@@ -123,6 +147,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
       ) : null}
       {mode === 'style' ? (
         <StyleToPresetForm
+          disabled={!category.trim()}
           instruction={instruction}
           isSubmitting={generation.isGenerating}
           onChangeInstruction={setInstruction}
@@ -131,7 +156,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
       ) : null}
       {mode === 'outpaint' || mode === 'upscale' ? (
         <ActionButton
-          disabled={generation.isGenerating}
+          disabled={!category.trim() || generation.isGenerating}
           label={mode === 'outpaint' ? t`Extend to screen ratio` : t`Enhance wallpaper`}
           onPress={() => run(mode)}
         />

@@ -1,7 +1,7 @@
 import type { AppIconName } from '@/components/ui/app-icon';
 
 export const tabIcons = {
-  create: 'sparkles',
-  library: 'library',
+  add: 'plus',
+  home: 'home',
   profile: 'profile',
-} as const satisfies Record<'create' | 'library' | 'profile', AppIconName>;
+} as const satisfies Record<'add' | 'home' | 'profile', AppIconName>;

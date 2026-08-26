@@ -1,3 +1,6 @@
+-- CreateSchema
+CREATE SCHEMA IF NOT EXISTS "public";
+
 -- CreateTable
 CREATE TABLE "user" (
     "id" TEXT NOT NULL,
@@ -33,6 +36,8 @@ CREATE TABLE "preset" (
 -- CreateTable
 CREATE TABLE "wallpaper" (
     "id" TEXT NOT NULL,
+    "category" TEXT NOT NULL,
+    "device_id" TEXT,
     "user_id" TEXT,
     "preset_id" TEXT,
     "mode" TEXT NOT NULL,
@@ -42,6 +47,8 @@ CREATE TABLE "wallpaper" (
     "width" INTEGER,
     "height" INTEGER,
     "status" TEXT NOT NULL DEFAULT 'pending',
+    "quality" TEXT NOT NULL DEFAULT 'hd',
+    "favorite" BOOLEAN NOT NULL DEFAULT false,
     "provider_task" TEXT,
     "error" TEXT,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -66,7 +73,16 @@ CREATE INDEX "preset_owner_user_id_idx" ON "preset"("owner_user_id");
 CREATE INDEX "wallpaper_user_id_idx" ON "wallpaper"("user_id");
 
 -- CreateIndex
+CREATE INDEX "wallpaper_device_id_idx" ON "wallpaper"("device_id");
+
+-- CreateIndex
+CREATE INDEX "wallpaper_device_id_category_idx" ON "wallpaper"("device_id", "category");
+
+-- CreateIndex
 CREATE INDEX "wallpaper_preset_id_idx" ON "wallpaper"("preset_id");
+
+-- CreateIndex
+CREATE INDEX "wallpaper_device_id_favorite_idx" ON "wallpaper"("device_id", "favorite");
 
 -- AddForeignKey
 ALTER TABLE "preset" ADD CONSTRAINT "preset_owner_user_id_fkey" FOREIGN KEY ("owner_user_id") REFERENCES "user"("id") ON DELETE SET NULL ON UPDATE CASCADE;

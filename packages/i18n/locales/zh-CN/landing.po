@@ -12,167 +12,291 @@ msgstr ""
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
 
-#. js-lingui-explicit-id
-#: apps/landing/src/components/android-cta.tsx
-msgid "common.androidCta"
-msgstr "下载 Android"
-
-#. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.closing.eyebrow"
+msgid "Turn a feeling into your wallpaper."
+msgstr "把一种感受，变成你的壁纸。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Meet a world you love every time you unlock."
+msgstr "每次解锁，都遇见一个喜欢的世界。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "YOUR SCREEN, YOUR WORLD"
 msgstr "你的屏幕，你的世界"
 
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Workflow"
+msgstr "创作流程"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Preview the result, then save, share, or apply it to Android."
+msgstr "预览最终效果，再保存、分享或应用到 Android。"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/components/android-cta.tsx
+#~ msgid "common.androidCta"
+#~ msgstr "下载 Android"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Save it, share it, and come back anytime."
+msgstr "保存、分享，随时回来看看。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Three steps from a passing thought to a place worth returning to."
+msgstr "三步，把一闪而过的念头变成值得反复回看的风景。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Keep describing changes, or start with an image and make it feel more like you."
+msgstr "继续描述想要的变化，或从一张图片开始，让它更像你。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Refine the details"
+msgstr "调整细节"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Lumina — AI wallpaper, made personal."
+msgstr "Lumina — 为你而生的 AI 壁纸。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Turn a sentence into a wallpaper."
+msgstr "把一句话变成一张壁纸。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Describe an idea"
+msgstr "描述灵感"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "中文 / English"
+msgstr "中文 / English"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Create from a text idea and let color, texture, and mood take shape."
+msgstr "从一段文字出发，让颜色、质感和氛围慢慢成形。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Skip to content"
+msgstr "跳到正文"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Create without friction, organize by feeling, and revisit whenever you want."
+msgstr "轻松创作，按感受归类，并在任何时候重新发现它们。"
+
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.closing.title"
-msgstr "让每次解锁，都遇见你喜欢的世界。"
+#~ msgid "landing.closing.eyebrow"
+#~ msgstr "你的屏幕，你的世界"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.closing.title"
+#~ msgstr "让每次解锁，都遇见你喜欢的世界。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/components/device-preview.tsx
-msgid "landing.devicePreview.date"
-msgstr "周三 · 7月29日"
+#~ msgid "landing.devicePreview.date"
+#~ msgstr "周三 · 7月29日"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.create.description"
-msgstr "从一句文字灵感开始，让色彩、质感和氛围逐渐清晰。"
+#~ msgid "landing.feature.create.description"
+#~ msgstr "从一句文字灵感开始，让色彩、质感和氛围逐渐清晰。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.create.title"
-msgstr "把一句描述，变成一张壁纸。"
+#~ msgid "landing.feature.create.title"
+#~ msgstr "把一句描述，变成一张壁纸。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.edit.description"
-msgstr "选择已有图片并描述想要的变化，让熟悉的素材拥有新的表达。"
+#~ msgid "landing.feature.edit.description"
+#~ msgstr "选择已有图片并描述想要的变化，让熟悉的素材拥有新的表达。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.edit.title"
-msgstr "从已有画面，继续向前。"
+#~ msgid "landing.feature.edit.title"
+#~ msgstr "从已有画面，继续向前。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.keep.description"
-msgstr "把喜欢的作品保存到设备、分享给朋友，或留在作品库中继续使用。"
+#~ msgid "landing.feature.keep.description"
+#~ msgstr "把喜欢的作品保存到设备、分享给朋友，或留在作品库中继续使用。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.keep.title"
-msgstr "保存、分享，也随时回来看看。"
+#~ msgid "landing.feature.keep.title"
+#~ msgstr "保存、分享，也随时回来看看。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.preview.description"
-msgstr "用贴近设备比例的预览检查构图，再决定如何应用到 Android。"
+#~ msgid "landing.feature.preview.description"
+#~ msgstr "用贴近设备比例的预览检查构图，再决定如何应用到 Android。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.feature.preview.title"
-msgstr "先在屏幕里，看见最终效果。"
+#~ msgid "landing.feature.preview.title"
+#~ msgstr "先在屏幕里，看见最终效果。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.features.eyebrow"
-msgstr "你可以做到"
+#~ msgid "landing.features.eyebrow"
+#~ msgstr "你的个人壁纸库"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.features.summary"
-msgstr "围绕一张壁纸，保留从创作到应用真正需要的动作。"
+#~ msgid "landing.features.summary"
+#~ msgstr "分类将相近的壁纸放在一起，流畅的砖块布局则让画面本身成为主角。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.features.title"
-msgstr "创作的每一步，都为你的屏幕而存在。"
+#~ msgid "landing.features.title"
+#~ msgstr "为你创造的每一种氛围，留一个位置。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.footer.tagline"
-msgstr "Lumina — 为你而作的 AI 壁纸。"
+#~ msgid "landing.footer.tagline"
+#~ msgstr "Lumina — 为你而作的 AI 壁纸。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.hero.eyebrow"
-msgstr "AI 壁纸 · 为你而作"
+#~ msgid "landing.hero.eyebrow"
+#~ msgstr "AI 壁纸 · 为你而作"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.hero.note"
-msgstr "为 Android 而作"
+#~ msgid "landing.hero.note"
+#~ msgstr "为 Android 而作"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.hero.summary"
-msgstr "从一句描述开始，创作、调整并预览一张真正属于你的壁纸。"
+#~ msgid "landing.hero.summary"
+#~ msgstr "描述一种心情，Lumina 帮你创作、收藏，让它成为日常的一部分。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.hero.title"
-msgstr "把想象留在屏幕上。"
+#~ msgid "landing.hero.title"
+#~ msgstr "把一种感受，变成你的壁纸。"
 
 #. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.nav.features"
+#~ msgid "landing.nav.features"
+#~ msgstr "功能"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.nav.language"
+#~ msgstr "中文 / English"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.nav.workflow"
+#~ msgstr "创作流程"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.skip"
+#~ msgstr "跳到主要内容"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.apply.description"
+#~ msgstr "在设备画框中确认效果，再保存、分享或应用到 Android 屏幕。"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.apply.title"
+#~ msgstr "预览并应用"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.describe.description"
+#~ msgstr "写下颜色、光线与氛围，让一个念头成为壁纸的起点。"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.describe.title"
+#~ msgstr "描述灵感"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.eyebrow"
+#~ msgstr "一个安静的小仪式"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.refine.description"
+#~ msgstr "继续描述变化，或从已有图片出发，把画面调整到更像你。"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.refine.title"
+#~ msgstr "细致调整"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.summary"
+#~ msgstr "轻松创作，按感受归类，并在任何时候重新发现它们。"
+
+#. js-lingui-explicit-id
+#: apps/landing/src/app/[locale]/page.tsx
+#~ msgid "landing.workflow.title"
+#~ msgstr "三步，把一闪而过的念头变成值得反复回看的风景。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Collections keep related wallpapers together, while a fluid masonry view keeps the images themselves in focus."
+msgstr "分类将相近的壁纸放在一起，流畅的砖块布局则让画面本身成为主角。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "A home for every atmosphere you create."
+msgstr "为你创造的每一种氛围，留一个位置。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Write down color, light, and mood to give an idea a place to start."
+msgstr "写下颜色、光线和心情，为灵感找到一个起点。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "A SMALL, QUIET RITUAL"
+msgstr "一个安静的小仪式"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Choose an image, describe the change, and give familiar material a new expression."
+msgstr "选择一张图片，描述变化，让熟悉的素材拥有新的表达。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Take an existing image further."
+msgstr "让已有图片再向前一步。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "See the final effect on a screen first."
+msgstr "先在屏幕上看看最终效果。"
+
+#: apps/landing/src/app/[locale]/page.tsx
+msgid "Features"
 msgstr "功能"
 
-#. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.nav.language"
-msgstr "中文 / English"
+msgid "Describe a mood. Lumina helps you create it, collect it, and make it part of every day."
+msgstr "描述一种心情，Lumina 帮你创作、收藏，让它成为日常的一部分。"
 
-#. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.nav.workflow"
-msgstr "创作流程"
+msgid "Made for Android"
+msgstr "为 Android 打造"
 
-#. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.skip"
-msgstr "跳到主要内容"
+msgid "Keep favorite work on your device, share it with friends, or revisit it in your library."
+msgstr "把喜欢的作品留在设备上、分享给朋友，或随时回到壁纸库重温。"
 
-#. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.apply.description"
-msgstr "在设备画框中确认效果，再保存、分享或应用到 Android 屏幕。"
+msgid "Check the composition in a device-shaped preview before you apply it."
+msgstr "应用之前，先在设备预览中检查画面构图。"
 
-#. js-lingui-explicit-id
+#: apps/landing/src/components/android-cta.tsx
+msgid "Download for Android"
+msgstr "下载 Android 版"
+
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.apply.title"
+msgid "Preview and apply"
 msgstr "预览并应用"
 
-#. js-lingui-explicit-id
 #: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.describe.description"
-msgstr "写下颜色、光线与氛围，让一个念头成为壁纸的起点。"
-
-#. js-lingui-explicit-id
-#: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.describe.title"
-msgstr "描述灵感"
-
-#. js-lingui-explicit-id
-#: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.eyebrow"
-msgstr "创作流程"
-
-#. js-lingui-explicit-id
-#: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.refine.description"
-msgstr "继续描述变化，或从已有图片出发，把画面调整到更像你。"
-
-#. js-lingui-explicit-id
-#: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.refine.title"
-msgstr "细致调整"
-
-#. js-lingui-explicit-id
-#: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.summary"
-msgstr "三个清晰的步骤，让灵感从文字走进每天都会看见的屏幕。"
-
-#. js-lingui-explicit-id
-#: apps/landing/src/app/[locale]/page.tsx
-msgid "landing.workflow.title"
-msgstr "从灵感，到每天看见的世界。"
+msgid "YOUR PERSONAL LIBRARY"
+msgstr "你的个人壁纸库"

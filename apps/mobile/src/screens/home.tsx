@@ -1,203 +1,254 @@
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
+import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
+import { useMemo } from 'react';
+import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 
 import { ErrorState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { AppIcon } from '@/components/ui/app-icon';
 import { radius, spacing } from '@/constants/theme';
-import { ChipsSelector, type CreateChipField } from '@/features/create/chips-selector';
-import { GenerateButton } from '@/features/create/generate-button';
-import { IdeaInput } from '@/features/create/idea-input';
-import { PresetGrid } from '@/features/create/preset-grid';
-import { QualitySelector } from '@/features/create/quality-selector';
-import { ResultView } from '@/features/create/result-view';
-import { ExistingImageEditor } from '@/features/edit/ExistingImageEditor';
-import { useGenerate } from '@/hooks/use-generate';
-import { useDeviceSize } from '@/lib/useDeviceSize';
+import { useWallpapers } from '@/features/library/use-wallpapers';
 import { useTheme } from '@/hooks/use-theme';
-import { useCreateStore } from '@/stores/create-store';
+import type { WallpaperListItem } from '@/lib/api';
+
+type WallpaperCategory = { items: WallpaperListItem[]; name: string };
 
 export function HomeScreen() {
   const { t } = useLingui();
+  const router = useRouter();
   const theme = useTheme();
-  const [workspaceMode, setWorkspaceMode] = useState<'create' | 'edit'>('create');
-  const deviceSize = useDeviceSize();
-  const idea = useCreateStore((state) => state.idea);
-  const presetId = useCreateStore((state) => state.presetId);
-  const chipValues = useCreateStore((state) => state.chipValues);
-  const quality = useCreateStore((state) => state.quality);
-  const setIdea = useCreateStore((state) => state.setIdea);
-  const setPresetId = useCreateStore((state) => state.setPresetId);
-  const setChip = useCreateStore((state) => state.setChip);
-  const setQuality = useCreateStore((state) => state.setQuality);
-  const generation = useGenerate();
-  const trimmedIdea = idea.trim();
-  const generationSucceeded =
-    generation.job?.status === 'succeeded' && Boolean(generation.job.resultImageUrl);
-
-  function updateChip(field: CreateChipField, value: string | undefined) {
-    setChip(field, value);
-  }
-
-  function generateWallpaper() {
-    generation.generate({
-      height: deviceSize.targetHeight,
-      mode: 'text2img',
-      presetId,
-      quality,
-      userInputs: { idea: trimmedIdea, ...chipValues },
-      width: deviceSize.targetWidth,
-    });
-  }
+  const wallpapers = useWallpapers({}, 50);
+  const categories = useMemo(() => groupWallpapers(wallpapers.wallpapers), [wallpapers.wallpapers]);
+  const error = wallpapers.deviceIdError ?? wallpapers.error ?? wallpapers.favoriteError;
 
   return (
     <ScrollView
-      contentContainerStyle={{ gap: spacing.lg, padding: spacing.md, paddingBottom: spacing.xxl }}
+      contentContainerStyle={{
+        flexGrow: categories.length ? undefined : 1,
+        gap: spacing.lg,
+        padding: spacing.md,
+        paddingBottom: spacing.xxl,
+      }}
       contentInsetAdjustmentBehavior="automatic"
-      keyboardShouldPersistTaps="handled"
+      refreshControl={
+        <RefreshControl
+          onRefresh={() => void wallpapers.refetch()}
+          refreshing={wallpapers.isRefetching}
+          tintColor={theme.primary}
+        />
+      }
+      style={{ backgroundColor: theme.background, flex: 1 }}
     >
-      <View style={{ gap: spacing.xs, paddingHorizontal: spacing.xs }}>
-        <ThemedText variant="display">
-          <Trans>Make your screen yours</Trans>
-        </ThemedText>
-        <ThemedText style={{ color: theme.mutedText }} variant="body">
-          <Trans>Create a new wallpaper from an idea, or transform one of your photos.</Trans>
-        </ThemedText>
-      </View>
-
-      <View
-        accessibilityRole="tablist"
-        style={{
-          backgroundColor: theme.surface,
-          borderColor: theme.border,
-          borderCurve: 'continuous',
-          borderRadius: radius.full,
-          borderWidth: 1,
-          flexDirection: 'row',
-          gap: spacing.xs,
-          padding: spacing.xs,
-        }}
-      >
-        <WorkspaceModeButton
-          icon="sparkles"
-          label={t`Create`}
-          onPress={() => setWorkspaceMode('create')}
-          selected={workspaceMode === 'create'}
-        />
-        <WorkspaceModeButton
-          icon="image"
-          label={t`Edit a photo`}
-          onPress={() => setWorkspaceMode('edit')}
-          selected={workspaceMode === 'edit'}
-        />
-      </View>
-
-      {generationSucceeded && generation.job ? (
-        <ResultView job={generation.job} onRegenerate={generation.regenerate} />
-      ) : workspaceMode === 'create' ? (
-        <ThemedView variant="card" style={{ gap: spacing.xl }}>
-          <PresetGrid onSelect={setPresetId} selectedPresetId={presetId} />
-          <ChipsSelector onChange={updateChip} values={chipValues} />
-          <IdeaInput onChangeText={setIdea} value={idea} />
-          <QualitySelector onChange={setQuality} value={quality} />
-          {generation.cooldownSeconds > 0 && !generation.isGenerating ? (
-            <ThemedText selectable variant="caption">
-              <Trans>
-                To avoid duplicate requests, try again in {generation.cooldownSeconds} seconds.
-              </Trans>
-            </ThemedText>
-          ) : null}
-          {generation.error ? (
-            <ErrorState message={generation.error.message} onRetry={generation.retry} />
-          ) : null}
-          <GenerateButton
-            disabled={!trimmedIdea || generation.isGenerating || generation.cooldownSeconds > 0}
-            isGenerating={generation.isGenerating}
-            onPress={generateWallpaper}
-          />
-        </ThemedView>
-      ) : (
-        <ExistingImageEditor deviceSize={deviceSize} />
-      )}
-
-      <ThemedView
-        variant="card"
-        style={{
-          alignItems: 'center',
-          borderRadius: radius.md,
-          flexDirection: 'row',
-          gap: spacing.md,
-          justifyContent: 'space-between',
-          padding: spacing.md,
-        }}
-      >
-        <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
-          <View
-            style={{
-              alignItems: 'center',
-              backgroundColor: theme.muted,
-              borderRadius: radius.full,
-              height: 36,
-              justifyContent: 'center',
-              width: 36,
-            }}
-          >
-            <AppIcon color={theme.primary} name="image" size={18} />
-          </View>
-          <ThemedText variant="label">
-            <Trans>Optimized for this device</Trans>
+      <View style={{ flexDirection: 'row', gap: spacing.md, justifyContent: 'space-between' }}>
+        <View style={{ flex: 1, gap: spacing.xs }}>
+          <ThemedText style={{ color: theme.primary }} variant="label">
+            <Trans>Your wallpaper space</Trans>
+          </ThemedText>
+          <ThemedText variant="title">
+            <Trans>Ideas, carefully kept.</Trans>
           </ThemedText>
         </View>
-        <ThemedText style={{ color: theme.primary, fontVariant: ['tabular-nums'] }} variant="label">
-          {deviceSize.targetWidth} × {deviceSize.targetHeight}
-        </ThemedText>
-      </ThemedView>
+        {categories.length ? (
+          <Pressable
+            accessibilityLabel={t`Create wallpaper`}
+            accessibilityRole="button"
+            onPress={() => router.push('/create-wallpaper')}
+            style={({ pressed }) => ({
+              alignItems: 'center',
+              backgroundColor: theme.surface,
+              borderColor: theme.border,
+              borderRadius: radius.full,
+              borderWidth: 1,
+              height: 48,
+              justifyContent: 'center',
+              opacity: pressed ? 0.75 : 1,
+              width: 48,
+            })}
+          >
+            <AppIcon color={theme.primary} name="plus" size={22} />
+          </Pressable>
+        ) : null}
+      </View>
+
+      {error ? (
+        <ErrorState message={error.message} onRetry={() => void wallpapers.refetch()} />
+      ) : null}
+      {!error && !categories.length ? (
+        <HomeEmptyState onCreate={() => router.push('/create-wallpaper')} />
+      ) : null}
+      {categories.length ? (
+        <View style={{ gap: spacing.md }}>
+          <View
+            style={{
+              alignItems: 'flex-end',
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+            }}
+          >
+            <ThemedText variant="subtitle">
+              <Trans>My categories</Trans>
+            </ThemedText>
+            <ThemedText style={{ color: theme.mutedText }} variant="caption">
+              <Trans>{categories.length} categories</Trans>
+            </ThemedText>
+          </View>
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
+            {categories.map((category) => (
+              <CategoryCard
+                category={category}
+                key={category.name}
+                onPress={() =>
+                  router.push({
+                    params: { category: category.name },
+                    pathname: '/category/[category]',
+                  })
+                }
+              />
+            ))}
+          </View>
+        </View>
+      ) : null}
     </ScrollView>
   );
 }
 
-function WorkspaceModeButton({
-  icon,
-  label,
-  onPress,
-  selected,
-}: {
-  icon: 'image' | 'sparkles';
-  label: string;
-  onPress: () => void;
-  selected: boolean;
-}) {
+function HomeEmptyState({ onCreate }: { onCreate: () => void }) {
   const theme = useTheme();
 
   return (
+    <View style={{ alignItems: 'center', flex: 1, gap: spacing.lg, justifyContent: 'center' }}>
+      <View
+        style={{
+          backgroundColor: theme.muted,
+          borderColor: theme.border,
+          borderRadius: radius.xl,
+          borderWidth: 1,
+          height: 190,
+          overflow: 'hidden',
+          transform: [{ rotate: '-3deg' }],
+          width: 154,
+        }}
+      >
+        <View
+          style={{
+            borderColor: 'rgba(32, 25, 20, 0.18)',
+            borderRadius: radius.full,
+            borderWidth: 1,
+            height: 112,
+            left: 23,
+            position: 'absolute',
+            top: 34,
+            width: 94,
+          }}
+        />
+        <View
+          style={{
+            backgroundColor: 'rgba(155, 91, 50, 0.18)',
+            borderRadius: radius.full,
+            bottom: 22,
+            height: 54,
+            position: 'absolute',
+            right: 18,
+            width: 54,
+          }}
+        />
+      </View>
+      <View style={{ alignItems: 'center', gap: spacing.sm, maxWidth: 300 }}>
+        <ThemedText style={{ textAlign: 'center' }} variant="title">
+          <Trans>Start with an idea you cannot quite explain.</Trans>
+        </ThemedText>
+        <ThemedText style={{ color: theme.mutedText, textAlign: 'center' }} variant="body">
+          <Trans>Tell Lumina a color, a mood, or a moment. We will shape it for this screen.</Trans>
+        </ThemedText>
+      </View>
+      <Pressable
+        accessibilityRole="button"
+        onPress={onCreate}
+        style={({ pressed }) => ({
+          alignItems: 'center',
+          backgroundColor: theme.surface,
+          borderColor: theme.border,
+          borderRadius: radius.md,
+          borderWidth: 1,
+          flexDirection: 'row',
+          gap: spacing.sm,
+          minHeight: 50,
+          opacity: pressed ? 0.76 : 1,
+          paddingHorizontal: spacing.lg,
+        })}
+        testID="home-empty-create"
+      >
+        <AppIcon color={theme.primary} name="plus" />
+        <ThemedText variant="label">
+          <Trans>Create your first wallpaper</Trans>
+        </ThemedText>
+      </Pressable>
+    </View>
+  );
+}
+
+function CategoryCard({ category, onPress }: { category: WallpaperCategory; onPress: () => void }) {
+  const { t } = useLingui();
+  const theme = useTheme();
+  const previews = category.items.filter((item) => item.resultImageUrl).slice(0, 2);
+
+  return (
     <Pressable
-      accessibilityRole="tab"
-      accessibilityState={{ selected }}
+      accessibilityLabel={t`Open ${category.name}`}
+      accessibilityRole="button"
       onPress={onPress}
       style={({ pressed }) => ({
-        alignItems: 'center',
-        backgroundColor: selected ? theme.primary : 'transparent',
-        borderCurve: 'continuous',
-        borderRadius: radius.full,
-        flex: 1,
-        flexDirection: 'row',
-        gap: spacing.sm,
-        justifyContent: 'center',
-        minHeight: 48,
-        opacity: pressed ? 0.82 : 1,
-        paddingHorizontal: spacing.md,
-        transform: [{ scale: pressed ? 0.98 : 1 }],
+        backgroundColor: theme.card,
+        borderColor: theme.border,
+        borderRadius: radius.md,
+        borderWidth: 1,
+        minWidth: 150,
+        opacity: pressed ? 0.78 : 1,
+        overflow: 'hidden',
+        transform: [{ scale: pressed ? 0.985 : 1 }],
+        width: '48.5%',
       })}
     >
-      <AppIcon color={selected ? theme.primaryForeground : theme.mutedText} name={icon} />
-      <ThemedText
-        style={{ color: selected ? theme.primaryForeground : theme.text, fontWeight: '600' }}
-        variant="body"
-      >
-        {label}
-      </ThemedText>
+      <View style={{ backgroundColor: theme.muted, flexDirection: 'row', gap: 2, height: 132 }}>
+        {[0, 1].map((index) =>
+          previews[index]?.resultImageUrl ? (
+            <Image
+              accessibilityLabel={t`Wallpaper preview`}
+              contentFit="cover"
+              key={previews[index].id}
+              source={{ uri: previews[index].resultImageUrl }}
+              style={{ flex: 1 }}
+            />
+          ) : (
+            <View
+              key={index}
+              style={{
+                backgroundColor: index ? 'rgba(155, 91, 50, 0.22)' : theme.muted,
+                flex: 1,
+              }}
+            />
+          ),
+        )}
+      </View>
+      <View style={{ gap: 3, padding: spacing.sm + 4 }}>
+        <ThemedText numberOfLines={1} variant="subtitle">
+          {category.name}
+        </ThemedText>
+        <ThemedText style={{ color: theme.mutedText }} variant="caption">
+          <Trans>{category.items.length} wallpapers</Trans>
+        </ThemedText>
+      </View>
     </Pressable>
   );
+}
+
+function groupWallpapers(items: WallpaperListItem[]): WallpaperCategory[] {
+  const groups = new Map<string, WallpaperListItem[]>();
+  for (const item of items) {
+    const name = item.category;
+    groups.set(name, [...(groups.get(name) ?? []), item]);
+  }
+
+  return [...groups.entries()].map(([name, groupedItems]) => ({ items: groupedItems, name }));
 }

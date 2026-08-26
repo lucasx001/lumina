@@ -112,7 +112,7 @@ export function ProfileScreen() {
         <ProfileMenuRow
           icon="library"
           label={t`My wallpapers`}
-          onPress={() => router.navigate('/library')}
+          onPress={() => router.navigate('/')}
         />
         <ProfileMenuRow
           expanded={expandedInformation === 'about'}

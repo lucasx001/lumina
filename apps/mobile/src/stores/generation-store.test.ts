@@ -3,6 +3,7 @@ import { ApiError, type GenerateRequest } from '@/lib/api';
 import { clientCooldownMs, useGenerationStore } from './generation-store';
 
 const request: GenerateRequest = {
+  category: 'Aurora',
   height: 2400,
   mode: 'text2img',
   quality: 'draft',

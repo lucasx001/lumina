@@ -11,6 +11,7 @@ describe('runWallpaperGraph', () => {
 
     const wallpaper = await runWallpaperGraph(
       {
+        category: 'minimal',
         height: 2400,
         mode: 'text2img',
         presetId: 'preset-minimal',
@@ -37,6 +38,7 @@ describe('runWallpaperGraph', () => {
 
     await runWallpaperGraph(
       {
+        category: 'ocean',
         height: 2400,
         mode: 'outpaint',
         sourceImageUrl: 'https://source.example/image.png',
@@ -55,6 +57,7 @@ describe('runWallpaperGraph', () => {
 
     await runWallpaperGraph(
       {
+        category: 'custom styles',
         clerkUserId: 'user_clerk_123',
         height: 2400,
         mode: 'style',
@@ -81,6 +84,7 @@ describe('runWallpaperGraph', () => {
 
     const wallpaper = await runWallpaperGraph(
       {
+        category: 'warm tones',
         height: 2400,
         mode: 'text2img',
         userInputs: { tone: 'warm' },
@@ -98,6 +102,7 @@ describe('runWallpaperGraph', () => {
 
     await runWallpaperGraph(
       {
+        category: 'drafts',
         height: 2400,
         mode: 'text2img',
         quality: 'draft',
@@ -116,6 +121,7 @@ describe('runWallpaperGraph', () => {
     await expect(
       runWallpaperGraph(
         {
+          category: 'night skies',
           height: 2400,
           mode: 'text2img',
           userInputs: { idea: 'a calm night sky' },
@@ -135,6 +141,7 @@ describe('runWallpaperGraph', () => {
     await expect(
       runWallpaperGraph(
         {
+          category: 'night skies',
           height: 2400,
           mode: 'text2img',
           userInputs: { idea: 'a calm night sky' },

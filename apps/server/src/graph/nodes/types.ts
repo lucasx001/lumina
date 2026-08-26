@@ -23,6 +23,7 @@ export type CustomPresetData = {
 
 export type WallpaperRepository = {
   create(data: {
+    category: string;
     deviceId?: string;
     mode: string;
     presetId?: string;

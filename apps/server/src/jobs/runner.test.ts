@@ -11,6 +11,7 @@ describe('generation runner', () => {
     });
 
     await runner.run({
+      category: 'night skies',
       height: 2400,
       mode: 'text2img',
       userInputs: { idea: 'a calm night sky' },
@@ -39,6 +40,7 @@ describe('generation runner', () => {
     );
 
     await runner.run({
+      category: 'retries',
       height: 2400,
       mode: 'text2img',
       userInputs: { idea: 'retry wallpaper' },

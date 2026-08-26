@@ -10,7 +10,11 @@ export interface AndroidCtaProps {
 
 export function AndroidCta({ className, compact = false }: AndroidCtaProps): React.JSX.Element {
   const href = getAndroidDownloadUrl();
-  const ctaClassName = [className, compact ? 'android-cta--compact' : undefined]
+  const ctaClassName = [
+    'inline-flex w-max cursor-pointer items-center justify-center rounded-full border border-[#201914] bg-[#201914] font-semibold text-[#fffdf8] transition duration-200 hover:-translate-y-0.5 hover:border-[#9b5b32] hover:bg-[#9b5b32] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#9b5b32]',
+    compact ? 'min-h-10 px-4 py-2 text-xs' : 'min-h-12 px-6 py-2.5',
+    className,
+  ]
     .filter(Boolean)
     .join(' ');
 
@@ -18,7 +22,7 @@ export function AndroidCta({ className, compact = false }: AndroidCtaProps): Rea
     return (
       <a className={ctaClassName} href={href} rel="noreferrer" target="_blank">
         <span>
-          <Trans id="common.androidCta">Download for Android</Trans>
+          <Trans>Download for Android</Trans>
         </span>
       </a>
     );
@@ -27,7 +31,7 @@ export function AndroidCta({ className, compact = false }: AndroidCtaProps): Rea
   return (
     <button className={ctaClassName} type="button">
       <span>
-        <Trans id="common.androidCta">Download for Android</Trans>
+        <Trans>Download for Android</Trans>
       </span>
     </button>
   );

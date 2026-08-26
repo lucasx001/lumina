@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro';
-import { Tabs } from 'expo-router';
+import { router, Tabs } from 'expo-router';
+import { View } from 'react-native';
 
 import { AppIcon } from '@/components/ui/app-icon';
 import { useTheme } from '@/hooks/use-theme';
@@ -28,18 +29,40 @@ export default function TabLayout() {
         name="(create)"
         options={{
           tabBarIcon: ({ color, size }) => (
-            <AppIcon color={color} name={tabIcons.create} size={size} />
+            <AppIcon color={color} name={tabIcons.home} size={size} />
           ),
-          title: t`Create`,
+          title: t`Home`,
         }}
       />
       <Tabs.Screen
-        name="library"
+        listeners={{
+          tabPress: (event) => {
+            event.preventDefault();
+            router.push('/create-wallpaper');
+          },
+        }}
+        name="(add)"
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <AppIcon color={color} name={tabIcons.library} size={size} />
+          tabBarIcon: () => (
+            <View
+              style={{
+                alignItems: 'center',
+                backgroundColor: theme.primary,
+                borderColor: theme.primary,
+                borderRadius: 999,
+                borderWidth: 1,
+                boxShadow: '0 10px 24px rgba(155, 91, 50, 0.3)',
+                height: 58,
+                justifyContent: 'center',
+                transform: [{ translateY: -13 }],
+                width: 58,
+              }}
+            >
+              <AppIcon color={theme.primaryForeground} name={tabIcons.add} size={24} />
+            </View>
           ),
-          title: t`Library`,
+          tabBarLabel: () => null,
+          title: t`Add`,
         }}
       />
       <Tabs.Screen
@@ -51,6 +74,7 @@ export default function TabLayout() {
           title: t`Profile`,
         }}
       />
+      <Tabs.Screen name="library" options={{ href: null }} />
     </Tabs>
   );
 }

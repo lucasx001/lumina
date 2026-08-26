@@ -14,6 +14,7 @@ jest.mock('expo-image', () => {
 
 describe('WallpaperDetail', () => {
   const wallpaper = {
+    category: 'Nature',
     createdAt: '2026-07-26T00:00:00.000Z',
     height: 2400,
     id: 'wallpaper-1',
