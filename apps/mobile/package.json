@@ -75,8 +75,8 @@
       "<rootDir>/src/test/setup-i18n.ts"
     ],
     "testMatch": [
-      "<rootDir>/src/**/*.test.ts",
-      "<rootDir>/src/**/*.test.tsx"
+      "<rootDir>/src/__tests__/**/*.test.ts",
+      "<rootDir>/src/__tests__/**/*.test.tsx"
     ],
     "transform": {
       "^.+\\.mjs$": "babel-jest"

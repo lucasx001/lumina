@@ -8,7 +8,7 @@ import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
 import { AppIcon } from '@/components/ui/app-icon';
 import { radius, spacing } from '@/constants/theme';
-import { useWallpapers } from '@/features/library/use-wallpapers';
+import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
 import { useTheme } from '@/hooks/use-theme';
 import type { WallpaperListItem } from '@/lib/api';
 

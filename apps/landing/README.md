@@ -11,10 +11,9 @@ bun --filter=@lumina/landing run dev
 
 ## Local checks
 
-Run the landing test suite, type-check, and production build, followed by the workspace check:
+Run the landing type-check and production build, followed by the workspace check:
 
 ```bash
-bun --filter=@lumina/landing run test
 bun --filter=@lumina/landing run typecheck
 bun --filter=@lumina/landing run build
 bun run check

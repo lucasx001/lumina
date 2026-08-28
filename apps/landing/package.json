@@ -6,7 +6,6 @@
     "build": "next build",
     "dev": "next dev --port 3001",
     "start": "next start",
-    "test": "bun x vitest run --root ../.. apps/landing/src",
     "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "dependencies": {

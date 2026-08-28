@@ -5,11 +5,11 @@ import { useEffect, useMemo } from 'react';
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { Button } from '@/components/ui/button';
 import { ApplySheet } from '@/features/apply/ApplySheet';
-import { WallpaperDetail } from '@/features/library/WallpaperDetail';
-import { useWallpapers } from '@/features/library/use-wallpapers';
+import { WallpaperDetail } from '@/features/wallpapers/wallpaper-detail';
+import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
 import { useTheme } from '@/hooks/use-theme';
 import { createTabBarStyle } from '@/navigation/tab-bar-options';
-import { useLibraryStore } from '@/stores/library-store';
+import { useWallpaperPreviewStore } from '@/stores/wallpaper-preview-store';
 
 export function WallpaperPreviewScreen() {
   const { t } = useLingui();
@@ -23,10 +23,10 @@ export function WallpaperPreviewScreen() {
     : params.wallpaperId;
   const wallpapers = useWallpapers({ category }, 50);
   const wallpaper = wallpapers.wallpapers.find((item) => item.id === wallpaperId);
-  const previewMode = useLibraryStore((state) => state.previewMode);
-  const isApplySheetVisible = useLibraryStore((state) => state.isApplySheetVisible);
-  const setApplySheetVisible = useLibraryStore((state) => state.setApplySheetVisible);
-  const setPreviewMode = useLibraryStore((state) => state.setPreviewMode);
+  const previewMode = useWallpaperPreviewStore((state) => state.previewMode);
+  const isApplySheetVisible = useWallpaperPreviewStore((state) => state.isApplySheetVisible);
+  const setApplySheetVisible = useWallpaperPreviewStore((state) => state.setApplySheetVisible);
+  const setPreviewMode = useWallpaperPreviewStore((state) => state.setPreviewMode);
   const tabBarStyle = useMemo(
     () => createTabBarStyle(theme),
     [theme.border, theme.fontFamily, theme.surface],

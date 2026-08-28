@@ -2,9 +2,9 @@ import { useLingui } from '@lingui/react/macro';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
-import { WallpaperDetail } from '@/features/library/WallpaperDetail';
-import { useWallpapers } from '@/features/library/use-wallpapers';
-import { useLibraryStore } from '@/stores/library-store';
+import { WallpaperDetail } from '@/features/wallpapers/wallpaper-detail';
+import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
+import { useWallpaperPreviewStore } from '@/stores/wallpaper-preview-store';
 
 export function WallpaperPreviewScreen() {
   const { t } = useLingui();
@@ -16,8 +16,8 @@ export function WallpaperPreviewScreen() {
     : params.wallpaperId;
   const wallpapers = useWallpapers({ category }, 50);
   const wallpaper = wallpapers.wallpapers.find((item) => item.id === wallpaperId);
-  const previewMode = useLibraryStore((state) => state.previewMode);
-  const setPreviewMode = useLibraryStore((state) => state.setPreviewMode);
+  const previewMode = useWallpaperPreviewStore((state) => state.previewMode);
+  const setPreviewMode = useWallpaperPreviewStore((state) => state.setPreviewMode);
 
   if (wallpapers.isLoading || wallpapers.isPreparingDeviceId) {
     return <LoadingState label={t`Loading wallpaper…`} />;

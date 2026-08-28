@@ -17,7 +17,7 @@ msgstr ""
 msgid "Close creation panel"
 msgstr "Close creation panel"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Style transfer"
 msgstr "Style transfer"
 
@@ -61,7 +61,7 @@ msgstr "Save custom preset"
 msgid "Start with an idea you cannot quite explain."
 msgstr "Start with an idea you cannot quite explain."
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Apply and share coming soon"
 msgstr "Apply and share coming soon"
 
@@ -82,13 +82,9 @@ msgid "Share Lumina"
 msgstr "Share Lumina"
 
 #: apps/mobile/src/features/edit/EditModePicker.tsx
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Extend"
 msgstr "Extend"
-
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "Make your screen yours"
-#~ msgstr "Make your screen yours"
 
 #: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 msgid "What would you like to change?"
@@ -106,7 +102,7 @@ msgstr "Choose an image to extend, enhance, edit, or turn into a reusable style.
 msgid "Regenerate"
 msgstr "Regenerate"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "This wallpaper has no preview image."
 msgstr "This wallpaper has no preview image."
 
@@ -146,7 +142,6 @@ msgstr "Password"
 msgid "Wallpaper preview"
 msgstr "Wallpaper preview"
 
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
 #: apps/mobile/src/screens/home.tsx
 msgid "Create wallpaper"
@@ -177,12 +172,6 @@ msgstr "iOS does not allow apps to set system wallpaper directly. Save it, then 
 msgid "Generating…"
 msgstr "Generating…"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#: apps/mobile/src/screens/home.tsx
-msgid "Uncategorized"
-msgstr "Uncategorized"
-
 #: apps/mobile/src/features/edit/EditModePicker.tsx
 msgid "Fill your screen"
 msgstr "Fill your screen"
@@ -195,10 +184,6 @@ msgstr "Soft"
 msgid "Output quality"
 msgstr "Output quality"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "This account requires a sign-in method that is not available in the app."
-#~ msgstr "This account requires a sign-in method that is not available in the app."
-
 #: apps/mobile/src/screens/profile.tsx
 msgid "Syncing device history…"
 msgstr "Syncing device history…"
@@ -207,7 +192,7 @@ msgstr "Syncing device history…"
 msgid "Enter your email address and we’ll send you a password reset code."
 msgstr "Enter your email address and we’ll send you a password reset code."
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Size"
 msgstr "Size"
 
@@ -219,6 +204,7 @@ msgstr "Create personal wallpapers with Lumina."
 msgid "Processing your image…"
 msgstr "Processing your image…"
 
+#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
 msgid "For example: Quiet nights"
 msgstr "For example: Quiet nights"
@@ -236,7 +222,7 @@ msgstr "Opening share…"
 msgid "Wallpaper unavailable"
 msgstr "Wallpaper unavailable"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Created"
 msgstr "Created"
 
@@ -266,10 +252,6 @@ msgstr "Sign up"
 msgid "Analyze color, composition, and texture to save a private creative preset."
 msgstr "Analyze color, composition, and texture to save a private creative preset."
 
-#: apps/mobile/src/screens/library.tsx
-msgid "Search, filter, preview, and apply everything you create."
-msgstr "Search, filter, preview, and apply everything you create."
-
 #: apps/mobile/src/features/create/preset-grid.tsx
 msgid "Loading presets…"
 msgstr "Loading presets…"
@@ -283,24 +265,16 @@ msgid "Google"
 msgstr "Google"
 
 #: apps/mobile/src/features/edit/EditModePicker.tsx
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Edit"
 msgstr "Edit"
-
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-msgid "View wallpaper details"
-msgstr "View wallpaper details"
-
-#: apps/mobile/src/app/(tabs)/library/_layout.tsx
-msgid "Library"
-msgstr "Library"
 
 #: apps/mobile/src/features/edit/ImagePickerEntry.tsx
 msgid "Change image"
 msgstr "Change image"
 
 #: apps/mobile/src/features/create/result-view.tsx
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Lock screen"
 msgstr "Lock screen"
 
@@ -340,14 +314,6 @@ msgstr "Or login with"
 msgid "Describe your idea"
 msgstr "Describe your idea"
 
-#: apps/mobile/src/features/library/PresetManager.tsx
-msgid "No custom presets yet"
-msgstr "No custom presets yet"
-
-#: apps/mobile/src/screens/library.tsx
-msgid "Your wallpaper collection"
-msgstr "Your wallpaper collection"
-
 #: apps/mobile/src/screens/profile.tsx
 msgid "My wallpapers"
 msgstr "My wallpapers"
@@ -376,31 +342,16 @@ msgstr "Loading placeholder"
 msgid "Password reset failed."
 msgstr "Password reset failed."
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "Enter the security code sent to your email."
-#~ msgstr "Enter the security code sent to your email."
-
 #: apps/mobile/src/features/apply/useSaveAndShare.ts
 msgid "Could not save the wallpaper. Try again later."
 msgstr "Could not save the wallpaper. Try again later."
-
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-msgid "HD"
-msgstr "HD"
 
 #. placeholder {0}: category.name
 #: apps/mobile/src/screens/home.tsx
 msgid "Open {0}"
 msgstr "Open {0}"
 
-#: apps/mobile/src/app/(tabs)/_layout.tsx
-#: apps/mobile/src/app/(tabs)/(create)/_layout.tsx
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "Create"
-#~ msgstr "Create"
-
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Remove wallpaper from favorites"
 msgstr "Remove wallpaper from favorites"
 
@@ -409,7 +360,6 @@ msgstr "Remove wallpaper from favorites"
 msgid "Home"
 msgstr "Home"
 
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
 #: apps/mobile/src/screens/category-detail.tsx
 msgid "Generated wallpaper"
 msgstr "Generated wallpaper"
@@ -421,18 +371,6 @@ msgstr "Choose a starting point, then describe what you want to see."
 #: apps/mobile/src/features/apply/ApplySheet.tsx
 msgid "Set as both"
 msgstr "Set as both"
-
-#: apps/mobile/src/screens/home.tsx
-msgid "Preparing your wallpaper space…"
-msgstr "Preparing your wallpaper space…"
-
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "Optimized for this device"
-#~ msgstr "Optimized for this device"
-
-#: apps/mobile/src/screens/library.tsx
-msgid "Search by category, mode, or quality"
-msgstr "Search by category, mode, or quality"
 
 #: apps/mobile/src/screens/password-reset.tsx
 #: apps/mobile/src/screens/sign-in.tsx
@@ -456,30 +394,21 @@ msgstr "Apply and save"
 msgid "Tell Lumina a color, a mood, or a moment. We will shape it for this screen."
 msgstr "Tell Lumina a color, a mood, or a moment. We will shape it for this screen."
 
-#. placeholder {0}: generation.cooldownSeconds
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "To avoid duplicate requests, try again in {0} seconds."
-#~ msgstr "To avoid duplicate requests, try again in {0} seconds."
-
 #: apps/mobile/src/features/apply/ApplySheet.tsx
 msgid "Saving…"
 msgstr "Saving…"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Choose lock screen, home screen, and sharing actions when available."
 msgstr "Choose lock screen, home screen, and sharing actions when available."
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Wallpaper information"
 msgstr "Wallpaper information"
 
 #: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 msgid "Start editing"
 msgstr "Start editing"
-
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-msgid "Create a wallpaper and it will be saved here automatically."
-msgstr "Create a wallpaper and it will be saved here automatically."
 
 #: apps/mobile/src/features/create/quality-selector.tsx
 msgid "Faster and lower resolution, ideal for iterating on ideas"
@@ -489,14 +418,9 @@ msgstr "Faster and lower resolution, ideal for iterating on ideas"
 msgid "Photo library permission is required to save wallpapers."
 msgstr "Photo library permission is required to save wallpapers."
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Generated"
 msgstr "Generated"
-
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "Generating your wallpaper…"
-#~ msgstr "Generating your wallpaper…"
 
 #: apps/mobile/src/screens/password-reset.tsx
 #: apps/mobile/src/screens/sign-up.tsx
@@ -529,1107 +453,6 @@ msgstr "Calm"
 msgid "Your wallpaper space"
 msgstr "Your wallpaper space"
 
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.applying"
-#~ msgstr "Applying…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.both"
-#~ msgstr "Set as both"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.chooseTarget"
-#~ msgstr "Choose where to apply it."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/useApplyWallpaper.ts
-#~ msgid "mobile.apply.failed"
-#~ msgstr "Could not apply the wallpaper. Try again later."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.home"
-#~ msgstr "Set as home screen"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.iosHint"
-#~ msgstr "iOS does not allow apps to set system wallpaper directly. Save it, then set it from Photos."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.lock"
-#~ msgstr "Set as lock screen"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.openingShare"
-#~ msgstr "Opening share…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
-#~ msgid "mobile.apply.photoPermission"
-#~ msgstr "Photo library permission is required to save wallpapers."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.save"
-#~ msgstr "Save to Photos"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
-#~ msgid "mobile.apply.saveFailed"
-#~ msgstr "Could not save the wallpaper. Try again later."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.saving"
-#~ msgstr "Saving…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.share"
-#~ msgstr "Share"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
-#~ msgid "mobile.apply.shareFailed"
-#~ msgstr "Could not share the wallpaper. Try again later."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
-#~ msgid "mobile.apply.shareUnavailable"
-#~ msgstr "Sharing is unavailable on this device."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.apply.title"
-#~ msgstr "Apply wallpaper"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/auth-screen-layout.tsx
-#~ msgid "mobile.auth.brand"
-#~ msgstr "Lumina"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.confirmPassword"
-#~ msgstr "Confirm password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.confirmPassword.placeholder"
-#~ msgstr "Repeat password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/LoginSheet.tsx
-#~ msgid "mobile.auth.description"
-#~ msgstr "Sign in with Google to merge this device history into your account and keep creating anywhere."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/LoginSheet.tsx
-#~ msgid "mobile.auth.dismiss"
-#~ msgstr "Close sign-in"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.email"
-#~ msgstr "Email"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.email.placeholder"
-#~ msgstr "Your email address"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.emailRequired"
-#~ msgstr "Enter your email address first."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.fieldsRequired"
-#~ msgstr "Enter your email and password."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.forgotPassword"
-#~ msgstr "Forgot password?"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/GoogleSignInButton.tsx
-#~ msgid "mobile.auth.google.loading"
-#~ msgstr "Opening Google…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/GoogleSignInButton.tsx
-#~ msgid "mobile.auth.google.logo"
-#~ msgstr "Google"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/features/auth/GoogleSignInButton.tsx
-#~ msgid "mobile.auth.google.signIn"
-#~ msgstr "Continue with Google"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.google.signUp"
-#~ msgstr "Sign up with Google"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.mfa.description"
-#~ msgstr "Enter the security code sent to your email."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.mfaUnsupported"
-#~ msgstr "This account requires a sign-in method that is not available in the app."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/LoginSheet.tsx
-#~ msgid "mobile.auth.notNow"
-#~ msgstr "Not now"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.password"
-#~ msgstr "Password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.password.createPlaceholder"
-#~ msgstr "Create password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.password.placeholder"
-#~ msgstr "Password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.passwordMismatch"
-#~ msgstr "Passwords do not match."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.reset.codeDescription"
-#~ msgstr "Enter the password reset code sent to your email."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.reset.newPassword"
-#~ msgstr "New password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.reset.newPasswordTitle"
-#~ msgstr "New password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.reset.passwordDescription"
-#~ msgstr "Choose a new password for your account."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.reset.save"
-#~ msgstr "Save new password"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.signIn.action"
-#~ msgstr "Log in"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.signIn.failed"
-#~ msgstr "Sign-in failed."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.signIn.goToSignUp"
-#~ msgstr "Sign up"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.signIn.noAccount"
-#~ msgstr "Don't have an account? "
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.signIn.social"
-#~ msgstr "Or login with"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "mobile.auth.signIn.title"
-#~ msgstr "Login"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.action"
-#~ msgstr "Sign up"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.changeEmail"
-#~ msgstr "Use a different email"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.codeDescription"
-#~ msgstr "We sent a verification code to {emailAddress}."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.failed"
-#~ msgstr "Sign-up failed."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.goToSignIn"
-#~ msgstr "Log in"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.hasAccount"
-#~ msgstr "Already have an account? "
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.social"
-#~ msgstr "Or sign up with"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.signUp.title"
-#~ msgstr "Sign up"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/auth/LoginSheet.tsx
-#~ msgid "mobile.auth.title"
-#~ msgstr "Connect your creative space"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.verificationCode"
-#~ msgstr "Verification code"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.verificationCode.placeholder"
-#~ msgstr "Enter code"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.verify.action"
-#~ msgstr "Verify"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#: apps/mobile/src/app/(auth)/sign-up.tsx
-#~ msgid "mobile.auth.verify.title"
-#~ msgstr "Verify email"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/apply/ApplySheet.tsx
-#~ msgid "mobile.common.cancel"
-#~ msgstr "Cancel"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/components/feedback.tsx
-#~ msgid "mobile.common.loading"
-#~ msgstr "Loading…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/components/feedback.tsx
-#~ msgid "mobile.common.loadingPlaceholder"
-#~ msgstr "Loading placeholder"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/components/feedback.tsx
-#~ msgid "mobile.common.retry"
-#~ msgstr "Retry"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#~ msgid "mobile.create.applyAndSave"
-#~ msgstr "Apply and save"
-
-#. placeholder {0}: generation.cooldownSeconds
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.cooldown"
-#~ msgstr "To avoid duplicate requests, try again in {0} seconds."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/generate-button.tsx
-#~ msgid "mobile.create.generate"
-#~ msgstr "Generate wallpaper"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.generating"
-#~ msgstr "Generating your wallpaper…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/generate-button.tsx
-#~ msgid "mobile.create.generatingShort"
-#~ msgstr "Generating…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.hero.description"
-#~ msgstr "Create a new wallpaper from an idea, or transform one of your photos."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.hero.title"
-#~ msgstr "Make your screen yours"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/idea-input.tsx
-#~ msgid "mobile.create.idea"
-#~ msgstr "Describe your idea"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/idea-input.tsx
-#~ msgid "mobile.create.idea.accessibility"
-#~ msgstr "Wallpaper idea"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/idea-input.tsx
-#~ msgid "mobile.create.idea.placeholder"
-#~ msgstr "For example: a neon city on a rainy night"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.loadingPresets"
-#~ msgstr "Loading presets…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.mood"
-#~ msgstr "Mood"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.mood.calm"
-#~ msgstr "Calm"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.mood.dreamy"
-#~ msgstr "Dreamy"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.mood.energetic"
-#~ msgstr "Energetic"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.mood.mysterious"
-#~ msgstr "Mysterious"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.optimizedForDevice"
-#~ msgstr "Optimized for this device"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.abstract.category"
-#~ msgstr "Abstract art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.abstract.name"
-#~ msgstr "Abstract"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.anime.category"
-#~ msgstr "Anime art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.anime.name"
-#~ msgstr "Anime"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.cinematic.category"
-#~ msgstr "Cinematic art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.cinematic.name"
-#~ msgstr "Cinematic"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.cyberpunk.category"
-#~ msgstr "Cyberpunk art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.cyberpunk.name"
-#~ msgstr "Cyberpunk"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.editorial.category"
-#~ msgstr "Editorial art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.editorial.name"
-#~ msgstr "Editorial"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.minimal.category"
-#~ msgstr "Minimal art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.minimal.name"
-#~ msgstr "Minimal"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.nature.category"
-#~ msgstr "Nature art"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.preset.nature.name"
-#~ msgstr "Nature"
-
-#. placeholder {0}: preset.name
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.presetCover"
-#~ msgstr "{0} preset cover"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/quality-selector.tsx
-#~ msgid "mobile.create.quality"
-#~ msgstr "Output quality"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/quality-selector.tsx
-#~ msgid "mobile.create.quality.draft"
-#~ msgstr "Quick preview"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/quality-selector.tsx
-#~ msgid "mobile.create.quality.draft.description"
-#~ msgstr "Faster and lower resolution, ideal for iterating on ideas"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/quality-selector.tsx
-#~ msgid "mobile.create.quality.hd"
-#~ msgstr "High resolution"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/quality-selector.tsx
-#~ msgid "mobile.create.quality.hd.description"
-#~ msgstr "Full 2K+ resolution, ideal for saving and applying"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#~ msgid "mobile.create.regenerate"
-#~ msgstr "Regenerate"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#~ msgid "mobile.create.result.draft"
-#~ msgstr "Quick preview · Low resolution"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#~ msgid "mobile.create.result.hd"
-#~ msgstr "High resolution · Full 2K+"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#~ msgid "mobile.create.result.ready"
-#~ msgstr "Your wallpaper is ready"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/preset-grid.tsx
-#~ msgid "mobile.create.selectPreset"
-#~ msgstr "Choose a preset"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.theme"
-#~ msgstr "Theme"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.theme.abstract"
-#~ msgstr "Abstract"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.theme.city"
-#~ msgstr "City"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.theme.nature"
-#~ msgstr "Nature"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.theme.space"
-#~ msgstr "Space"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.tone"
-#~ msgstr "Color tone"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.tone.cool"
-#~ msgstr "Cool"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.tone.highContrast"
-#~ msgstr "High contrast"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.tone.soft"
-#~ msgstr "Soft"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/chips-selector.tsx
-#~ msgid "mobile.create.tone.warm"
-#~ msgstr "Warm"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.workspace.create"
-#~ msgstr "Create"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "mobile.create.workspace.edit"
-#~ msgstr "Edit a photo"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.chooseMode"
-#~ msgstr "Choose an action"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.enhanceWallpaper"
-#~ msgstr "Enhance wallpaper"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.extendToScreen"
-#~ msgstr "Extend to screen ratio"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.extractAnotherStyle"
-#~ msgstr "Extract another style"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.change"
-#~ msgstr "Change image"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.choose"
-#~ msgstr "Choose image"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.description"
-#~ msgstr "Choose an image to extend, enhance, edit, or turn into a reusable style."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.moduleMissing"
-#~ msgstr "The image module is incomplete. Install the latest development build."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.selected"
-#~ msgstr "Selected source image"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.title"
-#~ msgstr "Start with an image"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.unsupported"
-#~ msgstr "Choose a JPEG, PNG, or WebP image."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.uploadFailed"
-#~ msgstr "Image upload failed. Try again."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
-#~ msgid "mobile.edit.image.uploading"
-#~ msgstr "Uploading image securely…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.instructions"
-#~ msgstr "What would you like to change?"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.instructions.placeholder"
-#~ msgstr "For example: turn the sky into a sunset and keep the people and buildings"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.edit"
-#~ msgstr "Edit"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.edit.description"
-#~ msgstr "Change with a prompt"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.outpaint"
-#~ msgstr "Extend"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.outpaint.description"
-#~ msgstr "Fill your screen"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.style"
-#~ msgstr "Extract style"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.style.description"
-#~ msgstr "Save as a creative preset"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.upscale"
-#~ msgstr "Enhance"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#~ msgid "mobile.edit.mode.upscale.description"
-#~ msgstr "Enhance clarity and detail"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.presetSaved"
-#~ msgstr "Custom preset saved"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.presetSaved.description"
-#~ msgstr "Select it from the preset list above to generate another wallpaper."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.processing"
-#~ msgstr "Processing your image…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
-#~ msgid "mobile.edit.start"
-#~ msgstr "Start editing"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
-#~ msgid "mobile.edit.style.description"
-#~ msgstr "Analyze color, composition, and texture to save a private creative preset."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
-#~ msgid "mobile.edit.style.extracting"
-#~ msgstr "Extracting…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
-#~ msgid "mobile.edit.style.placeholder"
-#~ msgstr "Optional: describe the details you want to preserve"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
-#~ msgid "mobile.edit.style.save"
-#~ msgstr "Save custom preset"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
-#~ msgid "mobile.edit.style.title"
-#~ msgstr "Extract style"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.actionsPending"
-#~ msgstr "Apply and share coming soon"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.actionsPending.description"
-#~ msgstr "Choose lock screen, home screen, and sharing actions when available."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/library.tsx
-#~ msgid "mobile.library.applySaveShare"
-#~ msgstr "Apply, save, or share"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.back"
-#~ msgstr "Back to library"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/PresetManager.tsx
-#~ msgid "mobile.library.customPresets"
-#~ msgstr "Custom presets"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/PresetManager.tsx
-#~ msgid "mobile.library.customPresets.description"
-#~ msgstr "Styles extracted from your favorite wallpapers will appear here."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/PresetManager.tsx
-#~ msgid "mobile.library.customPresets.empty"
-#~ msgstr "No custom presets yet"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/library.tsx
-#~ msgid "mobile.library.discover.description"
-#~ msgstr "Search, filter, preview, and apply everything you create."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/library.tsx
-#~ msgid "mobile.library.discover.title"
-#~ msgstr "Your wallpaper collection"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.empty.action"
-#~ msgstr "Create wallpaper"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.empty.description"
-#~ msgstr "Create a wallpaper and it will be saved here automatically."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.empty.title"
-#~ msgstr "No wallpapers yet"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.favorite"
-#~ msgstr "Add wallpaper to favorites"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/library-filters.tsx
-#~ msgid "mobile.library.filter.all"
-#~ msgstr "All"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/library-filters.tsx
-#~ msgid "mobile.library.filter.favorites"
-#~ msgstr "Favorites"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.fullscreenPreview"
-#~ msgstr "Full-screen wallpaper preview"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.generated"
-#~ msgstr "Generated"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.generatedWallpaper"
-#~ msgstr "Generated wallpaper"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.information.created"
-#~ msgstr "Created"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.information.mode"
-#~ msgstr "Mode"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.information.size"
-#~ msgstr "Size"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.mode.edit"
-#~ msgstr "Edit"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.mode.outpaint"
-#~ msgstr "Extend"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.mode.style"
-#~ msgstr "Style transfer"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.mode.text2img"
-#~ msgstr "Text creation"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.mode.upscale"
-#~ msgstr "Upscale"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.noPreview"
-#~ msgstr "This wallpaper has no preview image."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.quality.hd"
-#~ msgstr "HD"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.quality.preview"
-#~ msgstr "Preview"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.resolutionUnknown"
-#~ msgstr "Resolution unavailable"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.resultUnavailable"
-#~ msgstr "Result unavailable"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/library.tsx
-#~ msgid "mobile.library.search.accessibility"
-#~ msgstr "Search wallpapers"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/library.tsx
-#~ msgid "mobile.library.search.placeholder"
-#~ msgstr "Search by category, mode, or quality"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.uncategorized"
-#~ msgstr "Uncategorized"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.unfavorite"
-#~ msgstr "Remove wallpaper from favorites"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-#~ msgid "mobile.library.viewDetails"
-#~ msgstr "View wallpaper details"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.library.wallpaperInformation"
-#~ msgstr "Wallpaper information"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.preview.homeScreen"
-#~ msgstr "Home screen"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/features/create/result-view.tsx
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#~ msgid "mobile.preview.lockScreen"
-#~ msgstr "Lock screen"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.about"
-#~ msgstr "About Lumina"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.aboutDescription"
-#~ msgstr "Lumina turns ideas and personal photos into device-sized wallpapers, with previews for both lock and home screens."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/profile.tsx
-#~ msgid "mobile.profile.anonymous"
-#~ msgstr "You are using Lumina anonymously. Sign in to sync your history across devices."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.avatar"
-#~ msgstr "Profile photo"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/profile.tsx
-#~ msgid "mobile.profile.clerkConnected"
-#~ msgstr "Signed in with Clerk"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.deviceOnly"
-#~ msgstr "Saved on this device"
-
-#. placeholder {0}: googleAccount.emailAddress
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/profile.tsx
-#~ msgid "mobile.profile.googleConnected"
-#~ msgstr "Google connected: {0}"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.guestCreator"
-#~ msgstr "Guest creator"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.language"
-#~ msgstr "Language"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.languageDescription"
-#~ msgstr "Your interface language is stored securely on this device."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.myWallpapers"
-#~ msgstr "My wallpapers"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.privacy"
-#~ msgstr "Privacy"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.privacyDescription"
-#~ msgstr "You can create as a guest. Account sign-in is optional and is used to sync your wallpaper history across devices."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.restoring"
-#~ msgstr "Restoring sign-in state…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.share"
-#~ msgstr "Share Lumina"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.shareMessage"
-#~ msgstr "Create personal wallpapers with Lumina."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.signedIn"
-#~ msgstr "Signed in"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.signIn"
-#~ msgstr "Sign in and sync"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.signOut"
-#~ msgstr "Sign out"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.syncDescription"
-#~ msgstr "Sign in to sync wallpaper history across devices while keeping creations already saved here."
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.syncing"
-#~ msgstr "Syncing device history…"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/screens/profile.tsx
-#~ msgid "mobile.profile.syncTitle"
-#~ msgstr "Take your collection with you"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/profile.tsx
-#~ msgid "mobile.profile.title"
-#~ msgstr "Profile"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/_layout.tsx
-#: apps/mobile/src/app/(tabs)/(create)/_layout.tsx
-#~ msgid "mobile.tab.create"
-#~ msgstr "Create"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/_layout.tsx
-#: apps/mobile/src/app/(tabs)/library/_layout.tsx
-#~ msgid "mobile.tab.library"
-#~ msgstr "Library"
-
-#. js-lingui-explicit-id
-#: apps/mobile/src/app/(tabs)/_layout.tsx
-#: apps/mobile/src/app/(tabs)/profile/_layout.tsx
-#~ msgid "mobile.tab.profile"
-#~ msgstr "Profile"
-
 #: apps/mobile/src/screens/password-reset.tsx
 msgid "Save new password"
 msgstr "Save new password"
@@ -1637,10 +460,6 @@ msgstr "Save new password"
 #: apps/mobile/src/features/apply/ApplySheet.tsx
 msgid "Set as lock screen"
 msgstr "Set as lock screen"
-
-#: apps/mobile/src/features/library/library-filters.tsx
-msgid "All"
-msgstr "All"
 
 #: apps/mobile/src/screens/sign-in.tsx
 msgid "Don't have an account? "
@@ -1650,17 +469,13 @@ msgstr "Don't have an account? "
 msgid "Guest creator"
 msgstr "Guest creator"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Text creation"
 msgstr "Text creation"
 
 #: apps/mobile/src/screens/profile.tsx
 msgid "Lumina turns ideas and personal photos into device-sized wallpapers, with previews for both lock and home screens."
 msgstr "Lumina turns ideas and personal photos into device-sized wallpapers, with previews for both lock and home screens."
-
-#: apps/mobile/src/features/library/PresetManager.tsx
-msgid "Custom presets"
-msgstr "Custom presets"
 
 #: apps/mobile/src/screens/password-reset.tsx
 #: apps/mobile/src/screens/sign-in.tsx
@@ -1676,7 +491,7 @@ msgstr "Cinematic"
 msgid "Save to Photos"
 msgstr "Save to Photos"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Upscale"
 msgstr "Upscale"
 
@@ -1684,6 +499,7 @@ msgstr "Upscale"
 msgid "Select it from the preset list above to generate another wallpaper."
 msgstr "Select it from the preset list above to generate another wallpaper."
 
+#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
 msgid "Wallpaper category"
 msgstr "Wallpaper category"
@@ -1700,10 +516,6 @@ msgstr "Cyberpunk art"
 msgid "Open wallpaper preview"
 msgstr "Open wallpaper preview"
 
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "Edit a photo"
-#~ msgstr "Edit a photo"
-
 #: apps/mobile/src/features/auth/GoogleSignInButton.tsx
 #: apps/mobile/src/screens/sign-in.tsx
 msgid "Continue with Google"
@@ -1714,7 +526,7 @@ msgid "Already have an account? "
 msgstr "Already have an account? "
 
 #: apps/mobile/src/features/create/result-view.tsx
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Home screen"
 msgstr "Home screen"
 
@@ -1767,10 +579,6 @@ msgstr "Loading…"
 msgid "Signed in"
 msgstr "Signed in"
 
-#: apps/mobile/src/features/library/PresetManager.tsx
-msgid "Styles extracted from your favorite wallpapers will appear here."
-msgstr "Styles extracted from your favorite wallpapers will appear here."
-
 #: apps/mobile/src/screens/profile.tsx
 msgid "Restoring sign-in state…"
 msgstr "Restoring sign-in state…"
@@ -1795,8 +603,7 @@ msgstr "Lumina"
 msgid "Repeat password"
 msgstr "Repeat password"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Add wallpaper to favorites"
 msgstr "Add wallpaper to favorites"
 
@@ -1804,9 +611,9 @@ msgstr "Add wallpaper to favorites"
 msgid "For example: a neon city on a rainy night"
 msgstr "For example: a neon city on a rainy night"
 
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-msgid "Preview"
-msgstr "Preview"
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+msgid "Back to category"
+msgstr "Back to category"
 
 #: apps/mobile/src/screens/password-reset.tsx
 msgid "Reset password"
@@ -1871,11 +678,7 @@ msgstr "Or sign up with"
 msgid "Editorial art"
 msgstr "Editorial art"
 
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-msgid "No wallpapers yet"
-msgstr "No wallpapers yet"
-
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Full-screen wallpaper preview"
 msgstr "Full-screen wallpaper preview"
 
@@ -1896,7 +699,6 @@ msgstr "Color tone"
 msgid "Abstract"
 msgstr "Abstract"
 
-#: apps/mobile/src/screens/library.tsx
 #: apps/mobile/src/screens/wallpaper-preview.tsx
 msgid "Apply, save, or share"
 msgstr "Apply, save, or share"
@@ -1905,6 +707,7 @@ msgstr "Apply, save, or share"
 msgid "Abstract art"
 msgstr "Abstract art"
 
+#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
 msgid "Save to category"
 msgstr "Save to category"
@@ -1933,10 +736,6 @@ msgstr "Profile photo"
 msgid "Verify"
 msgstr "Verify"
 
-#: apps/mobile/src/features/library/WallpaperGrid.tsx
-msgid "Result unavailable"
-msgstr "Result unavailable"
-
 #: apps/mobile/src/features/create/preset-grid.tsx
 msgid "Choose a preset"
 msgstr "Choose a preset"
@@ -1950,10 +749,6 @@ msgstr "Editorial"
 msgid "Profile"
 msgstr "Profile"
 
-#: apps/mobile/src/app/(auth)/sign-in.tsx
-#~ msgid "Enter the password reset code sent to your email."
-#~ msgstr "Enter the password reset code sent to your email."
-
 #: apps/mobile/src/screens/sign-up.tsx
 msgid "Create password"
 msgstr "Create password"
@@ -1966,10 +761,6 @@ msgstr "Minimal art"
 msgid "Language"
 msgstr "Language"
 
-#: apps/mobile/src/screens/home.tsx
-#~ msgid "Create a new wallpaper from an idea, or transform one of your photos."
-#~ msgstr "Create a new wallpaper from an idea, or transform one of your photos."
-
 #: apps/mobile/src/features/edit/ImagePickerEntry.tsx
 msgid "The image module is incomplete. Install the latest development build."
 msgstr "The image module is incomplete. Install the latest development build."
@@ -1978,7 +769,7 @@ msgstr "The image module is incomplete. Install the latest development build."
 msgid "Applying…"
 msgstr "Applying…"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Resolution unavailable"
 msgstr "Resolution unavailable"
 
@@ -1986,17 +777,9 @@ msgstr "Resolution unavailable"
 msgid "About Lumina"
 msgstr "About Lumina"
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
-msgid "Back to library"
-msgstr "Back to library"
-
 #: apps/mobile/src/features/create/chips-selector.tsx
 msgid "Warm"
 msgstr "Warm"
-
-#: apps/mobile/src/features/library/library-filters.tsx
-msgid "Favorites"
-msgstr "Favorites"
 
 #: apps/mobile/src/features/create/quality-selector.tsx
 msgid "High resolution"
@@ -2067,10 +850,6 @@ msgstr "Login"
 msgid "Share"
 msgstr "Share"
 
-#: apps/mobile/src/screens/library.tsx
-msgid "Search wallpapers"
-msgstr "Search wallpapers"
-
 #: apps/mobile/src/screens/password-reset.tsx
 msgid "Enter your email address first."
 msgstr "Enter your email address first."
@@ -2079,6 +858,6 @@ msgstr "Enter your email address first."
 msgid "Sign-up failed."
 msgstr "Sign-up failed."
 
-#: apps/mobile/src/features/library/WallpaperDetail.tsx
+#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
 msgid "Mode"
 msgstr "Mode"

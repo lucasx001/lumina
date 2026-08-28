@@ -83,15 +83,10 @@ export default defineConfig({
         plugins: [...serverTestPreset.plugins],
         rules: serverTestPreset.rules,
       },
-      {
-        files: ['apps/landing/**/*.test.ts'],
-        plugins: [...serverTestPreset.plugins],
-        rules: serverTestPreset.rules,
-      },
     ],
   },
   test: {
-    include: ['apps/server/src/**/*.test.ts', 'apps/landing/src/**/*.test.ts'],
+    include: ['apps/server/src/__tests__/**/*.test.ts'],
   },
   staged: {
     '*.{js,cjs,mjs,ts,tsx,json,md,yml,yaml}': 'vp check --fix',

@@ -74,7 +74,6 @@ export default function TabLayout() {
           title: t`Profile`,
         }}
       />
-      <Tabs.Screen name="library" options={{ href: null }} />
     </Tabs>
   );
 }
