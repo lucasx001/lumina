@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
-import { ChipsSelector } from '@/features/create/chips-selector';
+import { ChipsSelector } from '@/components/create';
 
 describe('ChipsSelector', () => {
   it('selects and deselects a finite chip option', () => {

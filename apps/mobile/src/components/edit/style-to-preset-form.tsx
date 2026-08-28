@@ -2,7 +2,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { TextInput, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 

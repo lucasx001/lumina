@@ -6,11 +6,10 @@ import { Pressable, ScrollView, Share, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { AppIcon, type AppIconName } from '@/components/ui/app-icon';
-import { Button } from '@/components/ui/button';
+import { AppIcon, Button, type AppIconName } from '@/components/ui';
 import { radius, shadows, spacing } from '@/constants/theme';
-import { useAuth } from '@/features/auth/useAuth';
-import { useAppLocale } from '@/features/i18n/i18n-provider';
+import { useAuth } from '@/hooks/use-auth';
+import { useAppLocale } from '@/components/i18n-provider';
 import { useTheme } from '@/hooks/use-theme';
 
 type ExpandedInformation = 'about' | 'privacy' | null;

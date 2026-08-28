@@ -6,7 +6,7 @@ import { View } from 'react-native';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { uploadSourceImage } from '@/lib/api';

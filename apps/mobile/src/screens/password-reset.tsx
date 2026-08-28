@@ -6,10 +6,9 @@ import { useEffect } from 'react';
 import { Pressable } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Button } from '@/components/ui/button';
-import { AuthScreenLayout } from '@/features/auth/auth-screen-layout';
-import { AuthTextField } from '@/features/auth/auth-text-field';
-import { getAuthFlowError, throwIfClerkError } from '@/features/auth/clerk-flow-error';
+import { Button } from '@/components/ui';
+import { AuthScreenLayout, AuthTextField } from '@/components/auth';
+import { getAuthFlowError, throwIfClerkError } from '@/lib/clerk-flow-error';
 import { useTheme } from '@/hooks/use-theme';
 import { usePasswordResetStore } from '@/stores/password-reset-store';
 

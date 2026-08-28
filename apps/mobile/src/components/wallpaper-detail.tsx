@@ -4,11 +4,9 @@ import { useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { HomeIconsOverlay } from '@/components/preview/home-icons-overlay';
-import { LockClockOverlay } from '@/components/preview/lock-clock-overlay';
-import { StatusBarOverlay } from '@/components/preview/status-bar-overlay';
+import { HomeIconsOverlay, LockClockOverlay, StatusBarOverlay } from '@/components/preview';
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon } from '@/components/ui/app-icon';
+import { AppIcon } from '@/components/ui';
 import type { WallpaperPreviewMode } from '@/components/WallpaperPreview';
 import { radius, shadows, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';

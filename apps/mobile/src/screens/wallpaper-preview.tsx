@@ -3,10 +3,10 @@ import { Stack, useLocalSearchParams, useNavigation, useRouter } from 'expo-rout
 import { useEffect, useMemo } from 'react';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
-import { Button } from '@/components/ui/button';
-import { ApplySheet } from '@/features/apply/ApplySheet';
-import { WallpaperDetail } from '@/features/wallpapers/wallpaper-detail';
-import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
+import { Button } from '@/components/ui';
+import { ApplySheet } from '@/components/apply';
+import { WallpaperDetail } from '@/components/wallpaper-detail';
+import { useWallpapers } from '@/hooks/use-wallpapers';
 import { useTheme } from '@/hooks/use-theme';
 import { createTabBarStyle } from '@/navigation/tab-bar-options';
 import { useWallpaperPreviewStore } from '@/stores/wallpaper-preview-store';

@@ -6,7 +6,7 @@ import { FlatList, Pressable, View } from 'react-native';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon } from '@/components/ui/app-icon';
+import { AppIcon } from '@/components/ui';
 import { radius, shadows, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { getPresets } from '@/lib/api';

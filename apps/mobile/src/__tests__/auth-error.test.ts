@@ -1,4 +1,4 @@
-import { normalizeAuthError } from '@/features/auth/auth-error';
+import { normalizeAuthError } from '@/lib/auth-error';
 
 describe('normalizeAuthError', () => {
   it('turns a missing Expo auth dependency into an actionable message', () => {

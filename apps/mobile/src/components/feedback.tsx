@@ -2,8 +2,7 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { ActivityIndicator, type DimensionValue, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon } from '@/components/ui/app-icon';
-import { Button } from '@/components/ui/button';
+import { AppIcon, Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 

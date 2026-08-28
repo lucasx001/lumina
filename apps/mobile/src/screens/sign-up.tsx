@@ -6,11 +6,10 @@ import { useEffect } from 'react';
 import { Pressable } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
-import { Button } from '@/components/ui/button';
-import { AuthScreenLayout } from '@/features/auth/auth-screen-layout';
-import { AuthTextField } from '@/features/auth/auth-text-field';
-import { getAuthFlowError, throwIfClerkError } from '@/features/auth/clerk-flow-error';
-import { useAuth as useAppAuth } from '@/features/auth/useAuth';
+import { Button } from '@/components/ui';
+import { AuthScreenLayout, AuthTextField } from '@/components/auth';
+import { getAuthFlowError, throwIfClerkError } from '@/lib/clerk-flow-error';
+import { useAuth as useAppAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
 import { useSignUpStore } from '@/stores/sign-up-store';
 

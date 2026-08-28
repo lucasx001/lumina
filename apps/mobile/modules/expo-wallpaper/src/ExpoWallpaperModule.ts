@@ -6,7 +6,12 @@ interface ExpoWallpaperNativeModule {
   setWallpaper(uri: string, target: WallpaperTarget): Promise<void>;
 }
 
-const ExpoWallpaperModule = requireNativeModule<ExpoWallpaperNativeModule>('ExpoWallpaper');
+let nativeModule: ExpoWallpaperNativeModule | undefined;
+
+function getNativeModule() {
+  nativeModule ??= requireNativeModule<ExpoWallpaperNativeModule>('ExpoWallpaper');
+  return nativeModule;
+}
 
 const wallpaperTargets = new Set<WallpaperTarget>(['home', 'lock', 'both']);
 
@@ -24,7 +29,7 @@ export function setWallpaper(uri: string, target: WallpaperTarget): Promise<void
     throw new TypeError(`Unsupported wallpaper target: ${target}`);
   }
 
-  return ExpoWallpaperModule.setWallpaper(uri, target);
+  return getNativeModule().setWallpaper(uri, target);
 }
 
-export default ExpoWallpaperModule;
+export default { setWallpaper };

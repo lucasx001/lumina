@@ -7,14 +7,17 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ErrorState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon } from '@/components/ui/app-icon';
+import { AppIcon } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
-import { ChipsSelector, type CreateChipField } from '@/features/create/chips-selector';
-import { GenerateButton } from '@/features/create/generate-button';
-import { IdeaInput } from '@/features/create/idea-input';
-import { PresetGrid } from '@/features/create/preset-grid';
-import { QualitySelector } from '@/features/create/quality-selector';
-import { ResultView } from '@/features/create/result-view';
+import {
+  ChipsSelector,
+  GenerateButton,
+  IdeaInput,
+  PresetGrid,
+  QualitySelector,
+  ResultView,
+  type CreateChipField,
+} from '@/components/create';
 import { useGenerate } from '@/hooks/use-generate';
 import { useTheme } from '@/hooks/use-theme';
 import { useDeviceSize } from '@/lib/useDeviceSize';

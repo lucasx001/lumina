@@ -4,7 +4,7 @@ import { useCallback, useState } from 'react';
 import { Asset, requestPermissionsAsync } from 'expo-media-library';
 import { isAvailableAsync, shareAsync } from 'expo-sharing';
 
-import { downloadWallpaper } from './local-wallpaper';
+import { downloadWallpaper } from '@/lib/local-wallpaper';
 
 export type SaveAndShareAction = 'save' | 'share' | undefined;
 

@@ -1,7 +1,7 @@
 import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
-import { ApplySheet } from '@/features/apply/ApplySheet';
+import { ApplySheet } from '@/components/apply';
 
 jest.mock('../../modules/expo-wallpaper', () => ({
   setWallpaper: jest.fn(),

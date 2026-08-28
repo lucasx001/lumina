@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
-import { ResultView } from '@/features/create/result-view';
+import { ResultView } from '@/components/create';
 
 jest.mock('expo-image', () => {
   const React = require('react');
@@ -11,7 +11,7 @@ jest.mock('expo-image', () => {
   };
 });
 
-jest.mock('@/features/apply/ApplySheet', () => ({
+jest.mock('@/components/apply', () => ({
   ApplySheet: () => null,
 }));
 

@@ -2,7 +2,7 @@ import { ActivityIndicator, Pressable, View, type StyleProp, type ViewStyle } fr
 
 import { radius, spacing } from '@/constants/theme';
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon, type AppIconName } from '@/components/ui/app-icon';
+import { AppIcon, type AppIconName } from './app-icon';
 import { useTheme } from '@/hooks/use-theme';
 
 type ButtonVariant = 'destructive' | 'ghost' | 'primary' | 'secondary';

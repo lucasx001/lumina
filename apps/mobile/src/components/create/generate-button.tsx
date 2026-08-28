@@ -1,6 +1,6 @@
 import { useLingui } from '@lingui/react/macro';
 
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 
 type GenerateButtonProps = {
   disabled: boolean;

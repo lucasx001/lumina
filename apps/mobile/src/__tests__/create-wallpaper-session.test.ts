@@ -2,7 +2,7 @@ import type { GenerateRequest } from '@/lib/api';
 import { useCreateStore } from '@/stores/create-store';
 import { useGenerationStore } from '@/stores/generation-store';
 
-import { resetCreateWallpaperSession } from '@/features/create/create-wallpaper-session';
+import { resetCreateWallpaperSession } from '@/lib/create-wallpaper-session';
 
 const request: GenerateRequest = {
   category: 'Rainy nights',

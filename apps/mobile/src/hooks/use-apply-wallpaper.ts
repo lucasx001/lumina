@@ -1,9 +1,9 @@
 import { useLingui } from '@lingui/react/macro';
 import { useCallback, useState } from 'react';
 
-import { setWallpaper, type WallpaperTarget } from '../../../modules/expo-wallpaper';
+import { setWallpaper, type WallpaperTarget } from '../../modules/expo-wallpaper';
 
-import { downloadWallpaper } from './local-wallpaper';
+import { downloadWallpaper } from '@/lib/local-wallpaper';
 
 export function useApplyWallpaper(imageUrl: string) {
   const { t } = useLingui();

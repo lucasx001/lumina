@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
-import { GoogleSignInButton } from '@/features/auth/GoogleSignInButton';
+import { GoogleSignInButton } from '@/components/auth';
 
 jest.mock('@/hooks/use-theme', () => ({
   useTheme: () => ({ surface: '#ffffff', text: '#111111' }),

@@ -16,7 +16,7 @@ jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-jest.mock('@/features/wallpapers/use-wallpapers', () => ({
+jest.mock('@/hooks/use-wallpapers', () => ({
   useWallpapers: (...args: unknown[]) => mockUseWallpapers(...args),
 }));
 

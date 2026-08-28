@@ -5,6 +5,33 @@ jest.mock('react-native-toast-message', () => {
   return { __esModule: true, default: Toast };
 });
 
+jest.mock(
+  'expo-file-system',
+  () => ({
+    File: Object.assign(jest.fn(), { downloadFileAsync: jest.fn() }),
+    Paths: { cache: 'cache' },
+  }),
+  { virtual: true },
+);
+
+jest.mock(
+  'expo-media-library',
+  () => ({
+    Asset: { create: jest.fn() },
+    requestPermissionsAsync: jest.fn(),
+  }),
+  { virtual: true },
+);
+
+jest.mock(
+  'expo-sharing',
+  () => ({
+    isAvailableAsync: jest.fn(),
+    shareAsync: jest.fn(),
+  }),
+  { virtual: true },
+);
+
 function mockTranslate(message: TestMessage, values?: Record<string, unknown>): string {
   const template = typeof message === 'string' ? message : (message.message ?? message.id ?? '');
 

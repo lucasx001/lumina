@@ -68,7 +68,7 @@ jest.mock('expo-image', () => {
   return { Image: (props: Record<string, unknown>) => React.createElement(View, props) };
 });
 
-jest.mock('@/features/auth/useAuth', () => ({
+jest.mock('@/hooks/use-auth', () => ({
   useAuth: () => ({
     authError: undefined,
     isSigningIn: false,

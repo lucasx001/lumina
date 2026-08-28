@@ -6,7 +6,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { bindDevice } from '@/lib/api';
 import { getAnonymousDeviceId } from '@/lib/device-id';
 
-import { normalizeAuthError } from './auth-error';
+import { normalizeAuthError } from '@/lib/auth-error';
 
 WebBrowser.maybeCompleteAuthSession();
 

@@ -6,17 +6,20 @@ import { TextInput, View } from 'react-native';
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
-import { ResultView } from '@/features/create/result-view';
+import { ResultView } from '@/components/create';
 import { useGenerate } from '@/hooks/use-generate';
 import { useTheme } from '@/hooks/use-theme';
 import { useCreateStore } from '@/stores/create-store';
 import type { WallpaperSize } from '@/lib/useDeviceSize';
 
-import { EditModePicker, type ExistingImageMode } from './EditModePicker';
-import { ImagePickerEntry } from './ImagePickerEntry';
-import { StyleToPresetForm } from './StyleToPresetForm';
+import {
+  EditModePicker,
+  ImagePickerEntry,
+  StyleToPresetForm,
+  type ExistingImageMode,
+} from '@/components/edit';
 
 type ExistingImageEditorProps = {
   deviceSize: WallpaperSize;

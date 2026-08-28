@@ -3,8 +3,8 @@ import { useRouter } from 'expo-router';
 import { useLayoutEffect } from 'react';
 import { View } from 'react-native';
 
-import { fixedCreateSheetBehavior } from '@/features/create/create-wallpaper-bottom-sheet';
-import { resetCreateWallpaperSession } from '@/features/create/create-wallpaper-session';
+import { fixedCreateSheetBehavior } from '@/lib/create-wallpaper-bottom-sheet';
+import { resetCreateWallpaperSession } from '@/lib/create-wallpaper-session';
 import { radius } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { CreateWallpaperScreen } from '@/screens/create-wallpaper';

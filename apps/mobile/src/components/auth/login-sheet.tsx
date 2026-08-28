@@ -6,7 +6,7 @@ import { ThemedView } from '@/components/themed-view';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-import { GoogleSignInButton } from './GoogleSignInButton';
+import { GoogleSignInButton } from './google-sign-in-button';
 
 export type LoginSheetProps = {
   error?: Error;

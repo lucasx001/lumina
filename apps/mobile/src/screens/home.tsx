@@ -6,9 +6,9 @@ import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 
 import { ErrorState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon } from '@/components/ui/app-icon';
+import { AppIcon } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
-import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
+import { useWallpapers } from '@/hooks/use-wallpapers';
 import { useTheme } from '@/hooks/use-theme';
 import type { WallpaperListItem } from '@/lib/api';
 

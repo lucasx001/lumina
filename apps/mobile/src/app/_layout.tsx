@@ -10,8 +10,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import Toast from 'react-native-toast-message';
 
-import { ApiTokenBridge } from '@/features/auth/ApiTokenBridge';
-import { MobileI18nProvider } from '@/features/i18n/i18n-provider';
+import { ApiTokenBridge } from '@/components/auth';
+import { MobileI18nProvider } from '@/components/i18n-provider';
 import { useTheme } from '@/hooks/use-theme';
 import { clerkTokenCache } from '@/lib/clerkTokenCache';
 import { queryClient } from '@/lib/queryClient';

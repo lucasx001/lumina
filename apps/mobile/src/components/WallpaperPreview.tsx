@@ -1,9 +1,7 @@
 import { Image, type ImageProps } from 'expo-image';
 import { View } from 'react-native';
 
-import { HomeIconsOverlay } from '@/components/preview/home-icons-overlay';
-import { LockClockOverlay } from '@/components/preview/lock-clock-overlay';
-import { StatusBarOverlay } from '@/components/preview/status-bar-overlay';
+import { HomeIconsOverlay, LockClockOverlay, StatusBarOverlay } from '@/components/preview';
 import { radius, shadows } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 

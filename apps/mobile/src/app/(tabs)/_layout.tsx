@@ -2,7 +2,7 @@ import { useLingui } from '@lingui/react/macro';
 import { router, Tabs } from 'expo-router';
 import { View } from 'react-native';
 
-import { AppIcon } from '@/components/ui/app-icon';
+import { AppIcon } from '@/components/ui';
 import { useTheme } from '@/hooks/use-theme';
 import { createTabBarItemStyle, createTabBarStyle } from '@/navigation/tab-bar-options';
 import { tabIcons } from '@/navigation/tab-icons';

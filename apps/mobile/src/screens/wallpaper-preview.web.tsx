@@ -2,8 +2,8 @@ import { useLingui } from '@lingui/react/macro';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
-import { WallpaperDetail } from '@/features/wallpapers/wallpaper-detail';
-import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
+import { WallpaperDetail } from '@/components/wallpaper-detail';
+import { useWallpapers } from '@/hooks/use-wallpapers';
 import { useWallpaperPreviewStore } from '@/stores/wallpaper-preview-store';
 
 export function WallpaperPreviewScreen() {

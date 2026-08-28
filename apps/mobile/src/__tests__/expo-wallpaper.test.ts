@@ -12,12 +12,13 @@ const expoMock: {
     setWallpaper: jest.Mock<Promise<void>, [string, 'home' | 'lock' | 'both']>;
   }>;
 } = jest.requireMock('expo');
-const mockSetWallpaper = expoMock.requireNativeModule.mock.results[0].value.setWallpaper;
+const mockSetWallpaper = jest.fn<Promise<void>, [string, 'home' | 'lock' | 'both']>();
 
 describe('expo-wallpaper', () => {
   beforeEach(() => {
     mockSetWallpaper.mockReset();
     mockSetWallpaper.mockResolvedValue();
+    expoMock.requireNativeModule.mockReturnValue({ setWallpaper: mockSetWallpaper });
   });
 
   it.each(['home', 'lock', 'both'] as const)(

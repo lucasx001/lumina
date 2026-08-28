@@ -4,9 +4,9 @@ import { Pressable, useWindowDimensions, View } from 'react-native';
 
 import { WallpaperPreview, type WallpaperPreviewMode } from '@/components/WallpaperPreview';
 import { ThemedText } from '@/components/themed-text';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
-import { ApplySheet } from '@/features/apply/ApplySheet';
+import { ApplySheet } from '@/components/apply';
 import { useTheme } from '@/hooks/use-theme';
 import type { GenerationJob } from '@/lib/api';
 

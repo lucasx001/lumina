@@ -1,4 +1,4 @@
-import type { AppIconName } from '@/components/ui/app-icon';
+import type { AppIconName } from '@/components/ui';
 
 export const tabIcons = {
   add: 'plus',

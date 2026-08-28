@@ -1,7 +1,7 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { WallpaperDetail } from '@/features/wallpapers/wallpaper-detail';
+import { WallpaperDetail } from '@/components/wallpaper-detail';
 
 jest.mock('expo-image', () => {
   const React = require('react');

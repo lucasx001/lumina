@@ -6,9 +6,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
-import { AppIcon } from '@/components/ui/app-icon';
+import { AppIcon } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
-import { useWallpapers } from '@/features/wallpapers/use-wallpapers';
+import { useWallpapers } from '@/hooks/use-wallpapers';
 import { useTheme } from '@/hooks/use-theme';
 import type { WallpaperListItem } from '@/lib/api';
 

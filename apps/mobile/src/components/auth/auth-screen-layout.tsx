@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ThemedText } from '@/components/themed-text';
 import { spacing } from '@/constants/theme';
-import { GoogleSignInButton } from '@/features/auth/GoogleSignInButton';
+import { GoogleSignInButton } from './google-sign-in-button';
 import { useTheme } from '@/hooks/use-theme';
 
 type AuthScreenLayoutProps = {

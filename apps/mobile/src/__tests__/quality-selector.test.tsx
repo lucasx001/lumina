@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 
-import { QualitySelector } from '@/features/create/quality-selector';
+import { QualitySelector } from '@/components/create';
 
 describe('QualitySelector', () => {
   it('switches from the fast draft tier to the full-resolution tier', () => {

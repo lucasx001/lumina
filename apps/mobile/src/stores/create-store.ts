@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
-import type { CreateChipField, CreateChipValues } from '@/features/create/chips-selector';
-import type { ExistingImageMode } from '@/features/edit/EditModePicker';
+import type { CreateChipField, CreateChipValues } from '@/components/create';
+import type { ExistingImageMode } from '@/components/edit';
 import type { GenerationQuality } from '@/lib/api';
 
 type CreateState = {

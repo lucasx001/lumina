@@ -3,12 +3,12 @@ import { Modal, Platform, Pressable, View } from 'react-native';
 
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 
-import { useApplyWallpaper } from './useApplyWallpaper';
-import { useSaveAndShare } from './useSaveAndShare';
+import { useApplyWallpaper } from '@/hooks/use-apply-wallpaper';
+import { useSaveAndShare } from '@/hooks/use-save-and-share';
 
 export type ApplySheetProps = {
   imageUrl: string;
