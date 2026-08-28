@@ -128,14 +128,17 @@ export function createApiClient({
   baseUrl,
   fetchImpl = defaultFetch,
   getToken = async () => defaultTokenProvider?.(),
-  timeoutMs = 20_000,
 }: ApiClientOptions = {}) {
-  return async function apiFetch<T>(path: string, init?: RequestInit): Promise<T> {
+  return async function apiFetch<T>(
+    path: string,
+    options?: { timeoutMs?: number; init?: RequestInit },
+  ): Promise<T> {
     if (!baseUrl) {
       throw new ApiError('EXPO_PUBLIC_API_URL is not configured.', 0, 'API_URL_NOT_CONFIGURED');
     }
+    const { timeoutMs, init } = options || {};
 
-    const headers = new Headers(init?.headers);
+    const headers = new Headers(init?.headers || {});
     headers.set('Accept', 'application/json');
     const token = await getToken();
     if (token) {
@@ -146,7 +149,7 @@ export function createApiClient({
     init?.signal?.addEventListener('abort', abortFromCaller, { once: true });
     const timeout = setTimeout(() => {
       controller.abort();
-    }, timeoutMs);
+    }, timeoutMs || 20_000);
     let response: Response;
 
     try {
@@ -198,17 +201,23 @@ export function getPresets(): Promise<PresetsResponse> {
 
 export function createGeneration(request: GenerateRequest): Promise<GenerateResponse> {
   return apiFetch<GenerateResponse>('/generate', {
-    body: JSON.stringify(request),
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
+    init: {
+      body: JSON.stringify(request),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    },
+    timeoutMs: 120_000,
   });
 }
 
 export function createSourceImageUpload(contentType: string): Promise<PresignedUpload> {
   return apiFetch<PresignedUpload>('/uploads/presign', {
-    body: JSON.stringify({ contentType }),
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
+    init: {
+      body: JSON.stringify({ contentType }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    },
+    timeoutMs: 120_000,
   });
 }
 
@@ -271,9 +280,11 @@ export function setWallpaperFavorite(
   input: { deviceId: string; favorite: boolean },
 ): Promise<FavoriteWallpaperResponse> {
   return apiFetch<FavoriteWallpaperResponse>(`/wallpapers/${encodeURIComponent(id)}/favorite`, {
-    body: JSON.stringify(input),
-    headers: { 'Content-Type': 'application/json' },
-    method: 'PATCH',
+    init: {
+      body: JSON.stringify(input),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'PATCH',
+    },
   });
 }
 
@@ -283,9 +294,11 @@ export function bindDevice(
 ): Promise<BindDeviceResponse> {
   const client = getToken ? createApiClient({ baseUrl: apiBaseUrl, getToken }) : apiFetch;
   return client<BindDeviceResponse>('/me/bind-device', {
-    body: JSON.stringify({ deviceId }),
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
+    init: {
+      body: JSON.stringify({ deviceId }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    },
   });
 }
 

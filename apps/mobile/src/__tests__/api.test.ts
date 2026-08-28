@@ -126,14 +126,16 @@ describe('api client', () => {
 
     await expect(
       apiFetch('/generate', {
-        body: JSON.stringify({
-          height: 2400,
-          mode: 'text2img',
-          userInputs: { idea: 'night city' },
-          width: 1080,
-        }),
-        headers: { 'Content-Type': 'application/json' },
-        method: 'POST',
+        init: {
+          body: JSON.stringify({
+            height: 2400,
+            mode: 'text2img',
+            userInputs: { idea: 'night city' },
+            width: 1080,
+          }),
+          headers: { 'Content-Type': 'application/json' },
+          method: 'POST',
+        },
       }),
     ).resolves.toEqual({ jobId: 'job-1' });
     await expect(apiFetch('/presets')).resolves.toEqual({
