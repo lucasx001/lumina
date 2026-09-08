@@ -27,6 +27,7 @@
 | [0014](./0014-auth-frontend.md)            | auth-frontend                           | FE     | 0007, 0013       | M3     | ◐    |
 | [0015](./0015-image-edit.md)               | image-edit                              | BE+FE  | 0005, 0009       | M4     | ☐    |
 | [0016](./0016-polish.md)                   | polish                                  | BE+FE  | all              | M5     | ☐    |
+| [0017](./0017-docker-self-hosting.md)      | docker-self-hosting                     | Eng    | 0000, landing    | M6     | ◐    |
 
 ## 当前关键路径
 
@@ -67,6 +68,8 @@
 - **M3 登录认证**：0013、0014。
 - **M4 已有图片能力**：0015。
 - **M5 打磨**：0016。
+- **M6 Self-hosting**：0017 已完成单台 ECS 的 Docker、GHCR 与 GitHub
+  Actions 设计确认；Docker/Compose/CI 文件及真实 ECS 验收待实施。
 
 ## 本期不做
 
