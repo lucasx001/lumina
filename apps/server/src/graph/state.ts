@@ -16,14 +16,14 @@ export type WallpaperUserInputs = {
 
 export type WallpaperGraphInput = {
   category: string;
-  clerkUserId?: string;
-  deviceId?: string;
+  categoryId: string;
+  clerkUserId: string;
   height: number;
   mode: WallpaperMode;
   quality?: WallpaperQuality;
   presetId?: string;
   sourceImageUrl?: string;
-  userId?: string;
+  userId: string;
   userInputs: WallpaperUserInputs;
   wallpaperId?: string;
   width: number;
@@ -41,10 +41,10 @@ export type WallpaperGraphState = WallpaperGraphInput & {
 
 export const WallpaperGraphAnnotation = Annotation.Root({
   category: Annotation<string>,
-  clerkUserId: Annotation<string | undefined>,
-  deviceId: Annotation<string | undefined>,
+  clerkUserId: Annotation<string>,
+  categoryId: Annotation<string>,
   presetId: Annotation<string | undefined>,
-  userId: Annotation<string | undefined>,
+  userId: Annotation<string>,
   userInputs: Annotation<WallpaperUserInputs>,
   mode: Annotation<WallpaperMode>,
   quality: Annotation<WallpaperQuality | undefined>,

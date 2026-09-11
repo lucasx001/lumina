@@ -21,8 +21,10 @@ wallpaper imagery, precise typography, and a small number of focused calls to ac
 - CSS-created wallpaper art and phone mockups, so the first deployment has no remote-image,
   licensing, or image-hosting dependency.
 - A primary Android download CTA in the header, hero, and final section.
-- Product storytelling for Lumina's existing capabilities: AI generation, image editing, device
-  preview, Android wallpaper application, library, save, and share.
+- Product storytelling follows [the product specification](../../SPEC.md): sign in, open Add, choose
+  a style, enter a short prompt, select a category, and generate one wallpaper. The account owns all
+  categories and wallpapers; Home shows category cards leading to wallpaper previews, Android
+  application, save, and share. Image editing is explicitly labeled as coming soon.
 - Metadata, favicon, and responsive behavior suitable for social sharing and search previews.
 - Vercel configuration and project documentation sufficient to deploy from a monorepo subdirectory.
 
@@ -42,10 +44,10 @@ wallpaper imagery, precise typography, and a small number of focused calls to ac
 2. **Hero** — Large bilingual value statement, a short supporting line, Android CTA, and one
    prominent phone mockup that frames an abstract wallpaper. The hero explains the promise: make a
    wallpaper that feels personal.
-3. **Workflow** — Three concise steps, each paired with an abstract visual: describe an idea, refine
-   it, then preview and apply it.
-4. **Capability grid** — Supports the existing product rather than inventing features: AI-assisted
-   generation, edit from existing images, device-aware preview, and save/share/library.
+3. **Workflow** — Three steps: choose a style and describe an idea in Add; select a category and
+   generate; open the saved wallpaper from Home, preview, and apply it.
+4. **Capability grid** — Account-owned categories, AI generation, home/lock previews, Android
+   application, save/share, and an image-editing entry explicitly labeled coming soon.
 5. **Closing CTA** — Restates Android availability and the core promise in a high-contrast panel.
 6. **Footer** — Product name, short bilingual descriptor, and a lightweight copyright line.
 

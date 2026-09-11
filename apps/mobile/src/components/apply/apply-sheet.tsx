@@ -9,14 +9,17 @@ import { useTheme } from '@/hooks/use-theme';
 
 import { useApplyWallpaper } from '@/hooks/use-apply-wallpaper';
 import { useSaveAndShare } from '@/hooks/use-save-and-share';
+import Toast from 'react-native-toast-message';
+import { getAccountSession, isCurrentAccount } from '@/lib/account-session';
 
 export type ApplySheetProps = {
+  onRetryImage?: () => void;
   imageUrl: string;
   onDismiss: () => void;
   visible: boolean;
 };
 
-export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
+export function ApplySheet({ imageUrl, onDismiss, visible, onRetryImage }: ApplySheetProps) {
   const { t } = useLingui();
   const theme = useTheme();
   const { applyingTarget, applyWallpaper, error: applyError } = useApplyWallpaper(imageUrl);
@@ -29,12 +32,16 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
   const isAndroid = Platform.OS === 'android';
   const error = applyError ?? saveAndShareError;
 
-  async function runAction(action: () => Promise<void>) {
+  async function runAction(action: () => Promise<void>, message?: string) {
+    const account = getAccountSession();
     try {
       await action();
+      if (!isCurrentAccount(account)) return;
+      if (message) Toast.show({ type: 'success', text1: message });
       onDismiss();
     } catch {
       // Hooks retain the user-facing error for the sheet.
+      if (isCurrentAccount(account)) onRetryImage?.();
     }
   }
 
@@ -93,22 +100,21 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
                   label={applyingTarget === target ? t`Applying…` : label}
                   loading={applyingTarget === target}
                   key={target}
-                  onPress={() => void runAction(() => applyWallpaper(target))}
+                  onPress={() =>
+                    void runAction(() => applyWallpaper(target), t`Wallpaper applied.`)
+                  }
                   testID={`apply-wallpaper-${target}`}
                   variant={target === 'both' ? 'primary' : 'secondary'}
                 />
               ))}
-              <Button
-                disabled={disabled}
-                fullWidth
-                icon="share"
-                label={activeAction === 'share' ? t`Opening share…` : t`Share`}
-                loading={activeAction === 'share'}
-                onPress={() => void runAction(shareWallpaper)}
-                testID="share-wallpaper"
-                variant="secondary"
-              />
             </>
+          ) : Platform.OS === 'web' ? (
+            <ThemedText variant="caption">
+              <Trans>
+                Web cannot set system wallpaper. Save the image from your browser, then apply it in
+                system settings.
+              </Trans>
+            </ThemedText>
           ) : (
             <ThemedText
               style={{ color: theme.mutedText }}
@@ -121,16 +127,30 @@ export function ApplySheet({ imageUrl, onDismiss, visible }: ApplySheetProps) {
               </Trans>
             </ThemedText>
           )}
-          <Button
-            disabled={disabled}
-            fullWidth
-            icon="download"
-            label={activeAction === 'save' ? t`Saving…` : t`Save to Photos`}
-            loading={activeAction === 'save'}
-            onPress={() => void runAction(saveWallpaper)}
-            testID="save-wallpaper"
-            variant={isAndroid ? 'secondary' : 'primary'}
-          />
+          {Platform.OS !== 'web' ? (
+            <>
+              <Button
+                disabled={disabled}
+                fullWidth
+                icon="share"
+                label={activeAction === 'share' ? t`Opening share…` : t`Share`}
+                loading={activeAction === 'share'}
+                onPress={() => void runAction(shareWallpaper)}
+                testID="share-wallpaper"
+                variant="secondary"
+              />
+              <Button
+                disabled={disabled}
+                fullWidth
+                icon="download"
+                label={activeAction === 'save' ? t`Saving…` : t`Save to Photos`}
+                loading={activeAction === 'save'}
+                onPress={() => void runAction(saveWallpaper, t`Wallpaper saved to Photos.`)}
+                testID="save-wallpaper"
+                variant={isAndroid ? 'secondary' : 'primary'}
+              />
+            </>
+          ) : null}
           {error ? (
             <ThemedText style={{ color: theme.error }} testID="apply-sheet-error" variant="caption">
               {error.message}

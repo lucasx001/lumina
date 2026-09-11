@@ -1,4 +1,5 @@
-import { File, Paths } from 'expo-file-system';
+import { Directory, File, Paths } from 'expo-file-system';
+import { getAccountSession, requireCurrentAccount } from '@/lib/account-session';
 
 function extensionFromUrl(imageUrl: string) {
   const path = imageUrl.split('?')[0] ?? '';
@@ -6,16 +7,33 @@ function extensionFromUrl(imageUrl: string) {
   return extension ? `.${extension}` : '.jpg';
 }
 
-/** Downloads a generated remote image into the app cache for native platform APIs. */
-export async function downloadWallpaper(imageUrl: string) {
+/** Only this app-owned directory is removed; exported Photos assets are untouched. */
+export function clearWallpaperDownloads(): void {
+  const directory = new Directory(Paths.cache, 'lumina-wallpapers');
+  if (directory.exists) directory.delete();
+}
+
+export async function withLocalWallpaper(
+  imageUrl: string,
+  action: (uri: string) => Promise<unknown>,
+): Promise<void> {
+  const account = getAccountSession();
+  requireCurrentAccount(account);
   if (!imageUrl.startsWith('https://') && !imageUrl.startsWith('http://')) {
     throw new TypeError('A remote wallpaper URL is required.');
   }
 
+  const directory = new Directory(Paths.cache, 'lumina-wallpapers', `${account.version}`);
+  directory.create({ intermediates: true, idempotent: true });
   const destination = new File(
-    Paths.cache,
-    `lumina-wallpaper-${Date.now()}${extensionFromUrl(imageUrl)}`,
+    directory,
+    `${Date.now()}-${Math.random().toString(36).slice(2)}${extensionFromUrl(imageUrl)}`,
   );
-  const file = await File.downloadFileAsync(imageUrl, destination);
-  return file.uri;
+  try {
+    const file = await File.downloadFileAsync(imageUrl, destination);
+    requireCurrentAccount(account);
+    await action(file.uri);
+  } finally {
+    if (destination.exists) destination.delete();
+  }
 }

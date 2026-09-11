@@ -1,4 +1,5 @@
-import { Image, type ImageProps } from 'expo-image';
+import type { ImageProps } from 'expo-image';
+import { RemoteImage } from '@/components/remote-image';
 import { View } from 'react-native';
 
 import { HomeIconsOverlay, LockClockOverlay, StatusBarOverlay } from '@/components/preview';
@@ -10,6 +11,7 @@ export type WallpaperPreviewMode = 'home-screen' | 'lock-screen';
 export type WallpaperPreviewProps = {
   height: number;
   image: NonNullable<ImageProps['source']>;
+  onRetryImage?: () => void;
   /** Retained for the simple `<WallpaperPreview image lockScreen />` use case. */
   lockScreen?: boolean;
   mode?: WallpaperPreviewMode;
@@ -19,6 +21,7 @@ export type WallpaperPreviewProps = {
 export function WallpaperPreview({
   height,
   image,
+  onRetryImage,
   lockScreen,
   mode,
   width,
@@ -55,7 +58,8 @@ export function WallpaperPreview({
           overflow: 'hidden',
         }}
       >
-        <Image
+        <RemoteImage
+          onRetry={onRetryImage}
           alt="Wallpaper preview"
           contentFit="cover"
           source={image}

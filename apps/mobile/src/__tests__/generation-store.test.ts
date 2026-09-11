@@ -3,7 +3,7 @@ import { ApiError, type GenerateRequest } from '@/lib/api';
 import { clientCooldownMs, useGenerationStore } from '@/stores/generation-store';
 
 const request: GenerateRequest = {
-  category: 'Aurora',
+  categoryId: 'category-aurora',
   height: 2400,
   mode: 'text2img',
   quality: 'draft',
@@ -31,6 +31,7 @@ describe('useGenerationStore', () => {
 
   it('blocks duplicate requests during the client cooldown', () => {
     useGenerationStore.getState().start('create', request, 1_000);
+    useGenerationStore.getState().setJobId('create', 'job-1');
 
     expect(useGenerationStore.getState().start('create', request, 2_000)).toBe(false);
     expect(useGenerationStore.getState().sessions.create.clientError).toBeInstanceOf(ApiError);

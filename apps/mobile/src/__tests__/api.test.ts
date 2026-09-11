@@ -1,9 +1,11 @@
 import {
   ApiError,
-  bindDevice,
   createApiClient,
+  createCategory,
   createGeneration,
+  getCategories,
   getGenerationJob,
+  getWallpaper,
   getPresets,
   getWallpapers,
   resolveApiBaseUrl,
@@ -156,9 +158,11 @@ describe('api client', () => {
   });
 
   it('exposes typed helpers for generation endpoints', () => {
-    expect(bindDevice).toBeInstanceOf(Function);
+    expect(createCategory).toBeInstanceOf(Function);
     expect(createGeneration).toBeInstanceOf(Function);
+    expect(getCategories).toBeInstanceOf(Function);
     expect(getGenerationJob).toBeInstanceOf(Function);
+    expect(getWallpaper).toBeInstanceOf(Function);
     expect(getPresets).toBeInstanceOf(Function);
     expect(getWallpapers).toBeInstanceOf(Function);
   });

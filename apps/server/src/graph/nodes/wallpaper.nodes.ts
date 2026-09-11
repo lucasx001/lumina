@@ -18,17 +18,19 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
       const prompt = resolvePrompt(preset?.promptTemplate, state);
       let wallpaperId = state.wallpaperId;
       if (wallpaperId) {
-        await dependencies.wallpapers.update(wallpaperId, { prompt, status: 'processing' });
+        await dependencies.wallpapers.update(
+          { id: wallpaperId, userId: state.userId },
+          { prompt, status: 'processing' },
+        );
       } else {
         const wallpaper = await dependencies.wallpapers.create({
-          category: state.category,
-          deviceId: state.deviceId,
+          categoryId: state.categoryId,
           height: state.height,
           mode: state.mode,
           presetId: state.presetId,
           prompt,
           quality: state.quality ?? 'hd',
-          sourceImageUrl: state.sourceImageUrl,
+          sourceImageKey: state.sourceImageUrl,
           status: 'pending',
           userId: state.userId,
           width: state.width,
@@ -93,15 +95,18 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
           ownerClerkUserId: state.clerkUserId,
           styleRefUrl: state.sourceImageUrl,
         });
-        await dependencies.wallpapers.update(state.wallpaperId, {
-          error: null,
-          providerTask: result.providerTask,
-          prompt: state.prompt,
-          resultImageUrl: state.sourceImageUrl,
-          status: 'succeeded',
-          width: state.width,
-          height: state.height,
-        });
+        await dependencies.wallpapers.update(
+          { id: state.wallpaperId, userId: state.userId },
+          {
+            error: null,
+            providerTask: result.providerTask,
+            prompt: state.prompt,
+            resultImageKey: state.sourceImageUrl,
+            status: 'succeeded',
+            width: state.width,
+            height: state.height,
+          },
+        );
 
         return { resultImageUrl: state.sourceImageUrl };
       }
@@ -110,6 +115,7 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
       const key = generateWallpaperKey({
         extension: extensionForMimeType(mimeType),
         id: state.wallpaperId,
+        ownerId: state.userId,
       });
       const stored = result.imageBytes
         ? await dependencies.storage.uploadBuffer(Buffer.from(result.imageBytes), key, mimeType)
@@ -126,15 +132,18 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
         );
       }
 
-      await dependencies.wallpapers.update(state.wallpaperId, {
-        error: null,
-        providerTask: result.providerTask,
-        prompt: state.prompt,
-        resultImageUrl: stored.url,
-        status: 'succeeded',
-        width: result.width ?? state.width,
-        height: result.height ?? state.height,
-      });
+      await dependencies.wallpapers.update(
+        { id: state.wallpaperId, userId: state.userId },
+        {
+          error: null,
+          providerTask: result.providerTask,
+          prompt: state.prompt,
+          resultImageKey: stored.key,
+          status: 'succeeded',
+          width: stored.width ?? result.width ?? null,
+          height: stored.height ?? result.height ?? null,
+        },
+      );
 
       return { resultImageUrl: stored.url };
     },

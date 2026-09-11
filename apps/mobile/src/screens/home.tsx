@@ -1,26 +1,23 @@
 import { Trans, useLingui } from '@lingui/react/macro';
-import { Image } from 'expo-image';
+import { RemoteImage } from '@/components/remote-image';
+import { GenerationTasks } from '@/components/generation-tasks';
 import { useRouter } from 'expo-router';
-import { useMemo } from 'react';
 import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
 
-import { ErrorState } from '@/components/feedback';
+import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
 import { AppIcon } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
-import { useWallpapers } from '@/hooks/use-wallpapers';
+import { useCategories } from '@/hooks/use-categories';
 import { useTheme } from '@/hooks/use-theme';
-import type { WallpaperListItem } from '@/lib/api';
-
-type WallpaperCategory = { items: WallpaperListItem[]; name: string };
 
 export function HomeScreen() {
   const { t } = useLingui();
   const router = useRouter();
   const theme = useTheme();
-  const wallpapers = useWallpapers({}, 50);
-  const categories = useMemo(() => groupWallpapers(wallpapers.wallpapers), [wallpapers.wallpapers]);
-  const error = wallpapers.deviceIdError ?? wallpapers.error ?? wallpapers.favoriteError;
+  const categoriesQuery = useCategories();
+  const categories = categoriesQuery.categories;
+  const error = categoriesQuery.error;
 
   return (
     <ScrollView
@@ -33,8 +30,8 @@ export function HomeScreen() {
       contentInsetAdjustmentBehavior="automatic"
       refreshControl={
         <RefreshControl
-          onRefresh={() => void wallpapers.refetch()}
-          refreshing={wallpapers.isRefetching}
+          onRefresh={() => void categoriesQuery.refetch()}
+          refreshing={categoriesQuery.isRefetching}
           tintColor={theme.primary}
         />
       }
@@ -72,9 +69,11 @@ export function HomeScreen() {
       </View>
 
       {error ? (
-        <ErrorState message={error.message} onRetry={() => void wallpapers.refetch()} />
+        <ErrorState message={error.message} onRetry={() => void categoriesQuery.refetch()} />
       ) : null}
-      {!error && !categories.length ? (
+      <GenerationTasks />
+      {categoriesQuery.isLoading ? <LoadingState label={t`Loading categories…`} /> : null}
+      {!error && !categoriesQuery.isLoading && !categories.length ? (
         <HomeEmptyState onCreate={() => router.push('/create-wallpaper')} />
       ) : null}
       {categories.length ? (
@@ -96,11 +95,12 @@ export function HomeScreen() {
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm }}>
             {categories.map((category) => (
               <CategoryCard
+                onRetryImage={() => void categoriesQuery.refetch()}
                 category={category}
                 key={category.name}
                 onPress={() =>
                   router.push({
-                    params: { category: category.name },
+                    params: { category: category.id },
                     pathname: '/category/[category]',
                   })
                 }
@@ -188,10 +188,18 @@ function HomeEmptyState({ onCreate }: { onCreate: () => void }) {
   );
 }
 
-function CategoryCard({ category, onPress }: { category: WallpaperCategory; onPress: () => void }) {
+function CategoryCard({
+  onRetryImage,
+  category,
+  onPress,
+}: {
+  onRetryImage: () => void;
+  category: { count: number; coverImageUrls: string[]; id: string; name: string };
+  onPress: () => void;
+}) {
   const { t } = useLingui();
   const theme = useTheme();
-  const previews = category.items.filter((item) => item.resultImageUrl).slice(0, 2);
+  const previews = category.coverImageUrls.slice(0, 2);
 
   return (
     <Pressable
@@ -212,12 +220,13 @@ function CategoryCard({ category, onPress }: { category: WallpaperCategory; onPr
     >
       <View style={{ backgroundColor: theme.muted, flexDirection: 'row', gap: 2, height: 132 }}>
         {[0, 1].map((index) =>
-          previews[index]?.resultImageUrl ? (
-            <Image
+          previews[index] ? (
+            <RemoteImage
+              onRetry={onRetryImage}
               accessibilityLabel={t`Wallpaper preview`}
               contentFit="cover"
-              key={previews[index].id}
-              source={{ uri: previews[index].resultImageUrl }}
+              key={previews[index]}
+              source={{ uri: previews[index] }}
               style={{ flex: 1 }}
             />
           ) : (
@@ -236,19 +245,9 @@ function CategoryCard({ category, onPress }: { category: WallpaperCategory; onPr
           {category.name}
         </ThemedText>
         <ThemedText style={{ color: theme.mutedText }} variant="caption">
-          <Trans>{category.items.length} wallpapers</Trans>
+          <Trans>{category.count} wallpapers</Trans>
         </ThemedText>
       </View>
     </Pressable>
   );
-}
-
-function groupWallpapers(items: WallpaperListItem[]): WallpaperCategory[] {
-  const groups = new Map<string, WallpaperListItem[]>();
-  for (const item of items) {
-    const name = item.category;
-    groups.set(name, [...(groups.get(name) ?? []), item]);
-  }
-
-  return [...groups.entries()].map(([name, groupedItems]) => ({ items: groupedItems, name }));
 }

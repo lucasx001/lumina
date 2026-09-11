@@ -1,57 +1,34 @@
-# 0007 — frontend-foundation
+# 0007 — Mobile 应用基础
 
-> 模块：frontend-foundation ｜ 优先级：7 ｜ 依赖：无（现有 Expo 工程） ｜ 里程碑：M1 对应 SPEC：「前端设计」「技术栈」
->
-> 状态：本地实现、测试与三平台导出完成；Expo Go 真机与局域网后端手动联调待执行。
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-搭好 App 基础设施：底部 Tabs 导航、主题、React Query Provider、类型化 API
-client。坚持 native-first（`@expo/ui`），不引入 nativewind。
+使用 Expo SDK 56、Expo Router、Clerk、React Query、Zustand 和 Lingui。UI 保持原生 React
+Native 行为；社区 Bottom Sheet 置于 GestureHandlerRootView 下。
 
-## 范围
+导航为 Home、Add、Profile。当前 (create) 路由组承载首页和类型/作品页面，(add) 的 tabPress 打开 /create-wallpaper 透明覆盖路由。文件组名是实现细节；Add 对用户是动作入口。
 
-- In：Tabs 路由骨架、主题/字体、`QueryClientProvider`、`apps/mobile/src/lib/api.ts`（fetch 封装 + 基础 hooks）、设备尺寸工具。
-- Out：各页面具体内容（0009/0012）、鉴权头（0014 接入）。
+登录恢复完成前展示明确加载状态；业务页面受登录保护。账号变更时同步处理请求、Query 缓存与业务 store。屏幕尺寸仅用于比例和像素适配。
 
-## 涉及文件
+组件模块统一由 index.tsx 导出，消费者使用 @/components/[module]。Mobile 测试集中在 src/**tests**，原生模块 mock 集中维护。编写 Expo/RN 代码前阅读 AGENTS.md 指定的 SDK
+56 文档。
 
-- `apps/mobile/src/app/_layout.tsx`（包 `QueryClientProvider` + 主题 + 字体）
-- `apps/mobile/src/app/(tabs)/_layout.tsx`、`apps/mobile/src/app/(tabs)/index.tsx`(创作占位)、`library.tsx`、`profile.tsx`
-- `apps/mobile/src/lib/api.ts`（`apiFetch`、baseURL 来自
-  `expo-constants`/env）、`apps/mobile/src/lib/queryClient.ts`
-- `apps/mobile/src/lib/useDeviceSize.ts`（用响应式窗口尺寸和像素比推算目标壁纸 W×H）
-- `apps/mobile/src/components/`、`apps/mobile/src/constants/theme.ts`、`apps/mobile/src/hooks/`
-  （主题、可复用文本/容器、加载/错误状态与健康检查 query）
-- `apps/mobile/.env.example`（真机使用局域网 API URL）
+## 实现位置
 
-## 实现要点
+- `apps/mobile/src/app/_layout.tsx`
+- `apps/mobile/src/app/(tabs)/_layout.tsx`
+- `apps/mobile/src/components/`
+- `apps/mobile/src/hooks/`
+- `apps/mobile/src/stores/`
 
-- 依赖：`@tanstack/react-query`（必）、`zustand`（可选，轻状态）。
-- API baseURL 走 env（开发指向本机后端 IP；真机用局域网 IP 而非 localhost）。
-- Tabs：创作 / 壁纸库 / 我的，icon 用 `expo-symbols`；可叠 `expo-glass-effect` 提升质感。
-- `useDeviceSize`：返回设备像素宽高与推荐出图尺寸（≥2K，按屏比）。
-- 全局错误/加载态约定，供各页面复用。
+## 当前状态
 
-## 独立测试
+基础布局、路由、Providers 和组件目录已存在；账号状态边界按 A04 完成。
 
-- `expo start` 运行（此阶段无原生模块，Expo Go 或 dev build 均可），三个 Tab 可切换、主题/字体生效。
-- 用 React Query 调一个后端 `/health` 或 `/presets`（0006 就绪后）渲染出列表，验证 API client 连通。
-- 打印 `useDeviceSize()` 结果，确认推荐尺寸合理。
+## 验收标准
 
-## 完成标准 (DoD)
-
-- [x] 三 Tab 导航可用，主题/系统字体正常。
-- [x] `QueryClientProvider` 就位；配置 `EXPO_PUBLIC_API_URL` 后通过 React Query 请求 `/health`。
-- [x] `apiFetch` 统一处理 baseURL、JSON 与结构化服务端错误。
-- [x] `useDeviceSize` 返回保留屏幕比例、长边不小于 2K 的目标出图尺寸。
-
-## 验证记录
-
-- 移动端 Jest 覆盖 API
-  baseURL 优先级、成功 JSON 响应、结构化 HTTP 错误，以及常见与低密度屏幕的壁纸尺寸推算（5 项测试）。
-- `bun run check` 通过格式、lint 与类型检查；`bun --filter=@lumina/mobile run build`
-  成功导出 iOS、Android 与 Web，包含 `/`、`/library`、`/profile` 三个 Tab 路由。
-- 通过 `.env.example` 提供局域网 API URL 示例；不会为真机回退到 `localhost`。
-- 未进行 Expo Go/真机人工操作：配置真实 `EXPO_PUBLIC_API_URL` 后，应执行一次三个 Tab 切换与
-  `/health` 联调，以验证设备网络可达性。
+- [ ] 冷启动、登录恢复、退出和切换账号不闪现其他账号内容。
+- [ ] Add、返回、类型详情与预览导航可达，无空白占位页。
+- [ ] 真机小屏、键盘和大字体布局可用。

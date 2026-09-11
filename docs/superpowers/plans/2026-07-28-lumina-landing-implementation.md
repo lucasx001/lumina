@@ -375,8 +375,10 @@ configured. Vercel deploys the new Bun workspace as an independent monorepo proj
      bilingual copy, `AndroidCta`, and one `DevicePreview` using `aurora`.
   3. Workflow section at `id="workflow"`, titled `从灵感，到每天看见的世界。`, with three numbered
      cards: `描述灵感 / Describe`, `细致调整 / Refine`, and `预览并应用 / Preview & apply`.
-  4. Capability section at `id="features"` with cards accurately describing AI creation, editing an
-     existing image, device-aware preview, and the save/share/library workflow.
+  4. Capability section at `id="features"` follows [SPEC](../../SPEC.md): Add opens style, prompt,
+     and category selection; generated wallpapers belong to the account and appear under Home
+     category cards; previews offer Android application, save, and share. Image editing is labeled
+     coming soon, with a retained entry point.
   5. Closing CTA panel with `让每次解锁，都遇见你喜欢的世界。`, a supporting English translation,
      and `AndroidCta`.
   6. Footer with `Lumina — AI wallpaper, made personal.` and the current year.
@@ -387,8 +389,8 @@ configured. Vercel deploys the new Bun workspace as an independent monorepo proj
 - [ ] **Step 3: Add metadata and document styling**
 
   Expand `layout.tsx` metadata to include a bilingual title, the description
-  `用 AI 创建、编辑并应用属于你的 Android 壁纸。 Create and apply AI wallpapers that feel personal.`,
-  and a `robots` object allowing indexing. Omit `metadataBase` until a real canonical production URL
+  `选择风格，生成壁纸，按类型收藏你的灵感。 Create and organize personal AI wallpapers.`, and a
+  `robots` object allowing indexing. Omit `metadataBase` until a real canonical production URL
   exists. Use a system font stack rather than `next/font/google` so Latin and Simplified Chinese
   text receive consistent fallback coverage without an external font dependency.
 

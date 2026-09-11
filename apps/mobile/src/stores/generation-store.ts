@@ -5,6 +5,7 @@ import { ApiError, type GenerateRequest } from '@/lib/api';
 export type GenerationScope = 'create' | 'edit';
 
 type GenerationSession = {
+  isSubmitting?: boolean;
   clientError?: Error;
   cooldownUntil?: number;
   jobId?: string;
@@ -12,11 +13,13 @@ type GenerationSession = {
 };
 
 type GenerationState = {
+  activeAccountId: string | null;
   sessions: Record<GenerationScope, GenerationSession>;
 };
 
 type GenerationActions = {
   reset: (scope: GenerationScope) => void;
+  setActiveAccount: (accountId: string | null) => void;
   setClientError: (scope: GenerationScope, error: Error) => void;
   setJobId: (scope: GenerationScope, jobId: string) => void;
   start: (scope: GenerationScope, request: GenerateRequest, now?: number) => boolean;
@@ -31,24 +34,27 @@ function createInitialSessions(): GenerationState['sessions'] {
 }
 
 export const useGenerationStore = create<GenerationStore>()((set, get) => ({
+  activeAccountId: null,
   sessions: createInitialSessions(),
   reset: (scope) => set((state) => ({ sessions: { ...state.sessions, [scope]: {} } })),
+  setActiveAccount: (activeAccountId) => set({ activeAccountId }),
   setClientError: (scope, clientError) =>
     set((state) => ({
       sessions: {
         ...state.sessions,
-        [scope]: { ...state.sessions[scope], clientError },
+        [scope]: { ...state.sessions[scope], clientError, isSubmitting: false },
       },
     })),
   setJobId: (scope, jobId) =>
     set((state) => ({
       sessions: {
         ...state.sessions,
-        [scope]: { ...state.sessions[scope], jobId },
+        [scope]: { ...state.sessions[scope], jobId, isSubmitting: false },
       },
     })),
   start: (scope, request, now = Date.now()) => {
     const session = get().sessions[scope];
+    if (session.isSubmitting) return false;
     const cooldownUntil = session.cooldownUntil;
 
     if (cooldownUntil && cooldownUntil > now) {
@@ -76,6 +82,7 @@ export const useGenerationStore = create<GenerationStore>()((set, get) => ({
           cooldownUntil: now + clientCooldownMs,
           jobId: undefined,
           lastRequest: request,
+          isSubmitting: true,
         },
       },
     }));

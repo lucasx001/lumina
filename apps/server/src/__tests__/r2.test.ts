@@ -45,6 +45,20 @@ describe('generateWallpaperKey', () => {
 });
 
 describe('R2Storage', () => {
+  it('reads actual dimensions from the persisted image bytes', async () => {
+    const { client } = createClient();
+    const storage = createR2Storage(
+      { ...config, publicBaseUrl: 'https://images.example.com' },
+      { client },
+    );
+    const png = Buffer.from(
+      'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jmXcAAAAASUVORK5CYII=',
+      'base64',
+    );
+    await expect(
+      storage.uploadBuffer(png, 'wallpapers/test.png', 'image/png'),
+    ).resolves.toMatchObject({ width: 1, height: 1 });
+  });
   it('uploads a buffer and returns a public URL', async () => {
     const { client, send } = createClient();
     const storage = createR2Storage(

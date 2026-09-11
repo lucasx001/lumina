@@ -1,5 +1,5 @@
 import { Trans, useLingui } from '@lingui/react/macro';
-import { Image } from 'expo-image';
+import { RemoteImage } from '@/components/remote-image';
 import { useState, type ReactNode } from 'react';
 import { Pressable, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -17,6 +17,9 @@ type WallpaperDetailProps = {
   onClose: () => void;
   onModeChange: (mode: WallpaperPreviewMode) => void;
   onToggleFavorite?: () => void;
+  isUpdatingFavorite?: boolean;
+  favoriteError?: Error | null;
+  onRetryImage?: () => void;
   previewMode: WallpaperPreviewMode;
   wallpaper: WallpaperListItem;
 };
@@ -26,6 +29,9 @@ export function WallpaperDetail({
   onClose,
   onModeChange,
   onToggleFavorite,
+  isUpdatingFavorite = false,
+  favoriteError,
+  onRetryImage,
   previewMode,
   wallpaper,
 }: WallpaperDetailProps) {
@@ -49,9 +55,9 @@ export function WallpaperDetail({
   return (
     <View style={{ backgroundColor: theme.background, flex: 1 }} testID="wallpaper-detail">
       {wallpaper.resultImageUrl ? (
-        <Image
+        <RemoteImage
+          onRetry={onRetryImage}
           accessibilityLabel={t`Full-screen wallpaper preview`}
-          cachePolicy="memory-disk"
           contentFit="cover"
           source={{ uri: wallpaper.resultImageUrl }}
           style={{ bottom: 0, left: 0, position: 'absolute', right: 0, top: 0 }}
@@ -127,6 +133,7 @@ export function WallpaperDetail({
                   : t`Add wallpaper to favorites`
               }
               active={wallpaper.favorite}
+              disabled={isUpdatingFavorite}
               icon={wallpaper.favorite ? 'favorite-filled' : 'favorite'}
               onPress={onToggleFavorite}
               testID="detail-toggle-favorite"
@@ -188,6 +195,16 @@ export function WallpaperDetail({
           right: spacing.md,
         }}
       >
+        {isUpdatingFavorite ? (
+          <ThemedText style={{ color: '#FFFFFF' }} variant="caption">
+            <Trans>Updating favorite…</Trans>
+          </ThemedText>
+        ) : null}
+        {favoriteError ? (
+          <ThemedText accessibilityRole="alert" style={{ color: '#FFFFFF' }} variant="caption">
+            {favoriteError.message}
+          </ThemedText>
+        ) : null}
         <View
           style={{
             backgroundColor: 'rgba(255, 255, 255, 0.10)',
@@ -228,12 +245,14 @@ export function WallpaperDetail({
 }
 
 function RoundAction({
+  disabled = false,
   accessibilityLabel,
   active = false,
   icon,
   onPress,
   testID,
 }: {
+  disabled?: boolean;
   accessibilityLabel: string;
   active?: boolean;
   icon: 'arrow-left' | 'favorite' | 'favorite-filled' | 'info';
@@ -244,6 +263,8 @@ function RoundAction({
 
   return (
     <Pressable
+      disabled={disabled}
+      accessibilityState={{ disabled, busy: disabled }}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       onPress={onPress}

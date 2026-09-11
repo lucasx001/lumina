@@ -17,7 +17,12 @@ msgstr ""
 msgid "Close creation panel"
 msgstr "Close creation panel"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Verify your email"
+msgstr "Verify your email"
+
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Style transfer"
 msgstr "Style transfer"
 
@@ -25,27 +30,27 @@ msgstr "Style transfer"
 msgid "New password"
 msgstr "New password"
 
-#: apps/mobile/src/features/create/idea-input.tsx
+#: apps/mobile/src/components/create/idea-input.tsx
 msgid "Wallpaper idea"
 msgstr "Wallpaper idea"
 
-#: apps/mobile/src/features/auth/LoginSheet.tsx
+#: apps/mobile/src/components/auth/login-sheet.tsx
 msgid "Connect your creative space"
 msgstr "Connect your creative space"
 
 #: apps/mobile/src/features/auth/LoginSheet.tsx
-msgid "Sign in with Google to merge this device history into your account and keep creating anywhere."
-msgstr "Sign in with Google to merge this device history into your account and keep creating anywhere."
+#~ msgid "Sign in with Google to merge this device history into your account and keep creating anywhere."
+#~ msgstr "Sign in with Google to merge this device history into your account and keep creating anywhere."
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Mysterious"
 msgstr "Mysterious"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Anime art"
 msgstr "Anime art"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Anime"
 msgstr "Anime"
 
@@ -53,7 +58,7 @@ msgstr "Anime"
 msgid "We sent a verification code to {emailAddress}."
 msgstr "We sent a verification code to {emailAddress}."
 
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
+#: apps/mobile/src/components/edit/style-to-preset-form.tsx
 msgid "Save custom preset"
 msgstr "Save custom preset"
 
@@ -61,7 +66,7 @@ msgstr "Save custom preset"
 msgid "Start with an idea you cannot quite explain."
 msgstr "Start with an idea you cannot quite explain."
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Apply and share coming soon"
 msgstr "Apply and share coming soon"
 
@@ -69,40 +74,56 @@ msgstr "Apply and share coming soon"
 msgid "Loading wallpapers…"
 msgstr "Loading wallpapers…"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Create an account"
+msgstr "Create an account"
+
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "City"
 msgstr "City"
+
+#: apps/mobile/src/components/create/result-view.tsx
+msgid "View category"
+msgstr "View category"
 
 #: apps/mobile/src/screens/password-reset.tsx
 msgid "Verify code"
 msgstr "Verify code"
 
+#: apps/mobile/src/components/wallpaper-detail.tsx
+msgid "Updating favorite…"
+msgstr "Updating favorite…"
+
 #: apps/mobile/src/screens/profile.tsx
 msgid "Share Lumina"
 msgstr "Share Lumina"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Extend"
 msgstr "Extend"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Give inspiration a place to stay."
+msgstr "Give inspiration a place to stay."
+
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "What would you like to change?"
 msgstr "What would you like to change?"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Choose where to apply it."
 msgstr "Choose where to apply it."
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Choose an image to extend, enhance, edit, or turn into a reusable style."
 msgstr "Choose an image to extend, enhance, edit, or turn into a reusable style."
 
-#: apps/mobile/src/features/create/result-view.tsx
+#: apps/mobile/src/components/create/result-view.tsx
 msgid "Regenerate"
 msgstr "Regenerate"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "This wallpaper has no preview image."
 msgstr "This wallpaper has no preview image."
 
@@ -114,6 +135,10 @@ msgstr "Retry"
 msgid "Completing Google sign-in…"
 msgstr "Completing Google sign-in…"
 
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Name"
+msgstr "Name"
+
 #: apps/mobile/src/screens/sign-in.tsx
 #: apps/mobile/src/screens/sign-up.tsx
 msgid "Enter your email and password."
@@ -124,11 +149,12 @@ msgstr "Enter your email and password."
 msgid "Use a different email"
 msgstr "Use a different email"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/__tests__/create-catalog.test.ts
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Minimal"
 msgstr "Minimal"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Apply wallpaper"
 msgstr "Apply wallpaper"
 
@@ -142,6 +168,10 @@ msgstr "Password"
 msgid "Wallpaper preview"
 msgstr "Wallpaper preview"
 
+#: apps/mobile/src/screens/sign-in.tsx
+msgid "Welcome back"
+msgstr "Welcome back"
+
 #: apps/mobile/src/screens/create-wallpaper.tsx
 #: apps/mobile/src/screens/home.tsx
 msgid "Create wallpaper"
@@ -151,7 +181,7 @@ msgstr "Create wallpaper"
 msgid "We sent a password reset code to {emailAddress}."
 msgstr "We sent a password reset code to {emailAddress}."
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
 msgid "Choose an action"
 msgstr "Choose an action"
 
@@ -164,35 +194,44 @@ msgstr "Verification code"
 msgid "Sign up with Google"
 msgstr "Sign up with Google"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "iOS does not allow apps to set system wallpaper directly. Save it, then set it from Photos."
 msgstr "iOS does not allow apps to set system wallpaper directly. Save it, then set it from Photos."
 
-#: apps/mobile/src/features/create/generate-button.tsx
+#: apps/mobile/src/screens/category-detail.tsx
+msgid "No wallpapers in this category yet."
+msgstr "No wallpapers in this category yet."
+
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Edit an existing image"
+msgstr "Edit an existing image"
+
+#: apps/mobile/src/components/create/generate-button.tsx
+#: apps/mobile/src/components/generation-tasks/index.tsx
 msgid "Generating…"
 msgstr "Generating…"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
 msgid "Fill your screen"
 msgstr "Fill your screen"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Soft"
 msgstr "Soft"
 
-#: apps/mobile/src/features/create/quality-selector.tsx
+#: apps/mobile/src/components/create/quality-selector.tsx
 msgid "Output quality"
 msgstr "Output quality"
 
 #: apps/mobile/src/screens/profile.tsx
-msgid "Syncing device history…"
-msgstr "Syncing device history…"
+#~ msgid "Syncing device history…"
+#~ msgstr "Syncing device history…"
 
 #: apps/mobile/src/screens/password-reset.tsx
-msgid "Enter your email address and we’ll send you a password reset code."
-msgstr "Enter your email address and we’ll send you a password reset code."
+#~ msgid "Enter your email address and we’ll send you a password reset code."
+#~ msgstr "Enter your email address and we’ll send you a password reset code."
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Size"
 msgstr "Size"
 
@@ -200,20 +239,20 @@ msgstr "Size"
 msgid "Create personal wallpapers with Lumina."
 msgstr "Create personal wallpapers with Lumina."
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Processing your image…"
 msgstr "Processing your image…"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "For example: Quiet nights"
 msgstr "For example: Quiet nights"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
 msgid "Change with a prompt"
 msgstr "Change with a prompt"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Opening share…"
 msgstr "Opening share…"
 
@@ -222,59 +261,78 @@ msgstr "Opening share…"
 msgid "Wallpaper unavailable"
 msgstr "Wallpaper unavailable"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/create/result-view.tsx
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Create a new wallpaper"
+msgstr "Create a new wallpaper"
+
+#: apps/mobile/src/screens/sign-in.tsx
+msgid "Let the idea keep growing."
+msgstr "Let the idea keep growing."
+
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Created"
 msgstr "Created"
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Image upload failed. Try again."
 msgstr "Image upload failed. Try again."
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Cancel"
 msgstr "Cancel"
 
-#: apps/mobile/src/features/create/result-view.tsx
-msgid "High resolution · Full 2K+"
-msgstr "High resolution · Full 2K+"
+#: apps/mobile/src/components/create/result-view.tsx
+#~ msgid "High resolution · Full 2K+"
+#~ msgstr "High resolution · Full 2K+"
 
+#. placeholder {0}: 5
 #. placeholder {0}: generation.cooldownSeconds
+#: apps/mobile/src/__tests__/create-catalog.test.ts
 #: apps/mobile/src/screens/create-wallpaper.tsx
 msgid "Try again in {0} seconds."
 msgstr "Try again in {0} seconds."
+
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Enter your name."
+msgstr "Enter your name."
 
 #: apps/mobile/src/screens/sign-in.tsx
 #: apps/mobile/src/screens/sign-up.tsx
 msgid "Sign up"
 msgstr "Sign up"
 
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
+#: apps/mobile/src/components/edit/style-to-preset-form.tsx
 msgid "Analyze color, composition, and texture to save a private creative preset."
 msgstr "Analyze color, composition, and texture to save a private creative preset."
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Loading presets…"
 msgstr "Loading presets…"
 
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
+#: apps/mobile/src/screens/wallpaper-preview.web.tsx
+msgid "Web cannot set system wallpaper. Open Lumina on Android to apply it, or save the image from your browser."
+msgstr "Web cannot set system wallpaper. Open Lumina on Android to apply it, or save the image from your browser."
+
+#: apps/mobile/src/hooks/use-save-and-share.ts
 msgid "Could not share the wallpaper. Try again later."
 msgstr "Could not share the wallpaper. Try again later."
 
-#: apps/mobile/src/features/auth/GoogleSignInButton.tsx
+#: apps/mobile/src/components/auth/google-sign-in-button.tsx
 msgid "Google"
 msgstr "Google"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Edit"
 msgstr "Edit"
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Change image"
 msgstr "Change image"
 
-#: apps/mobile/src/features/create/result-view.tsx
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/create/result-view.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Lock screen"
 msgstr "Lock screen"
 
@@ -286,19 +344,23 @@ msgstr "Sign out"
 msgid "Passwords do not match."
 msgstr "Passwords do not match."
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Uploading image securely…"
 msgstr "Uploading image securely…"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Theme"
 msgstr "Theme"
 
-#: apps/mobile/src/features/create/quality-selector.tsx
-msgid "Full 2K+ resolution, ideal for saving and applying"
-msgstr "Full 2K+ resolution, ideal for saving and applying"
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Recover your account"
+msgstr "Recover your account"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/quality-selector.tsx
+#~ msgid "Full 2K+ resolution, ideal for saving and applying"
+#~ msgstr "Full 2K+ resolution, ideal for saving and applying"
+
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "High contrast"
 msgstr "High contrast"
 
@@ -306,11 +368,15 @@ msgstr "High contrast"
 msgid "My categories"
 msgstr "My categories"
 
-#: apps/mobile/src/screens/sign-in.tsx
-msgid "Or login with"
-msgstr "Or login with"
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Editing, extending, enhancing, and extracting a style from an image are planned for a later update."
+msgstr "Editing, extending, enhancing, and extracting a style from an image are planned for a later update."
 
-#: apps/mobile/src/features/create/idea-input.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+#~ msgid "Or login with"
+#~ msgstr "Or login with"
+
+#: apps/mobile/src/components/create/idea-input.tsx
 msgid "Describe your idea"
 msgstr "Describe your idea"
 
@@ -318,21 +384,29 @@ msgstr "Describe your idea"
 msgid "My wallpapers"
 msgstr "My wallpapers"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Extract another style"
 msgstr "Extract another style"
 
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
+#: apps/mobile/src/components/edit/style-to-preset-form.tsx
 msgid "Optional: describe the details you want to preserve"
 msgstr "Optional: describe the details you want to preserve"
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Choose a JPEG, PNG, or WebP image."
 msgstr "Choose a JPEG, PNG, or WebP image."
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/components/create/quality-selector.tsx
+msgid "Request more detail. Actual dimensions are shown after generation."
+msgstr "Request more detail. Actual dimensions are shown after generation."
+
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Enhance wallpaper"
 msgstr "Enhance wallpaper"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Enter your email address and we’ll send you a secure password reset code."
+msgstr "Enter your email address and we’ll send you a secure password reset code."
 
 #: apps/mobile/src/components/feedback.tsx
 msgid "Loading placeholder"
@@ -342,7 +416,7 @@ msgstr "Loading placeholder"
 msgid "Password reset failed."
 msgstr "Password reset failed."
 
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
+#: apps/mobile/src/hooks/use-save-and-share.ts
 msgid "Could not save the wallpaper. Try again later."
 msgstr "Could not save the wallpaper. Try again later."
 
@@ -351,7 +425,7 @@ msgstr "Could not save the wallpaper. Try again later."
 msgid "Open {0}"
 msgstr "Open {0}"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Remove wallpaper from favorites"
 msgstr "Remove wallpaper from favorites"
 
@@ -359,6 +433,10 @@ msgstr "Remove wallpaper from favorites"
 #: apps/mobile/src/app/(tabs)/(create)/_layout.tsx
 msgid "Home"
 msgstr "Home"
+
+#: apps/mobile/src/components/generation-tasks/index.tsx
+msgid "Saved"
+msgstr "Saved"
 
 #: apps/mobile/src/screens/category-detail.tsx
 msgid "Generated wallpaper"
@@ -368,7 +446,15 @@ msgstr "Generated wallpaper"
 msgid "Choose a starting point, then describe what you want to see."
 msgstr "Choose a starting point, then describe what you want to see."
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/generation-tasks/index.tsx
+msgid "Wallpaper"
+msgstr "Wallpaper"
+
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Keep your wallpapers and categories here so unfinished ideas can continue."
+msgstr "Keep your wallpapers and categories here so unfinished ideas can continue."
+
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Set as both"
 msgstr "Set as both"
 
@@ -378,15 +464,19 @@ msgstr "Set as both"
 msgid "Your email address"
 msgstr "Your email address"
 
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Choose a new password"
+msgstr "Choose a new password"
+
 #: apps/mobile/src/screens/home.tsx
 msgid "Create your first wallpaper"
 msgstr "Create your first wallpaper"
 
-#: apps/mobile/src/features/create/result-view.tsx
-msgid "Quick preview · Low resolution"
-msgstr "Quick preview · Low resolution"
+#: apps/mobile/src/components/create/result-view.tsx
+#~ msgid "Quick preview · Low resolution"
+#~ msgstr "Quick preview · Low resolution"
 
-#: apps/mobile/src/features/create/result-view.tsx
+#: apps/mobile/src/components/create/result-view.tsx
 msgid "Apply and save"
 msgstr "Apply and save"
 
@@ -394,33 +484,42 @@ msgstr "Apply and save"
 msgid "Tell Lumina a color, a mood, or a moment. We will shape it for this screen."
 msgstr "Tell Lumina a color, a mood, or a moment. We will shape it for this screen."
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Saving…"
 msgstr "Saving…"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Choose lock screen, home screen, and sharing actions when available."
 msgstr "Choose lock screen, home screen, and sharing actions when available."
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Wallpaper information"
 msgstr "Wallpaper information"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Start editing"
 msgstr "Start editing"
 
-#: apps/mobile/src/features/create/quality-selector.tsx
+#: apps/mobile/src/components/generation-tasks/index.tsx
+msgid "Recent creations"
+msgstr "Recent creations"
+
+#: apps/mobile/src/components/create/quality-selector.tsx
 msgid "Faster and lower resolution, ideal for iterating on ideas"
 msgstr "Faster and lower resolution, ideal for iterating on ideas"
 
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
+#: apps/mobile/src/hooks/use-save-and-share.ts
 msgid "Photo library permission is required to save wallpapers."
 msgstr "Photo library permission is required to save wallpapers."
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Generated"
 msgstr "Generated"
+
+#: apps/mobile/src/screens/password-reset.tsx
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Check your inbox."
+msgstr "Check your inbox."
 
 #: apps/mobile/src/screens/password-reset.tsx
 #: apps/mobile/src/screens/sign-up.tsx
@@ -431,8 +530,8 @@ msgstr "Enter code"
 msgid "Ideas, carefully kept."
 msgstr "Ideas, carefully kept."
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
+#: apps/mobile/src/components/edit/style-to-preset-form.tsx
 msgid "Extract style"
 msgstr "Extract style"
 
@@ -442,10 +541,10 @@ msgstr "Add"
 
 #: apps/mobile/src/screens/password-reset.tsx
 #: apps/mobile/src/screens/sign-up.tsx
-msgid "Verify email"
-msgstr "Verify email"
+#~ msgid "Verify email"
+#~ msgstr "Verify email"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Calm"
 msgstr "Calm"
 
@@ -457,7 +556,7 @@ msgstr "Your wallpaper space"
 msgid "Save new password"
 msgstr "Save new password"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Set as lock screen"
 msgstr "Set as lock screen"
 
@@ -465,11 +564,15 @@ msgstr "Set as lock screen"
 msgid "Don't have an account? "
 msgstr "Don't have an account? "
 
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "By continuing, you agree to the Terms of Service and Privacy Policy."
+msgstr "By continuing, you agree to the Terms of Service and Privacy Policy."
+
 #: apps/mobile/src/screens/profile.tsx
 msgid "Guest creator"
 msgstr "Guest creator"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Text creation"
 msgstr "Text creation"
 
@@ -483,24 +586,25 @@ msgstr "Lumina turns ideas and personal photos into device-sized wallpapers, wit
 msgid "Email"
 msgstr "Email"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Cinematic"
 msgstr "Cinematic"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Save to Photos"
 msgstr "Save to Photos"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Upscale"
 msgstr "Upscale"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Select it from the preset list above to generate another wallpaper."
 msgstr "Select it from the preset list above to generate another wallpaper."
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/category-detail.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Wallpaper category"
 msgstr "Wallpaper category"
 
@@ -508,7 +612,7 @@ msgstr "Wallpaper category"
 msgid "Choose a new password for your account."
 msgstr "Choose a new password for your account."
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Cyberpunk art"
 msgstr "Cyberpunk art"
 
@@ -516,7 +620,7 @@ msgstr "Cyberpunk art"
 msgid "Open wallpaper preview"
 msgstr "Open wallpaper preview"
 
-#: apps/mobile/src/features/auth/GoogleSignInButton.tsx
+#: apps/mobile/src/components/auth/google-sign-in-button.tsx
 #: apps/mobile/src/screens/sign-in.tsx
 msgid "Continue with Google"
 msgstr "Continue with Google"
@@ -525,37 +629,37 @@ msgstr "Continue with Google"
 msgid "Already have an account? "
 msgstr "Already have an account? "
 
-#: apps/mobile/src/features/create/result-view.tsx
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/create/result-view.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Home screen"
 msgstr "Home screen"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "For example: turn the sky into a sunset and keep the people and buildings"
 msgstr "For example: turn the sky into a sunset and keep the people and buildings"
 
-#: apps/mobile/src/features/auth/LoginSheet.tsx
+#: apps/mobile/src/components/auth/login-sheet.tsx
 msgid "Not now"
 msgstr "Not now"
 
 #. placeholder {0}: preset.name
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "{0} preset cover"
 msgstr "{0} preset cover"
 
-#. placeholder {0}: category.items.length
+#. placeholder {0}: category.count
 #. placeholder {0}: wallpapers.wallpapers.length
 #: apps/mobile/src/screens/category-detail.tsx
 #: apps/mobile/src/screens/home.tsx
 msgid "{0} wallpapers"
 msgstr "{0} wallpapers"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Nature"
 msgstr "Nature"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
 msgid "Save as a creative preset"
 msgstr "Save as a creative preset"
 
@@ -563,21 +667,26 @@ msgstr "Save as a creative preset"
 msgid "Put the idea into words."
 msgstr "Put the idea into words."
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Space"
 msgstr "Space"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
 msgid "Enhance clarity and detail"
 msgstr "Enhance clarity and detail"
 
 #: apps/mobile/src/components/feedback.tsx
+#: apps/mobile/src/screens/category-detail.tsx
 msgid "Loading…"
 msgstr "Loading…"
 
 #: apps/mobile/src/screens/profile.tsx
 msgid "Signed in"
 msgstr "Signed in"
+
+#: apps/mobile/src/screens/profile.tsx
+msgid "Account data is private to you"
+msgstr "Account data is private to you"
 
 #: apps/mobile/src/screens/profile.tsx
 msgid "Restoring sign-in state…"
@@ -587,47 +696,59 @@ msgstr "Restoring sign-in state…"
 msgid "Your interface language is stored securely on this device."
 msgstr "Your interface language is stored securely on this device."
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Set as home screen"
 msgstr "Set as home screen"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Cinematic art"
 msgstr "Cinematic art"
 
+#: apps/mobile/src/components/apply/apply-sheet.tsx
+msgid "Web cannot set system wallpaper. Save the image from your browser, then apply it in system settings."
+msgstr "Web cannot set system wallpaper. Save the image from your browser, then apply it in system settings."
+
 #: apps/mobile/src/features/auth/auth-screen-layout.tsx
-msgid "Lumina"
-msgstr "Lumina"
+#~ msgid "Lumina"
+#~ msgstr "Lumina"
 
 #: apps/mobile/src/screens/sign-up.tsx
 msgid "Repeat password"
 msgstr "Repeat password"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Add wallpaper to favorites"
 msgstr "Add wallpaper to favorites"
 
-#: apps/mobile/src/features/create/idea-input.tsx
+#: apps/mobile/src/components/create/idea-input.tsx
 msgid "For example: a neon city on a rainy night"
 msgstr "For example: a neon city on a rainy night"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Back to category"
 msgstr "Back to category"
 
 #: apps/mobile/src/screens/password-reset.tsx
-msgid "Reset password"
-msgstr "Reset password"
+#~ msgid "Reset password"
+#~ msgstr "Reset password"
 
 #: apps/mobile/src/screens/profile.tsx
 msgid "Privacy"
 msgstr "Privacy"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Extend to screen ratio"
 msgstr "Extend to screen ratio"
 
-#: apps/mobile/src/features/edit/StyleToPresetForm.tsx
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Image editing · Coming soon"
+msgstr "Image editing · Coming soon"
+
+#: apps/mobile/src/components/apply/apply-sheet.tsx
+msgid "Wallpaper applied."
+msgstr "Wallpaper applied."
+
+#: apps/mobile/src/components/edit/style-to-preset-form.tsx
 msgid "Extracting…"
 msgstr "Extracting…"
 
@@ -636,15 +757,15 @@ msgstr "Extracting…"
 msgid "Loading wallpaper…"
 msgstr "Loading wallpaper…"
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Choose image"
 msgstr "Choose image"
 
 #: apps/mobile/src/screens/profile.tsx
-msgid "An account is required to create and manage wallpapers. Your session also keeps wallpaper history connected across devices."
-msgstr "An account is required to create and manage wallpapers. Your session also keeps wallpaper history connected across devices."
+#~ msgid "An account is required to create and manage wallpapers. Your session also keeps wallpaper history connected across devices."
+#~ msgstr "An account is required to create and manage wallpapers. Your session also keeps wallpaper history connected across devices."
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Dreamy"
 msgstr "Dreamy"
 
@@ -652,7 +773,12 @@ msgstr "Dreamy"
 msgid "Back to Home"
 msgstr "Back to Home"
 
-#: apps/mobile/src/features/create/generate-button.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Return to your wallpaper space."
+msgstr "Return to your wallpaper space."
+
+#: apps/mobile/src/__tests__/create-catalog.test.ts
+#: apps/mobile/src/components/create/generate-button.tsx
 msgid "Generate wallpaper"
 msgstr "Generate wallpaper"
 
@@ -662,7 +788,7 @@ msgstr "Generate wallpaper"
 msgid "Log in"
 msgstr "Log in"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Nature art"
 msgstr "Nature art"
 
@@ -671,31 +797,31 @@ msgid "Remember your password? "
 msgstr "Remember your password? "
 
 #: apps/mobile/src/screens/sign-up.tsx
-msgid "Or sign up with"
-msgstr "Or sign up with"
+#~ msgid "Or sign up with"
+#~ msgstr "Or sign up with"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Editorial art"
 msgstr "Editorial art"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Full-screen wallpaper preview"
 msgstr "Full-screen wallpaper preview"
 
-#: apps/mobile/src/features/apply/useApplyWallpaper.ts
+#: apps/mobile/src/hooks/use-apply-wallpaper.ts
 msgid "Could not apply the wallpaper. Try again later."
 msgstr "Could not apply the wallpaper. Try again later."
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Cool"
 msgstr "Cool"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Color tone"
 msgstr "Color tone"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Abstract"
 msgstr "Abstract"
 
@@ -703,28 +829,41 @@ msgstr "Abstract"
 msgid "Apply, save, or share"
 msgstr "Apply, save, or share"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Abstract art"
 msgstr "Abstract art"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
 #: apps/mobile/src/screens/create-wallpaper.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Save to category"
 msgstr "Save to category"
 
-#: apps/mobile/src/features/apply/useSaveAndShare.ts
+#: apps/mobile/src/hooks/use-save-and-share.ts
 msgid "Sharing is unavailable on this device."
 msgstr "Sharing is unavailable on this device."
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#. placeholder {0}: job.category
+#: apps/mobile/src/components/create/result-view.tsx
+msgid "Saved to {0}"
+msgstr "Saved to {0}"
+
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Start with an image"
 msgstr "Start with an image"
+
+#: apps/mobile/src/components/remote-image/index.tsx
+msgid "Image failed to load. Retry"
+msgstr "Image failed to load. Retry"
+
+#: apps/mobile/src/components/create/result-view.tsx
+msgid "View wallpaper"
+msgstr "View wallpaper"
 
 #: apps/mobile/src/screens/sign-in.tsx
 msgid "Forgot password?"
 msgstr "Forgot password?"
 
-#: apps/mobile/src/features/edit/ExistingImageEditor.tsx
+#: apps/mobile/src/screens/existing-image-editor.tsx
 msgid "Custom preset saved"
 msgstr "Custom preset saved"
 
@@ -736,11 +875,15 @@ msgstr "Profile photo"
 msgid "Verify"
 msgstr "Verify"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Make a fresh start."
+msgstr "Make a fresh start."
+
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Choose a preset"
 msgstr "Choose a preset"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Editorial"
 msgstr "Editorial"
 
@@ -750,10 +893,14 @@ msgid "Profile"
 msgstr "Profile"
 
 #: apps/mobile/src/screens/sign-up.tsx
+msgid "How should we call you?"
+msgstr "How should we call you?"
+
+#: apps/mobile/src/screens/sign-up.tsx
 msgid "Create password"
 msgstr "Create password"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Minimal art"
 msgstr "Minimal art"
 
@@ -761,15 +908,16 @@ msgstr "Minimal art"
 msgid "Language"
 msgstr "Language"
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "The image module is incomplete. Install the latest development build."
 msgstr "The image module is incomplete. Install the latest development build."
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Applying…"
 msgstr "Applying…"
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/create/result-view.tsx
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Resolution unavailable"
 msgstr "Resolution unavailable"
 
@@ -777,28 +925,40 @@ msgstr "Resolution unavailable"
 msgid "About Lumina"
 msgstr "About Lumina"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Warm"
 msgstr "Warm"
 
-#: apps/mobile/src/features/create/quality-selector.tsx
+#: apps/mobile/src/screens/sign-in.tsx
+msgid "Log in to find your wallpaper categories, creative history, and preferences."
+msgstr "Log in to find your wallpaper categories, creative history, and preferences."
+
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Advanced options"
+msgstr "Advanced options"
+
+#: apps/mobile/src/components/create/quality-selector.tsx
 msgid "High resolution"
 msgstr "High resolution"
 
 #: apps/mobile/src/screens/profile.tsx
-msgid "Saved on this device"
-msgstr "Saved on this device"
+#~ msgid "Saved on this device"
+#~ msgstr "Saved on this device"
 
 #. placeholder {0}: categories.length
 #: apps/mobile/src/screens/home.tsx
 msgid "{0} categories"
 msgstr "{0} categories"
 
-#: apps/mobile/src/features/create/quality-selector.tsx
+#: apps/mobile/src/components/generation-tasks/index.tsx
+msgid "Failed — view details"
+msgstr "Failed — view details"
+
+#: apps/mobile/src/components/create/quality-selector.tsx
 msgid "Quick preview"
 msgstr "Quick preview"
 
-#: apps/mobile/src/features/create/result-view.tsx
+#: apps/mobile/src/components/create/result-view.tsx
 msgid "Your wallpaper is ready"
 msgstr "Your wallpaper is ready"
 
@@ -806,31 +966,39 @@ msgstr "Your wallpaper is ready"
 msgid "Confirm password"
 msgstr "Confirm password"
 
-#: apps/mobile/src/features/create/preset-grid.tsx
+#: apps/mobile/src/components/create/preset-grid.tsx
 msgid "Cyberpunk"
 msgstr "Cyberpunk"
 
-#: apps/mobile/src/features/edit/ImagePickerEntry.tsx
+#: apps/mobile/src/components/edit/image-picker-entry.tsx
 msgid "Selected source image"
 msgstr "Selected source image"
 
-#: apps/mobile/src/features/auth/GoogleSignInButton.tsx
+#: apps/mobile/src/components/auth/google-sign-in-button.tsx
 msgid "Opening Google…"
 msgstr "Opening Google…"
 
-#: apps/mobile/src/features/auth/LoginSheet.tsx
+#: apps/mobile/src/components/auth/login-sheet.tsx
 msgid "Close sign-in"
 msgstr "Close sign-in"
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Energetic"
 msgstr "Energetic"
+
+#: apps/mobile/src/screens/profile.tsx
+msgid "An account is required to create and manage wallpapers. Your wallpaper data belongs to this account and is isolated from other accounts."
+msgstr "An account is required to create and manage wallpapers. Your wallpaper data belongs to this account and is isolated from other accounts."
 
 #: apps/mobile/src/screens/password-reset.tsx
 msgid "Send reset code"
 msgstr "Send reset code"
 
-#: apps/mobile/src/features/edit/EditModePicker.tsx
+#: apps/mobile/src/screens/category-detail.tsx
+msgid "Load more"
+msgstr "Load more"
+
+#: apps/mobile/src/components/edit/edit-mode-picker.tsx
 msgid "Enhance"
 msgstr "Enhance"
 
@@ -838,15 +1006,15 @@ msgstr "Enhance"
 msgid "Sign-in failed."
 msgstr "Sign-in failed."
 
-#: apps/mobile/src/features/create/chips-selector.tsx
+#: apps/mobile/src/components/create/chips-selector.tsx
 msgid "Mood"
 msgstr "Mood"
 
 #: apps/mobile/src/screens/sign-in.tsx
-msgid "Login"
-msgstr "Login"
+#~ msgid "Login"
+#~ msgstr "Login"
 
-#: apps/mobile/src/features/apply/ApplySheet.tsx
+#: apps/mobile/src/components/apply/apply-sheet.tsx
 msgid "Share"
 msgstr "Share"
 
@@ -854,10 +1022,30 @@ msgstr "Share"
 msgid "Enter your email address first."
 msgstr "Enter your email address first."
 
+#: apps/mobile/src/screens/home.tsx
+msgid "Loading categories…"
+msgstr "Loading categories…"
+
 #: apps/mobile/src/screens/sign-up.tsx
 msgid "Sign-up failed."
 msgstr "Sign-up failed."
 
-#: apps/mobile/src/features/wallpapers/wallpaper-detail.tsx
+#: apps/mobile/src/components/auth/login-sheet.tsx
+msgid "Sign in with Google to keep your private wallpaper space available anywhere."
+msgstr "Sign in with Google to keep your private wallpaper space available anywhere."
+
+#: apps/mobile/src/components/apply/apply-sheet.tsx
+msgid "Wallpaper saved to Photos."
+msgstr "Wallpaper saved to Photos."
+
+#: apps/mobile/src/components/create/preset-grid.tsx
+msgid "No styles are available. Refresh to try again."
+msgstr "No styles are available. Refresh to try again."
+
+#: apps/mobile/src/screens/create-wallpaper.tsx
+msgid "Learn more"
+msgstr "Learn more"
+
+#: apps/mobile/src/components/wallpaper-detail.tsx
 msgid "Mode"
 msgstr "Mode"

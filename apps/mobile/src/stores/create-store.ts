@@ -6,6 +6,7 @@ import type { GenerationQuality } from '@/lib/api';
 
 type CreateState = {
   category: string;
+  categoryId?: string;
   chipValues: CreateChipValues;
   idea: string;
   instruction: string;
@@ -18,6 +19,7 @@ type CreateState = {
 type CreateActions = {
   reset: () => void;
   setCategory: (category: string) => void;
+  setCategoryId: (categoryId: string | undefined) => void;
   setChip: (field: CreateChipField, value: string | undefined) => void;
   setIdea: (idea: string) => void;
   setInstruction: (instruction: string) => void;
@@ -31,6 +33,7 @@ export type CreateStore = CreateState & CreateActions;
 
 const initialCreateState: CreateState = {
   category: '',
+  categoryId: undefined,
   chipValues: {},
   idea: '',
   instruction: '',
@@ -44,6 +47,7 @@ export const useCreateStore = create<CreateStore>()((set) => ({
   ...initialCreateState,
   reset: () => set(initialCreateState),
   setCategory: (category) => set({ category }),
+  setCategoryId: (categoryId) => set({ categoryId }),
   setChip: (field, value) =>
     set((state) => ({ chipValues: { ...state.chipValues, [field]: value } })),
   setIdea: (idea) => set({ idea }),

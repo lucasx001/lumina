@@ -15,6 +15,7 @@ jest.mock('expo-image', () => {
 describe('WallpaperDetail', () => {
   const wallpaper = {
     category: 'Nature',
+    categoryId: 'category-nature',
     createdAt: '2026-07-26T00:00:00.000Z',
     height: 2400,
     id: 'wallpaper-1',
@@ -23,6 +24,35 @@ describe('WallpaperDetail', () => {
     status: 'succeeded' as const,
     width: 1080,
   };
+
+  it('blocks duplicate favorites and displays a retryable submission error', () => {
+    const onToggleFavorite = jest.fn();
+    const view = (busy: boolean, error?: Error) => (
+      <SafeAreaProvider
+        initialMetrics={{
+          frame: { x: 0, y: 0, width: 390, height: 844 },
+          insets: { top: 0, bottom: 0, left: 0, right: 0 },
+        }}
+      >
+        <WallpaperDetail
+          wallpaper={wallpaper}
+          previewMode="lock-screen"
+          onClose={jest.fn()}
+          onModeChange={jest.fn()}
+          onToggleFavorite={onToggleFavorite}
+          isUpdatingFavorite={busy}
+          favoriteError={error}
+        />
+      </SafeAreaProvider>
+    );
+    const screen = render(view(true));
+    fireEvent.press(screen.getByTestId('detail-toggle-favorite'));
+    expect(onToggleFavorite).not.toHaveBeenCalled();
+    screen.rerender(view(false, new Error('Favorite could not be saved')));
+    expect(screen.getByText('Favorite could not be saved')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('detail-toggle-favorite'));
+    expect(onToggleFavorite).toHaveBeenCalledTimes(1);
+  });
 
   it('supports immersive preview controls and leaves a graceful action slot', () => {
     const onClose = jest.fn();

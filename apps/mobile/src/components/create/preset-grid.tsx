@@ -1,6 +1,5 @@
 import { Trans, useLingui } from '@lingui/react/macro';
-import { useQuery } from '@tanstack/react-query';
-import { Image } from 'expo-image';
+import { RemoteImage } from '@/components/remote-image';
 import { useCallback } from 'react';
 import { FlatList, Pressable, View } from 'react-native';
 
@@ -9,7 +8,7 @@ import { ThemedText } from '@/components/themed-text';
 import { AppIcon } from '@/components/ui';
 import { radius, shadows, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { getPresets } from '@/lib/api';
+import { usePresets } from '@/hooks/use-presets';
 
 type PresetGridProps = {
   onSelect: (presetId: string) => void;
@@ -18,7 +17,7 @@ type PresetGridProps = {
 
 export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
   const { t } = useLingui();
-  const presetsQuery = useQuery({ queryFn: getPresets, queryKey: ['presets'] });
+  const presetsQuery = usePresets();
   const theme = useTheme();
   const builtInPresetCopy: Partial<Record<string, { category: string; name: string }>> = {
     preset_builtin_abstract: {
@@ -83,7 +82,8 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
           testID={`preset-${preset.id}`}
         >
           {preset.coverImageUrl ? (
-            <Image
+            <RemoteImage
+              onRetry={() => void presetsQuery.refetch()}
               accessibilityLabel={t`${preset.name} preset cover`}
               contentFit="cover"
               source={preset.coverImageUrl}
@@ -141,6 +141,11 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
       ) : presetsQuery.isError ? (
         <ErrorState
           message={presetsQuery.error.message}
+          onRetry={() => void presetsQuery.refetch()}
+        />
+      ) : !presets.length ? (
+        <ErrorState
+          message={t`No styles are available. Refresh to try again.`}
           onRetry={() => void presetsQuery.refetch()}
         />
       ) : (

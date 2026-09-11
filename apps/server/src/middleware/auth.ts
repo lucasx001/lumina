@@ -12,8 +12,7 @@ type AuthEnvironment = {
 };
 
 /**
- * Resolves a Bearer token when present while still allowing device-based,
- * anonymous requests to reach routes that support them.
+ * Resolves a Bearer token when present for the application health surface.
  */
 export function optionalAuth(clerk: ClerkAuthService): MiddlewareHandler<AuthEnvironment> {
   return async (context, next) => {

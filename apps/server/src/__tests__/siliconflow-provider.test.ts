@@ -34,11 +34,11 @@ describe('SiliconFlowImageProvider', () => {
     });
 
     expect(result).toMatchObject({
-      height: 1024,
       imageUrl: 'https://provider.example.com/generated.png',
       providerTask: 'siliconflow:42',
-      width: 576,
     });
+    expect(result.width).toBeUndefined();
+    expect(result.height).toBeUndefined();
     expect(result.metadata).toMatchObject({
       inferenceMs: 1_234,
       model: 'black-forest-labs/FLUX.2-pro',

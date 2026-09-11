@@ -1,5 +1,3 @@
-import { useLingui } from '@lingui/react/macro';
-import { Image } from 'expo-image';
 import type { ReactNode } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,10 +9,15 @@ import { useTheme } from '@/hooks/use-theme';
 
 type AuthScreenLayoutProps = {
   children: ReactNode;
+  description: string;
   footer: ReactNode;
   googleAccessibilityLabel?: string;
   googleLoading?: boolean;
+  introTop?: number;
+  kicker: string;
+  legalNote?: ReactNode;
   onGooglePress?: () => void;
+  resetArt?: boolean;
   showGoogle?: boolean;
   socialLabel?: string;
   title: string;
@@ -22,15 +25,19 @@ type AuthScreenLayoutProps = {
 
 export function AuthScreenLayout({
   children,
+  description,
   footer,
   googleAccessibilityLabel = '',
   googleLoading = false,
+  introTop = 76,
+  kicker,
+  legalNote,
   onGooglePress = () => {},
-  showGoogle = true,
+  resetArt = false,
+  showGoogle = false,
   socialLabel = '',
   title,
 }: AuthScreenLayoutProps) {
-  const { t } = useLingui();
   const theme = useTheme();
 
   return (
@@ -46,31 +53,76 @@ export function AuthScreenLayout({
             alignSelf: 'center',
             flexGrow: 1,
             maxWidth: 430,
-            paddingBottom: spacing.xl,
-            paddingHorizontal: 36,
-            paddingTop: spacing.xxl,
+            paddingBottom: spacing.lg,
+            paddingHorizontal: 24,
+            paddingTop: 28,
             width: '100%',
           }}
           contentInsetAdjustmentBehavior="automatic"
           keyboardShouldPersistTaps="handled"
           style={{ flex: 1 }}
         >
-          <View style={{ alignItems: 'center' }}>
-            <Image
-              accessibilityLabel={t`Lumina`}
-              contentFit="contain"
-              source={require('../../../assets/images/splash-icon.png')}
-              style={{ height: 150, width: 170 }}
-            />
-            <ThemedText style={{ fontSize: 34, lineHeight: 44, marginTop: -8 }} variant="title">
-              {title}
+          <View style={{ flex: 1 }}>
+            <ThemedText style={{ fontSize: 24, fontWeight: '700', lineHeight: 30 }} variant="title">
+              Lumina
             </ThemedText>
-          </View>
+            {resetArt ? (
+              <View
+                style={{
+                  backgroundColor: theme.muted,
+                  borderColor: theme.border,
+                  borderCurve: 'continuous',
+                  borderRadius: 22,
+                  borderWidth: 1,
+                  height: 112,
+                  marginBottom: 28,
+                  marginTop: 85,
+                  position: 'relative',
+                  transform: [{ rotate: '-3deg' }],
+                  width: 92,
+                }}
+              >
+                <View
+                  style={{
+                    borderColor: theme.primary,
+                    borderRadius: 999,
+                    borderWidth: 1,
+                    bottom: 20,
+                    left: 20,
+                    position: 'absolute',
+                    right: 20,
+                    top: 20,
+                  }}
+                />
+              </View>
+            ) : null}
+            <View style={{ marginTop: resetArt ? 0 : introTop }}>
+              <ThemedText
+                style={{ color: theme.accent, fontFamily: theme.fontFamily, letterSpacing: 1.2 }}
+                variant="caption"
+              >
+                {kicker}
+              </ThemedText>
+              <ThemedText
+                style={{ fontSize: 42, letterSpacing: -1, lineHeight: 43, marginTop: 10 }}
+                variant="display"
+              >
+                {title}
+              </ThemedText>
+              <ThemedText
+                style={{ color: theme.mutedText, fontSize: 14, lineHeight: 22, marginTop: 14 }}
+                variant="body"
+              >
+                {description}
+              </ThemedText>
+            </View>
 
-          <View style={{ gap: spacing.lg, marginTop: spacing.xxl }}>{children}</View>
+            <View style={{ gap: 18, marginTop: 34 }}>{children}</View>
+            {legalNote ? <View style={{ marginTop: 12 }}>{legalNote}</View> : null}
 
-          <View style={{ alignItems: 'center', gap: spacing.lg, marginTop: spacing.lg }}>
-            {footer}
+            <View style={{ alignItems: 'center', gap: spacing.sm, marginTop: 'auto' }}>
+              {footer}
+            </View>
             {showGoogle ? (
               <>
                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>

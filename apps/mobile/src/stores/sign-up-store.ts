@@ -5,6 +5,7 @@ type SignUpState = {
   confirmPassword: string;
   emailAddress: string;
   isVerifying: boolean;
+  name: string;
   password: string;
 };
 
@@ -14,6 +15,7 @@ type SignUpActions = {
   setConfirmPassword: (confirmPassword: string) => void;
   setEmailAddress: (emailAddress: string) => void;
   setIsVerifying: (isVerifying: boolean) => void;
+  setName: (name: string) => void;
   setPassword: (password: string) => void;
 };
 
@@ -24,6 +26,7 @@ const initialSignUpState: SignUpState = {
   confirmPassword: '',
   emailAddress: '',
   isVerifying: false,
+  name: '',
   password: '',
 };
 
@@ -34,5 +37,6 @@ export const useSignUpStore = create<SignUpStore>()((set) => ({
   setConfirmPassword: (confirmPassword) => set({ confirmPassword }),
   setEmailAddress: (emailAddress) => set({ emailAddress }),
   setIsVerifying: (isVerifying) => set({ isVerifying }),
+  setName: (name) => set({ name }),
   setPassword: (password) => set({ password }),
 }));

@@ -6,7 +6,7 @@ import { ErrorState, LoadingState } from '@/components/feedback';
 import { Button } from '@/components/ui';
 import { ApplySheet } from '@/components/apply';
 import { WallpaperDetail } from '@/components/wallpaper-detail';
-import { useWallpapers } from '@/hooks/use-wallpapers';
+import { useWallpaper } from '@/hooks/use-wallpaper';
 import { useTheme } from '@/hooks/use-theme';
 import { createTabBarStyle } from '@/navigation/tab-bar-options';
 import { useWallpaperPreviewStore } from '@/stores/wallpaper-preview-store';
@@ -17,12 +17,11 @@ export function WallpaperPreviewScreen() {
   const router = useRouter();
   const theme = useTheme();
   const params = useLocalSearchParams<{ category: string; wallpaperId: string }>();
-  const category = Array.isArray(params.category) ? params.category[0] : params.category;
   const wallpaperId = Array.isArray(params.wallpaperId)
     ? params.wallpaperId[0]
     : params.wallpaperId;
-  const wallpapers = useWallpapers({ category }, 50);
-  const wallpaper = wallpapers.wallpapers.find((item) => item.id === wallpaperId);
+  const wallpaperQuery = useWallpaper(wallpaperId);
+  const wallpaper = wallpaperQuery.wallpaper;
   const previewMode = useWallpaperPreviewStore((state) => state.previewMode);
   const isApplySheetVisible = useWallpaperPreviewStore((state) => state.isApplySheetVisible);
   const setApplySheetVisible = useWallpaperPreviewStore((state) => state.setApplySheetVisible);
@@ -38,16 +37,14 @@ export function WallpaperPreviewScreen() {
     return () => tabNavigation?.setOptions({ tabBarStyle });
   }, [navigation, tabBarStyle]);
 
-  if (wallpapers.isLoading || wallpapers.isPreparingDeviceId) {
+  if (wallpaperQuery.isLoading) {
     return <LoadingState label={t`Loading wallpaper…`} />;
   }
-  if (wallpapers.error || wallpapers.deviceIdError) {
+  if (wallpaperQuery.error) {
     return (
       <ErrorState
-        message={
-          (wallpapers.error ?? wallpapers.deviceIdError)?.message ?? t`Wallpaper unavailable`
-        }
-        onRetry={() => void wallpapers.refetch()}
+        message={wallpaperQuery.error.message}
+        onRetry={() => void wallpaperQuery.refetch()}
       />
     );
   }
@@ -69,6 +66,7 @@ export function WallpaperPreviewScreen() {
                 onPress={() => setApplySheetVisible(true)}
               />
               <ApplySheet
+                onRetryImage={() => void wallpaperQuery.refetch()}
                 imageUrl={wallpaper.resultImageUrl}
                 onDismiss={() => setApplySheetVisible(false)}
                 visible={isApplySheetVisible}
@@ -78,7 +76,10 @@ export function WallpaperPreviewScreen() {
         }
         onClose={() => router.back()}
         onModeChange={setPreviewMode}
-        onToggleFavorite={() => wallpapers.toggleFavorite(wallpaper)}
+        onToggleFavorite={wallpaperQuery.toggleFavorite}
+        isUpdatingFavorite={wallpaperQuery.isUpdatingFavorite}
+        favoriteError={wallpaperQuery.favoriteError}
+        onRetryImage={() => void wallpaperQuery.refetch()}
         previewMode={previewMode}
         wallpaper={wallpaper}
       />

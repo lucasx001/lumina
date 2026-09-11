@@ -8,6 +8,7 @@ import { Pressable } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui';
 import { AuthScreenLayout, AuthTextField } from '@/components/auth';
+import { radius } from '@/constants/theme';
 import { getAuthFlowError, throwIfClerkError } from '@/lib/clerk-flow-error';
 import { useTheme } from '@/hooks/use-theme';
 import { usePasswordResetStore } from '@/stores/password-reset-store';
@@ -111,20 +112,31 @@ export function PasswordResetScreen() {
           </ThemedText>
         </Pressable>
       }
-
+      description={
+        stage === 'request'
+          ? t`Enter your email address and we’ll send you a secure password reset code.`
+          : stage === 'verify'
+            ? t`We sent a password reset code to ${emailAddress}.`
+            : t`Choose a new password for your account.`
+      }
+      kicker={
+        stage === 'request'
+          ? t`Recover your account`
+          : stage === 'verify'
+            ? t`Verify your email`
+            : t`Choose a new password`
+      }
+      resetArt={stage === 'request'}
       title={
         stage === 'request'
-          ? t`Reset password`
+          ? t`Return to your wallpaper space.`
           : stage === 'verify'
-            ? t`Verify email`
-            : t`New password`
+            ? t`Check your inbox.`
+            : t`Make a fresh start.`
       }
     >
       {stage === 'request' ? (
         <>
-          <ThemedText style={{ color: theme.mutedText }} variant="body">
-            <Trans>Enter your email address and we’ll send you a password reset code.</Trans>
-          </ThemedText>
           <AuthTextField
             autoCapitalize="none"
             autoComplete="email"
@@ -145,14 +157,12 @@ export function PasswordResetScreen() {
             label={t`Send reset code`}
             loading={busy}
             onPress={() => void requestReset()}
+            style={{ borderRadius: radius.md, minHeight: 52 }}
             testID="password-reset-request"
           />
         </>
       ) : stage === 'verify' ? (
         <>
-          <ThemedText style={{ color: theme.mutedText }} variant="body">
-            <Trans>We sent a password reset code to {emailAddress}.</Trans>
-          </ThemedText>
           <AuthTextField
             autoComplete="one-time-code"
             error={errors.fields.code?.message}
@@ -172,6 +182,7 @@ export function PasswordResetScreen() {
             label={t`Verify code`}
             loading={busy}
             onPress={() => void verifyResetCode()}
+            style={{ borderRadius: radius.md, minHeight: 52 }}
             testID="password-reset-verify"
           />
           <Pressable
@@ -191,9 +202,6 @@ export function PasswordResetScreen() {
         </>
       ) : (
         <>
-          <ThemedText style={{ color: theme.mutedText }} variant="body">
-            <Trans>Choose a new password for your account.</Trans>
-          </ThemedText>
           <AuthTextField
             autoComplete="new-password"
             label={t`New password`}
@@ -212,6 +220,7 @@ export function PasswordResetScreen() {
             label={t`Save new password`}
             loading={busy}
             onPress={() => void submitNewPassword()}
+            style={{ borderRadius: radius.md, minHeight: 52 }}
             testID="password-reset-submit"
           />
         </>

@@ -23,25 +23,24 @@ export type CustomPresetData = {
 
 export type WallpaperRepository = {
   create(data: {
-    category: string;
-    deviceId?: string;
+    categoryId: string;
     mode: string;
     presetId?: string;
     prompt: string;
     quality?: string;
-    sourceImageUrl?: string;
+    sourceImageKey?: string;
     status: string;
-    userId?: string;
+    userId: string;
     width: number;
     height: number;
   }): Promise<Wallpaper>;
   update(
-    id: string,
+    owner: { id: string; userId: string },
     data: {
       error?: string | null;
       providerTask?: string | null;
       prompt?: string;
-      resultImageUrl?: string | null;
+      resultImageKey?: string | null;
       status?: string;
       width?: number | null;
       height?: number | null;

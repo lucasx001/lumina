@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 
-import type { AuthVariables } from '../middleware/auth.js';
+import type { ClerkAuthService } from '../lib/clerk.js';
+import { requireAuth, type AuthVariables } from '../middleware/auth.js';
 
 export type PresetListItem = {
   category: string;
@@ -10,22 +11,26 @@ export type PresetListItem = {
 };
 
 export type PresetRepository = {
-  /** Compatibility with test doubles for the original built-in-only endpoint. */
-  listBuiltIn?(): Promise<PresetListItem[]>;
-  listVisible?(clerkUserId?: string): Promise<PresetListItem[]>;
+  listVisible(clerkUserId: string): Promise<PresetListItem[]>;
 };
 
-export function createPresetRoutes(repository?: PresetRepository) {
+export function createPresetRoutes({
+  clerk,
+  repository,
+}: {
+  clerk: ClerkAuthService;
+  repository?: PresetRepository;
+}) {
   const routes = new Hono<{ Variables: AuthVariables }>();
+  routes.use('*', requireAuth(clerk));
 
   routes.get('/presets', async (context) => {
-    const resolvedRepository = repository ?? (await createPrismaPresetRepository());
-    const presets = resolvedRepository.listVisible
-      ? await resolvedRepository.listVisible(context.get('user')?.clerkUserId)
-      : await resolvedRepository.listBuiltIn?.();
-    if (!presets) {
-      throw new Error('Preset repository does not implement a list operation.');
+    const clerkUserId = context.get('user')?.clerkUserId;
+    if (!clerkUserId) {
+      throw new Error('Authenticated Clerk user is missing.');
     }
+    const resolvedRepository = repository ?? (await createPrismaPresetRepository());
+    const presets = await resolvedRepository.listVisible(clerkUserId);
     return context.json({ presets });
   });
 

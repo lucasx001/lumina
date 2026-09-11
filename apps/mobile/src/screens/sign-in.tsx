@@ -8,6 +8,7 @@ import { Pressable } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui';
 import { AuthScreenLayout, AuthTextField } from '@/components/auth';
+import { radius } from '@/constants/theme';
 import { getAuthFlowError, throwIfClerkError } from '@/lib/clerk-flow-error';
 import { useAuth as useAppAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
@@ -78,11 +79,12 @@ export function SignInScreen() {
           </ThemedText>
         </Pressable>
       }
+      description={t`Log in to find your wallpaper categories, creative history, and preferences.`}
       googleAccessibilityLabel={t`Continue with Google`}
       googleLoading={isGoogleLoading}
+      kicker={t`Welcome back`}
       onGooglePress={() => void signInWithGoogle()}
-      socialLabel={t`Or login with`}
-      title={t`Login`}
+      title={t`Let the idea keep growing.`}
     >
       <AuthTextField
         autoCapitalize="none"
@@ -130,6 +132,7 @@ export function SignInScreen() {
         label={t`Log in`}
         loading={busy}
         onPress={() => void submitCredentials()}
+        style={{ borderRadius: radius.md, minHeight: 52 }}
         testID="sign-in-submit"
       />
     </AuthScreenLayout>

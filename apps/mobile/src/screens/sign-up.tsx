@@ -8,6 +8,7 @@ import { Pressable } from 'react-native';
 import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui';
 import { AuthScreenLayout, AuthTextField } from '@/components/auth';
+import { radius } from '@/constants/theme';
 import { getAuthFlowError, throwIfClerkError } from '@/lib/clerk-flow-error';
 import { useAuth as useAppAuth } from '@/hooks/use-auth';
 import { useTheme } from '@/hooks/use-theme';
@@ -27,7 +28,9 @@ export function SignUpScreen() {
     setConfirmPassword,
     setEmailAddress,
     setIsVerifying,
+    name,
     setPassword,
+    setName,
   } = useSignUpStore();
   const { t } = useLingui();
   const router = useRouter();
@@ -56,6 +59,10 @@ export function SignUpScreen() {
   };
 
   const submitSignUp = async () => {
+    if (!name.trim()) {
+      setError(t`Enter your name.`);
+      return;
+    }
     if (!emailAddress.trim() || !password) {
       setError(t`Enter your email and password.`);
       return;
@@ -66,7 +73,11 @@ export function SignUpScreen() {
     }
 
     try {
-      const { error } = await signUp.password({ emailAddress: emailAddress.trim(), password });
+      const { error } = await signUp.password({
+        emailAddress: emailAddress.trim(),
+        firstName: name.trim(),
+        password,
+      });
       throwIfClerkError(error);
       if (await finalizeIfComplete()) {
         return;
@@ -116,11 +127,24 @@ export function SignUpScreen() {
           </ThemedText>
         </Pressable>
       }
+      description={
+        isVerifying
+          ? t`We sent a verification code to ${emailAddress}.`
+          : t`Keep your wallpapers and categories here so unfinished ideas can continue.`
+      }
       googleAccessibilityLabel={t`Sign up with Google`}
       googleLoading={isGoogleLoading}
+      introTop={isVerifying ? 48 : 48}
+      kicker={isVerifying ? t`Verify your email` : t`Create an account`}
+      legalNote={
+        !isVerifying ? (
+          <ThemedText style={{ color: theme.mutedText, textAlign: 'center' }} variant="caption">
+            <Trans>By continuing, you agree to the Terms of Service and Privacy Policy.</Trans>
+          </ThemedText>
+        ) : undefined
+      }
       onGooglePress={() => void signInWithGoogle()}
-      socialLabel={t`Or sign up with`}
-      title={isVerifying ? t`Verify email` : t`Sign up`}
+      title={isVerifying ? t`Check your inbox.` : t`Give inspiration a place to stay.`}
     >
       {isVerifying ? (
         <>
@@ -166,6 +190,17 @@ export function SignUpScreen() {
       ) : (
         <>
           <AuthTextField
+            autoCapitalize="words"
+            autoComplete="name"
+            label={t`Name`}
+            onChangeText={setName}
+            placeholder={t`How should we call you?`}
+            returnKeyType="next"
+            testID="sign-up-name"
+            textContentType="name"
+            value={name}
+          />
+          <AuthTextField
             autoCapitalize="none"
             autoComplete="email"
             error={errors.fields.emailAddress?.message}
@@ -208,6 +243,7 @@ export function SignUpScreen() {
             label={t`Sign up`}
             loading={busy}
             onPress={() => void submitSignUp()}
+            style={{ borderRadius: radius.md, minHeight: 52 }}
             testID="sign-up-submit"
           />
         </>

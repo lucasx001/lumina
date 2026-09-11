@@ -3,7 +3,8 @@ import { fireEvent, render } from '@testing-library/react-native';
 import { HomeScreen } from '@/screens/home';
 
 const mockPush = jest.fn();
-const mockUseWallpapers = jest.fn();
+const mockUseCategories = jest.fn();
+jest.mock('@/components/generation-tasks', () => ({ GenerationTasks: () => null }));
 
 jest.mock('expo-image', () => {
   const React = require('react');
@@ -16,30 +17,35 @@ jest.mock('expo-router', () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-jest.mock('@/hooks/use-wallpapers', () => ({
-  useWallpapers: (...args: unknown[]) => mockUseWallpapers(...args),
+jest.mock('@/hooks/use-categories', () => ({
+  useCategories: (...args: unknown[]) => mockUseCategories(...args),
 }));
 
 describe('HomeScreen', () => {
   beforeEach(() => {
     mockPush.mockClear();
-    mockUseWallpapers.mockReturnValue({
-      deviceIdError: undefined,
+    mockUseCategories.mockReturnValue({
+      categories: [],
       error: null,
-      favoriteError: null,
       isLoading: true,
-      isPreparingDeviceId: true,
       isRefetching: false,
       refetch: jest.fn(),
-      wallpapers: [],
     });
   });
 
-  it('shows the new-user guidance while the first wallpaper request is preparing', () => {
+  it('waits for the category request before showing the empty state', () => {
     const screen = render(<HomeScreen />);
 
-    const createButton = screen.getByTestId('home-empty-create');
-    expect(createButton).toBeTruthy();
+    expect(screen.queryByTestId('home-empty-create')).toBeNull();
+    mockUseCategories.mockReturnValueOnce({
+      categories: [],
+      error: null,
+      isLoading: false,
+      isRefetching: false,
+      refetch: jest.fn(),
+    });
+    const emptyScreen = render(<HomeScreen />);
+    const createButton = emptyScreen.getByTestId('home-empty-create');
     fireEvent.press(createButton);
     expect(mockPush).toHaveBeenCalledWith('/create-wallpaper');
   });

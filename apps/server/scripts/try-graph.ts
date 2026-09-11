@@ -44,12 +44,12 @@ const dependencies: WallpaperGraphDependencies = {
         error: null,
         id: 'offline-wallpaper',
         providerTask: null,
-        resultImageUrl: null,
+        resultImageKey: null,
         updatedAt: new Date(),
       } as Wallpaper;
       return wallpaper;
     },
-    async update(_id, data) {
+    async update(_owner, data) {
       assert.ok(wallpaper, 'The graph must create a wallpaper before updating it.');
       Object.assign(wallpaper, data);
       return wallpaper;
@@ -60,18 +60,21 @@ const dependencies: WallpaperGraphDependencies = {
 const result = await runWallpaperGraph(
   {
     category: 'demo',
+    categoryId: 'demo-category',
+    clerkUserId: 'demo-user',
     height: 2400,
     mode: 'text2img',
     presetId: 'demo-preset',
     userInputs: { idea: 'misty mountain lake', tone: 'serene' },
+    userId: 'demo-local-user',
     width: 1080,
   },
   dependencies,
 );
 
 assert.equal(result.status, 'succeeded');
-assert.match(result.resultImageUrl ?? '', /^https:\/\/offline-r2\.example\//);
+assert.match(result.resultImageKey ?? '', /^wallpapers\//);
 assert.ok(Math.abs((result.width ?? 0) - 1080) <= 1);
 assert.ok(Math.abs((result.height ?? 0) - 2400) <= 1);
 
-console.log(`Graph succeeded: ${result.resultImageUrl}`);
+console.log(`Graph succeeded: ${result.resultImageKey}`);

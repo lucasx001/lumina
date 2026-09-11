@@ -2,18 +2,24 @@ import { Hono } from 'hono';
 import { z } from 'zod';
 
 import { generateSourceImageKey, type R2Storage } from '../lib/r2.js';
+import type { ClerkAuthService } from '../lib/clerk.js';
+import { requireAuth, type AuthVariables } from '../middleware/auth.js';
 import { AppError } from '../middleware/error.js';
+import { syncLocalUser, type MeRepository } from './me.js';
 
 const presignUploadSchema = z.object({
   contentType: z.enum(['image/jpeg', 'image/png', 'image/webp']),
 });
 
 export type EditRouteDependencies = {
+  clerk: ClerkAuthService;
   storage?: Pick<R2Storage, 'createPresignedPutUrl' | 'getUrl'>;
+  users?: MeRepository;
 };
 
-export function createEditRoutes(dependencies: EditRouteDependencies = {}) {
-  const routes = new Hono();
+export function createEditRoutes(dependencies: EditRouteDependencies) {
+  const routes = new Hono<{ Variables: AuthVariables }>();
+  routes.use('*', requireAuth(dependencies.clerk));
 
   routes.post('/uploads/presign', async (context) => {
     const parsed = presignUploadSchema.safeParse(await parseRequestBody(context.req.raw));
@@ -25,9 +31,15 @@ export function createEditRoutes(dependencies: EditRouteDependencies = {}) {
       );
     }
 
+    const user = await syncLocalUser(
+      context.get('user')?.clerkUserId,
+      dependencies.clerk,
+      dependencies.users,
+    );
     const storage = dependencies.storage ?? (await createStorage());
     const key = generateSourceImageKey({
       extension: extensionForContentType(parsed.data.contentType),
+      ownerId: user.id,
     });
     const [uploadUrl, sourceImageUrl] = await Promise.all([
       storage.createPresignedPutUrl(key, parsed.data.contentType),

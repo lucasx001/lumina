@@ -4,7 +4,8 @@ import { useCallback, useState } from 'react';
 import { Asset, requestPermissionsAsync } from 'expo-media-library';
 import { isAvailableAsync, shareAsync } from 'expo-sharing';
 
-import { downloadWallpaper } from '@/lib/local-wallpaper';
+import { withLocalWallpaper } from '@/lib/local-wallpaper';
+import { getAccountSession, requireCurrentAccount } from '@/lib/account-session';
 
 export type SaveAndShareAction = 'save' | 'share' | undefined;
 
@@ -18,13 +19,15 @@ export function useSaveAndShare(imageUrl: string) {
     setActiveAction('save');
 
     try {
-      const permission = await requestPermissionsAsync();
+      const account = getAccountSession();
+      requireCurrentAccount(account);
+      const permission = await requestPermissionsAsync(true, ['photo']);
+      requireCurrentAccount(account);
       if (permission.status !== 'granted') {
         throw new Error(t`Photo library permission is required to save wallpapers.`);
       }
 
-      const localUri = await downloadWallpaper(imageUrl);
-      await Asset.create(localUri);
+      await withLocalWallpaper(imageUrl, (localUri) => Asset.create(localUri));
     } catch (cause) {
       const nextError =
         cause instanceof Error
@@ -42,12 +45,14 @@ export function useSaveAndShare(imageUrl: string) {
     setActiveAction('share');
 
     try {
+      const account = getAccountSession();
+      requireCurrentAccount(account);
       if (!(await isAvailableAsync())) {
         throw new Error(t`Sharing is unavailable on this device.`);
       }
 
-      const localUri = await downloadWallpaper(imageUrl);
-      await shareAsync(localUri);
+      requireCurrentAccount(account);
+      await withLocalWallpaper(imageUrl, (localUri) => shareAsync(localUri));
     } catch (cause) {
       const nextError =
         cause instanceof Error

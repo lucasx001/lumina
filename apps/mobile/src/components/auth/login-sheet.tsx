@@ -86,8 +86,7 @@ export function LoginSheet({
               </ThemedText>
               <ThemedText style={{ color: theme.mutedText, textAlign: 'center' }} variant="body">
                 <Trans>
-                  Sign in with Google to merge this device history into your account and keep
-                  creating anywhere.
+                  Sign in with Google to keep your private wallpaper space available anywhere.
                 </Trans>
               </ThemedText>
             </View>

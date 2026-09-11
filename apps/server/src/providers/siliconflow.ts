@@ -162,8 +162,6 @@ function toImageResult(
 
   return {
     imageUrl,
-    width: spec.width,
-    height: spec.height,
     providerTask: `siliconflow:${seed ?? 'unknown'}`,
     metadata: {
       imageSize: `${spec.width}x${spec.height}`,

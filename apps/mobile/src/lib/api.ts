@@ -1,4 +1,5 @@
 import Constants from 'expo-constants';
+import { getAccountSession } from '@/lib/account-session';
 
 export type HealthResponse = { ok: boolean };
 
@@ -13,8 +14,7 @@ export type GenerationUserInputs = {
 };
 
 export type GenerateRequest = {
-  category: string;
-  deviceId?: string;
+  categoryId: string;
   height: number;
   mode: GenerationMode;
   quality: GenerationQuality;
@@ -35,13 +35,29 @@ export type PresignedUpload = {
 export type GenerationJobStatus = 'failed' | 'pending' | 'processing' | 'succeeded';
 
 export type GenerationJob = {
+  category?: string;
+  mode?: GenerationMode;
+  createdAt?: string;
+  categoryId?: string;
   error?: string;
   height?: number;
   resultImageUrl?: string;
   quality?: GenerationQuality;
   status: GenerationJobStatus;
   width?: number;
+  userId?: string;
+  wallpaperId?: string;
 };
+
+export type CategoryListItem = {
+  count: number;
+  coverImageUrls: string[];
+  id: string;
+  name: string;
+};
+
+export type CategoriesResponse = { categories: CategoryListItem[] };
+export type CreateCategoryResponse = { category: CategoryListItem };
 
 export type PresetListItem = {
   category: string;
@@ -54,6 +70,7 @@ export type PresetsResponse = { presets: PresetListItem[] };
 
 export type WallpaperListItem = {
   category: string;
+  categoryId: string;
   createdAt: string;
   favorite?: boolean;
   height: number | null;
@@ -73,14 +90,12 @@ export type WallpapersResponse = {
 };
 
 export type WallpapersRequest = {
-  category?: string;
-  deviceId: string;
+  categoryId?: string;
   favorite?: boolean;
   limit?: number;
   page?: number;
 };
 
-export type BindDeviceResponse = { bound: number };
 export type FavoriteWallpaperResponse = { wallpaper: WallpaperListItem };
 
 type ErrorPayload = { error?: { code?: unknown; message?: unknown } };
@@ -139,6 +154,7 @@ export function createApiClient({
     const { timeoutMs, init } = options || {};
 
     const headers = new Headers(init?.headers || {});
+    const accountSignal = getAccountSession().signal;
     headers.set('Accept', 'application/json');
     const token = await getToken();
     if (token) {
@@ -147,6 +163,8 @@ export function createApiClient({
     const controller = new AbortController();
     const abortFromCaller = () => controller.abort();
     init?.signal?.addEventListener('abort', abortFromCaller, { once: true });
+    accountSignal.addEventListener('abort', abortFromCaller, { once: true });
+    if (init?.signal?.aborted || accountSignal.aborted) controller.abort();
     const timeout = setTimeout(() => {
       controller.abort();
     }, timeoutMs || 20_000);
@@ -159,7 +177,7 @@ export function createApiClient({
         signal: controller.signal,
       });
     } catch (reason) {
-      if (init?.signal?.aborted) {
+      if (init?.signal?.aborted || accountSignal.aborted) {
         throw new ApiError('请求已取消。', 0, 'REQUEST_ABORTED');
       }
       if (controller.signal.aborted) {
@@ -173,9 +191,11 @@ export function createApiClient({
     } finally {
       clearTimeout(timeout);
       init?.signal?.removeEventListener('abort', abortFromCaller);
+      accountSignal.removeEventListener('abort', abortFromCaller);
     }
 
     const payload = await parseJson(response);
+    if (accountSignal.aborted) throw new ApiError('Account session changed.', 0, 'REQUEST_ABORTED');
 
     if (!response.ok) {
       const error = payload as ErrorPayload | undefined;
@@ -197,6 +217,20 @@ export function getHealth(): Promise<HealthResponse> {
 
 export function getPresets(): Promise<PresetsResponse> {
   return apiFetch<PresetsResponse>('/presets');
+}
+
+export function getCategories(): Promise<CategoriesResponse> {
+  return apiFetch<CategoriesResponse>('/categories');
+}
+
+export function createCategory(name: string): Promise<CreateCategoryResponse> {
+  return apiFetch<CreateCategoryResponse>('/categories', {
+    init: {
+      body: JSON.stringify({ name }),
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+    },
+  });
 }
 
 export function createGeneration(request: GenerateRequest): Promise<GenerateResponse> {
@@ -253,20 +287,14 @@ export function getGenerationJob(jobId: string): Promise<GenerationJob> {
   return apiFetch<GenerationJob>(`/jobs/${encodeURIComponent(jobId)}`);
 }
 
-export function getWallpapers({
-  category,
-  deviceId,
-  favorite,
-  limit = 20,
-  page = 1,
-}: WallpapersRequest) {
-  const query = new URLSearchParams({
-    deviceId,
-    limit: String(limit),
-    page: String(page),
-  });
-  if (category) {
-    query.set('category', category);
+export function getGenerationJobs(): Promise<{ jobs: GenerationJob[] }> {
+  return apiFetch('/jobs?status=recent');
+}
+
+export function getWallpapers({ categoryId, favorite, limit = 20, page = 1 }: WallpapersRequest) {
+  const query = new URLSearchParams({ limit: String(limit), page: String(page) });
+  if (categoryId) {
+    query.set('categoryId', categoryId);
   }
   if (favorite !== undefined) {
     query.set('favorite', String(favorite));
@@ -275,29 +303,19 @@ export function getWallpapers({
   return apiFetch<WallpapersResponse>(`/wallpapers?${query.toString()}`);
 }
 
+export function getWallpaper(id: string): Promise<{ wallpaper: WallpaperListItem }> {
+  return apiFetch<{ wallpaper: WallpaperListItem }>(`/wallpapers/${encodeURIComponent(id)}`);
+}
+
 export function setWallpaperFavorite(
   id: string,
-  input: { deviceId: string; favorite: boolean },
+  input: { favorite: boolean },
 ): Promise<FavoriteWallpaperResponse> {
   return apiFetch<FavoriteWallpaperResponse>(`/wallpapers/${encodeURIComponent(id)}/favorite`, {
     init: {
       body: JSON.stringify(input),
       headers: { 'Content-Type': 'application/json' },
       method: 'PATCH',
-    },
-  });
-}
-
-export function bindDevice(
-  deviceId: string,
-  getToken?: ApiTokenProvider,
-): Promise<BindDeviceResponse> {
-  const client = getToken ? createApiClient({ baseUrl: apiBaseUrl, getToken }) : apiFetch;
-  return client<BindDeviceResponse>('/me/bind-device', {
-    init: {
-      body: JSON.stringify({ deviceId }),
-      headers: { 'Content-Type': 'application/json' },
-      method: 'POST',
     },
   });
 }

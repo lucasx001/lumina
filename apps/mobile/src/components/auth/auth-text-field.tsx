@@ -39,7 +39,7 @@ export function AuthTextField({
 
   return (
     <View style={{ gap: spacing.sm }}>
-      <ThemedText style={{ fontSize: 19, fontWeight: '500' }} variant="body">
+      <ThemedText style={{ fontSize: 12, fontWeight: '700' }} variant="caption">
         {label}
       </ThemedText>
       <TextInput
@@ -54,14 +54,17 @@ export function AuthTextField({
         secureTextEntry={secureTextEntry}
         selectionColor={theme.primary}
         style={{
-          borderBottomColor: error ? theme.error : focused ? theme.primary : theme.border,
-          borderBottomWidth: focused || error ? 2 : 1,
+          backgroundColor: theme.surface,
+          borderColor: error ? theme.error : focused ? theme.primary : theme.border,
+          borderCurve: 'continuous',
+          borderRadius: 10,
+          borderWidth: 1,
           color: theme.text,
           fontFamily: theme.fontFamily,
           fontSize: 15,
-          minHeight: 48,
-          paddingHorizontal: 0,
-          paddingVertical: spacing.sm,
+          minHeight: 54,
+          paddingHorizontal: 14,
+          paddingVertical: 0,
         }}
         testID={testID}
         value={value}

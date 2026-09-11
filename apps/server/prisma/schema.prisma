@@ -14,12 +14,28 @@ model User {
   email         String?     @unique @map("email")
   nickname      String?     @map("nickname")
   avatarUrl     String?     @map("avatar_url")
+  categories    Category[]
   wallpapers    Wallpaper[]
   presets       Preset[]
   createdAt     DateTime    @default(now()) @map("created_at")
   updatedAt     DateTime    @updatedAt @map("updated_at")
 
   @@map("user")
+}
+
+model Category {
+  id             String      @id @default(cuid()) @map("id")
+  userId         String      @map("user_id")
+  user           User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name           String      @map("name")
+  normalizedName String      @map("normalized_name")
+  wallpapers     Wallpaper[]
+  createdAt      DateTime    @default(now()) @map("created_at")
+  updatedAt      DateTime    @updatedAt @map("updated_at")
+
+  @@unique([userId, normalizedName])
+  @@index([userId])
+  @@map("category")
 }
 
 model Preset {
@@ -43,31 +59,30 @@ model Preset {
 }
 
 model Wallpaper {
-  id             String   @id @default(cuid()) @map("id")
-  category       String   @map("category")
-  deviceId       String?  @map("device_id")
-  userId         String?  @map("user_id")
-  user           User?    @relation(fields: [userId], references: [id])
-  presetId       String?  @map("preset_id")
-  preset         Preset?  @relation(fields: [presetId], references: [id])
-  mode           String   @map("mode")
-  prompt         String   @map("prompt")
-  sourceImageUrl String?  @map("source_image_url")
-  resultImageUrl String?  @map("result_image_url")
-  width          Int?     @map("width")
-  height         Int?     @map("height")
-  status         String   @default("pending") @map("status")
-  quality        String   @default("hd") @map("quality")
-  favorite       Boolean  @default(false) @map("favorite")
-  providerTask   String?  @map("provider_task")
-  error          String?  @map("error")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+  id             String    @id @default(cuid()) @map("id")
+  categoryId     String    @map("category_id")
+  category       Category  @relation(fields: [categoryId], references: [id], onDelete: Restrict)
+  userId         String    @map("user_id")
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  presetId       String?   @map("preset_id")
+  preset         Preset?   @relation(fields: [presetId], references: [id])
+  mode           String    @map("mode")
+  prompt         String    @map("prompt")
+  sourceImageKey String?   @map("source_image_key")
+  resultImageKey String?   @map("result_image_key")
+  width          Int?      @map("width")
+  height         Int?      @map("height")
+  status         String    @default("pending") @map("status")
+  quality        String    @default("hd") @map("quality")
+  favorite       Boolean   @default(false) @map("favorite")
+  providerTask   String?   @map("provider_task")
+  error          String?   @map("error")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
 
-  @@index([userId])
-  @@index([deviceId])
-  @@index([deviceId, category])
+  @@index([userId, createdAt])
+  @@index([userId, categoryId, createdAt])
+  @@index([userId, favorite])
   @@index([presetId])
-  @@index([deviceId, favorite])
   @@map("wallpaper")
 }

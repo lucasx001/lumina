@@ -1,51 +1,30 @@
-# 0008 — wallpaper-preview
+# 0008 — 壁纸预览
 
-> 模块：wallpaper-preview ｜ 优先级：8 ｜ 依赖：0007 ｜ 里程碑：M1 对应 SPEC：「预览组件」
->
-> 状态：本地实现与组件测试完成；真机视觉验收待与 0009 联调时执行。
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-做一个纯展示组件：把任意图片合成进「手机壳 mockup」，叠加状态栏/时钟，支持 `锁屏 / 桌面`
-切换。可用静态图独立测试，与出图逻辑解耦。
+通过 wallpaperId 独立查询当前账号壁纸详情。完整预览显示图片、所属类型、创建时间、实际尺寸和收藏状态，切换桌面/锁屏叠层。结果预览和作品预览共享展示规则。
 
-## 范围
+图片按比例展示，不拉伸；时钟、状态栏和桌面图标是预览元素。加载/失败/不可访问状态有清楚反馈，返回后恢复类型页面。
 
-- In：`<WallpaperPreview image lockScreen />` 组件、状态栏/时钟/锁屏元素 overlay、锁屏/桌面切换。
-- Out：出图、应用壁纸（0011）。
+原生预览连接 0011 的应用、保存和分享操作。收藏提交中防止重复点击，失败可重试。Web 按平台能力提供预览和下载。
 
-## 涉及文件
+## 实现位置
 
+- `apps/mobile/src/screens/wallpaper-preview.tsx`
+- `apps/mobile/src/screens/wallpaper-preview.web.tsx`
+- `apps/mobile/src/components/wallpaper-detail.tsx`
 - `apps/mobile/src/components/WallpaperPreview.tsx`
-- `apps/mobile/src/components/preview/status-bar-overlay.tsx`、`lock-clock-overlay.tsx`、
-  `home-icons-overlay.tsx`
-- `apps/mobile/src/components/wallpaper-preview.test.tsx`
+- `apps/mobile/src/components/preview/`
 
-## 实现要点
+## 当前状态
 
-- 用 `expo-image` 渲染底图，按手机比例容器裁切（cover）。
-- overlay：状态栏（时间/信号/电量）+ 锁屏大时钟；桌面态可叠几个占位图标网格。
-- `mode` 切换锁屏/桌面时切换 overlay。
-- 避免渐变把状态栏糊掉；overlay 用半透明前景色，自适应深浅底图（可选：根据图片亮度调字色）。
-- 组件接收 `width/height`（来自 0007 `useDeviceSize`）保证比例真实。
+展示组件及原生操作入口已有；独立详情、分页外作品读取和收藏反馈见 D03、U02。
 
-## 独立测试
+## 验收标准
 
-- 临时在创作 Tab 或单独 demo 路由放一张本地静态图，渲染
-  `WallpaperPreview`，切换锁屏/桌面观察 overlay 正确。
-- 用不同比例图片验证 cover 裁切无拉伸。
-
-## 完成标准 (DoD)
-
-- [x] 静态图即可渲染出「手机壳 + 状态栏 + 时钟」预览。
-- [x] 锁屏/桌面切换正常。
-- [x] 不依赖网络/出图逻辑，可单独测试。
-
-## 验证记录
-
-- `WallpaperPreview` 以 `expo-image` 的 `contentFit="cover"`
-  渲染底图，在手机壳容器中叠加状态栏；锁屏显示日期/时钟，桌面显示占位图标网格。`mode` 支持
-  `lock-screen` / `home-screen`，并兼容 `lockScreen` 简写。
-- 组件测试覆盖锁屏 overlay、桌面 overlay 与给定宽高下的预览尺寸（3 项）；不请求网络或生成 API。
-- 已通过移动端 TypeScript 检查、相关 Jest 测试及后续的全仓
-  `vp check`。真实设备上的不同比例视觉验收将在配置 API 后的 0009 联调中补做。
+- [ ] 冷启动或直接打开旧作品 ID 可预览，无需先加载列表。
+- [ ] 跨账号与不存在作品不可访问。
+- [ ] 桌面/锁屏切换、真实尺寸、图片失败重试及安全区真机验证。

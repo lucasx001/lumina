@@ -1,9 +1,4 @@
-import {
-  type InfiniteData,
-  useInfiniteQuery,
-  useMutation,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 
 import {
   getWallpapers,
@@ -11,56 +6,43 @@ import {
   type WallpaperListItem,
   type WallpapersResponse,
 } from '@/lib/api';
-import { useAnonymousDeviceId } from '@/lib/device-id';
+import { useAuth as useClerkAuth } from '@clerk/expo';
 
 const defaultPageSize = 20;
 
 export type WallpaperFilters = {
-  category?: string;
+  categoryId?: string;
   favoritesOnly?: boolean;
 };
 
 export function useWallpapers(filters: WallpaperFilters = {}, pageSize = defaultPageSize) {
-  const anonymousDevice = useAnonymousDeviceId();
+  const { userId } = useClerkAuth();
   const queryClient = useQueryClient();
-  const query = useInfiniteQuery<
-    WallpapersResponse,
-    Error,
-    InfiniteData<WallpapersResponse>,
-    [string, string | undefined, string | undefined, boolean, number],
-    number
-  >({
-    enabled: Boolean(anonymousDevice.deviceId),
+  const query = useInfiniteQuery<WallpapersResponse, Error>({
+    enabled: Boolean(userId),
     getNextPageParam: (lastPage) => (lastPage.hasMore ? lastPage.page + 1 : undefined),
     initialPageParam: 1,
     queryFn: ({ pageParam }) => {
-      if (!anonymousDevice.deviceId) {
-        throw new Error('An anonymous device ID is required to load wallpapers.');
+      if (!userId) {
+        throw new Error('An authenticated account is required to load wallpapers.');
       }
 
       return getWallpapers({
-        deviceId: anonymousDevice.deviceId,
-        category: filters.category,
+        categoryId: filters.categoryId,
         favorite: filters.favoritesOnly ? true : undefined,
         limit: pageSize,
-        page: pageParam,
+        page: Number(pageParam),
       });
     },
-    queryKey: [
-      'wallpapers',
-      anonymousDevice.deviceId,
-      filters.category,
-      Boolean(filters.favoritesOnly),
-      pageSize,
-    ],
+    queryKey: ['wallpapers', userId, filters.categoryId, Boolean(filters.favoritesOnly), pageSize],
   });
   const favoriteMutation = useMutation({
     mutationFn: async ({ favorite, id }: { favorite: boolean; id: string }) => {
-      if (!anonymousDevice.deviceId) {
-        throw new Error('An anonymous device ID is required to favorite a wallpaper.');
+      if (!userId) {
+        throw new Error('An authenticated account is required to favorite a wallpaper.');
       }
 
-      return setWallpaperFavorite(id, { deviceId: anonymousDevice.deviceId, favorite });
+      return setWallpaperFavorite(id, { favorite });
     },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: ['wallpapers'] });
@@ -70,9 +52,7 @@ export function useWallpapers(filters: WallpaperFilters = {}, pageSize = default
 
   return {
     ...query,
-    deviceId: anonymousDevice.deviceId,
-    deviceIdError: anonymousDevice.error,
-    isPreparingDeviceId: anonymousDevice.isLoading,
+    accountId: userId,
     favoriteError: favoriteMutation.error,
     isUpdatingFavorite: favoriteMutation.isPending,
     toggleFavorite: (wallpaper: WallpaperListItem) =>

@@ -25,7 +25,7 @@ export function QualitySelector({ onChange, value }: QualitySelectorProps) {
       value: 'draft',
     },
     {
-      description: t`Full 2K+ resolution, ideal for saving and applying`,
+      description: t`Request more detail. Actual dimensions are shown after generation.`,
       label: t`High resolution`,
       value: 'hd',
     },

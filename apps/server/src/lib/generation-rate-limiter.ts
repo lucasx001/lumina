@@ -14,7 +14,7 @@ type CreateGenerationRateLimiterOptions = {
 
 /**
  * A small in-memory guard for the single-process MVP. The requester key is a
- * Clerk user when available and otherwise the anonymous device id.
+ * Clerk user ID for account-scoped generation requests.
  */
 export function createGenerationRateLimiter({
   limit = 3,

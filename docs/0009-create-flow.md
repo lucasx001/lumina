@@ -1,59 +1,33 @@
-# 0009 — create-flow
+# 0009 — Add 与创建 Sheet
 
-> 模块：create-flow ｜ 优先级：9 ｜ 依赖：0007,0008,0006 ｜ 里程碑：M1 对应 SPEC：「创作页」
->
-> 状态：本地实现与 mock 验证完成；真实后端/真机闭环待配置局域网 API 和 0003/0004 外部凭据后执行。
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-完成核心创作闭环 UI：选预设 → 选主题/色调/氛围 + 一句话想法 → 出图（轮询进度）→ 在手机壳预览看结果 → 可重生成。这是 M1 的可演示主线。
+点击 Add 打开 Bottom
+Sheet，依次选择风格、填写简单提示词、选择账号内类型，生成一张壁纸。类型选择器支持已有类型及新建类型，规则见 SPEC。高级情绪/色调和画质设置不阻碍主流程。
 
-## 范围
+Sheet 可下滑关闭、按钮关闭及系统返回，输入适配键盘。生成前明确校验风格、提示词与类型；提交期间防重复请求，限流显示等待时间，失败可重试。
 
-- In：预设网格、chips 选择、想法输入、生成按钮、轮询进度态、结果展示（接 0008 预览）、重生成。
-- Out：应用/分享/存相册（0011）、登录门槛（0014）。
+已提交任务归属于账号并可恢复，关闭或重开 Sheet 不丢任务。成功后显示“已保存到 {类型}”，更新类型卡片和作品列表，并提供单图预览/类型详情入口。
 
-## 涉及文件
+保留次级图片编辑入口，标注即将推出，当前进入占位说明。
 
-- `apps/mobile/src/app/(tabs)/index.tsx`（创作页主体）
-- `apps/mobile/src/features/create/preset-grid.tsx`、`chips-selector.tsx`、`idea-input.tsx`、
-  `generate-button.tsx`、`result-view.tsx`
-- `apps/mobile/src/hooks/use-generate.ts`（封装 `POST /generate` + `GET /jobs/:id` 轮询）
-- `apps/mobile/src/lib/api.ts`（生成、job、预设的类型化端点）
+## 实现位置
 
-## 实现要点
+- `apps/mobile/src/app/create-wallpaper.tsx`
+- `apps/mobile/src/screens/create-wallpaper.tsx`
+- `apps/mobile/src/components/create/`
+- `apps/mobile/src/hooks/use-generate.ts`
+- `apps/mobile/src/lib/create-wallpaper-session.ts`
 
-- 用 `@expo/ui` 原生组件 + `expo-image`；`useGenerate` 基于 React Query（mutation 建任务 +
-  query 轮询直到 succeeded/failed）。
-- 出图请求带 `useDeviceSize()` 的目标 W×H，保证出图匹配本机。
-- chips：主题/色调/氛围为有限可选项（与种子预设语义对应）。
-- 进度态：轮询期间显示生成中（可放草稿/骨架）；失败显示错误 + 重试。
-- 结果：渲染 `WallpaperPreview`（0008），提供「重生成」「下一步（应用/分享，占位到 0011）」。
-- 「快速预览(草稿) / 高清出图」两档可先占位（完整在 0016）。
+## 当前状态
 
-## 独立测试
+Sheet 与生成基础已有；风格必选、类型选择、任务恢复、归档导航、编辑入口见 C01–C04、E01。
 
-- 后端（0006）起好后，真机/模拟器走完：选预设→填想法→生成→看到 2K 图在手机壳预览。
-- 后端未就绪时，用 mock 数据渲染各子组件，保证 UI 可独立调。
-- 失败用例：后端 job 置 failed → UI 显示错误并可重试。
+## 验收标准
 
-## 完成标准 (DoD)
-
-- [x] 能从预设 + 想法触发出图并轮询到结果（mock API 覆盖）。
-- [x] 出图尺寸匹配本机屏幕（≥2K）。
-- [x] 结果在手机壳预览正确展示，可重生成。
-- [x] 加载/失败态完善。
-
-## 验证记录
-
-- `PresetGrid` 使用 `/presets`
-  提供的内置预设，支持加载/失败重试；主题、色调和氛围 chips 与受控想法输入一并组成 `text2img`
-  请求。请求始终使用 `useDeviceSize()` 的 `targetWidth` / `targetHeight`。
-- `useGenerate` 以 mutation 创建 job，并每秒轮询 `/jobs/:id`；`succeeded` / `failed`
-  时停止轮询。网络轮询失败重试当前 job，服务端 job 失败则可重新创建同一请求。
-- 成功结果使用 0008 `WallpaperPreview`，可切换锁屏/桌面并重生成；加载、网络错误和 job 失败均通过统一
-  `ErrorState` 暴露重试入口。
-- 移动端测试共覆盖 5 个套件、12 项断言，包含 API 请求、chips、结果预览和失败/重试 UI；后续全仓
-  `vp check`、测试与三平台导出均通过。
-- 未执行真实请求或真机操作：设置 `EXPO_PUBLIC_API_URL`
-  后，仍需按「独立测试」完成一次 2K 成功出图、预览与失败重试的设备联调。SiliconFlow/R2 凭据未配置时不得把该步骤标记为已验证。
+- [ ] 主流程只需风格、提示词和类型，点击生成产出一张作品。
+- [ ] 下滑/返回/键盘行为和生成中的关闭重开通过验证。
+- [ ] 成功可从首页类型找到该作品，编辑占位入口可达。

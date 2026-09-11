@@ -1,75 +1,56 @@
-# Lumina 实施进度
+# Lumina 实施清单
 
-> 来源规格：[SPEC.md](./SPEC.md) 编号越小优先级越高；`0000` 是所有功能开发前必须完成的工程化门槛。
+> 2026-09-07 P0/P1 实施记录。产品行为见 [SPEC](./SPEC.md)，后续差距和排序见
+> [Mobile 待办](./0018-mobile-roadmap.md)。自动化检查已运行；真实外部服务和真机效果仍需单独验收。
 
-## 状态图例
+## 交付优先级
 
-`☐ 未开始` | `◐ 进行中或外部验收待完成` | `☑ 完成` | `⊘ 本期不做`
+1. **P0：账号与数据正确性** — 强鉴权、账号归属、缓存/资产隔离，完整类型目录、分页与单图详情。
+2. **P1：核心闭环** — 类型选择、风格校验、任务恢复、归档反馈、编辑占位入口及真机操作。
+3. **P2：后续能力** — 完整图片编辑、大列表性能、国际化/无障碍与平台体验。
 
-## 模块清单
+编号用于文档索引，执行顺序以待办优先级与依赖为准。账号边界属于核心功能前置条件。
 
-| 步骤                                       | 模块                                    | 端     | 依赖             | 里程碑 | 状态 |
-| ------------------------------------------ | --------------------------------------- | ------ | ---------------- | ------ | ---- |
-| [0000](./0000-vite-plus-engineering.md)    | vite-plus-engineering                   | Eng    | -                | Pre-M0 | ☑    |
-| [0001](./0001-backend-foundation.md)       | backend-foundation                      | BE     | -                | M0     | ☑    |
-| [0002](./0002-database.md)                 | database                                | BE     | 0001             | M0     | ☑    |
-| [0003](./0003-image-provider.md)           | image-provider, SiliconFlow FLUX.2 Flex | BE     | 0001             | M0/M1  | ◐    |
-| [0004](./0004-oss-storage.md)              | Cloudflare R2 storage                   | BE     | 0001             | M1     | ◐    |
-| [0005](./0005-generation-pipeline.md)      | generation-pipeline                     | BE     | 0002, 0003, 0004 | M1     | ◐    |
-| [0006](./0006-generation-api.md)           | generation-api                          | BE     | 0005, 0002       | M1     | ◐    |
-| [0007](./0007-frontend-foundation.md)      | frontend-foundation                     | FE     | -                | M1     | ◐    |
-| [0008](./0008-wallpaper-preview.md)        | wallpaper-preview                       | FE     | 0007             | M1     | ◐    |
-| [0009](./0009-create-flow.md)              | create-flow                             | FE     | 0007, 0008, 0006 | M1     | ◐    |
-| [0010](./0010-native-wallpaper-android.md) | native-wallpaper-android                | Native | 0007             | M2     | ◐    |
-| [0011](./0011-apply-share-save.md)         | apply-share-save                        | FE     | 0010, 0009       | M2     | ◐    |
-| [0012](./0012-library.md)                  | library                                 | FE     | 0007, 0006       | M2     | ◐    |
-| [0013](./0013-auth-backend.md)             | auth-backend                            | BE     | 0001, 0002       | M3     | ◐    |
-| [0014](./0014-auth-frontend.md)            | auth-frontend                           | FE     | 0007, 0013       | M3     | ◐    |
-| [0015](./0015-image-edit.md)               | image-edit                              | BE+FE  | 0005, 0009       | M4     | ☐    |
-| [0016](./0016-polish.md)                   | polish                                  | BE+FE  | all              | M5     | ☐    |
+## 模块状态
 
-## 当前关键路径
+| 文档                                                        | 当前代码状态                                                                 | 目标待验收                      |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------- | ------------------------------- |
+| [0000 工程](./0000-vite-plus-engineering.md)                | 脚本、工作区与工具配置已存在                                                 | 实施变更后的检查、测试和构建    |
+| [0001 后端基础](./0001-backend-foundation.md)               | 现有工程、环境校验和路由挂载已具备。业务接口强鉴权与账号上下文按 0013 验收。 | 见模块验收标准及 0018           |
+| [0002 账号、类型与壁纸数据模型](./0002-database.md)         | User、Category、Wallpaper 账号归属和开发期重建迁移已落实。                   | 真实数据库验收                  |
+| [0003 图片生成 Provider](./0003-image-provider.md)          | Provider 适配、工厂和 mock 已存在                                            | 见模块验收标准及 0018           |
+| [0004 私有图片存储](./0004-oss-storage.md)                  | R2 object key 按账号分区，读取地址由服务端按归属生成。                       | 真实 R2、签名过期和泄露边界验收 |
+| [0005 生成与归档管线](./0005-generation-pipeline.md)        | 图编排与 runner 已存在                                                       | 见模块验收标准及 0018           |
+| [0006 生成、类型与作品 API](./0006-generation-api.md)       | 账号类型目录、生成、任务、分页列表、单图详情和收藏接口已落实。               | 真实服务验收                    |
+| [0007 Mobile 应用基础](./0007-frontend-foundation.md)       | 基础布局、路由、Providers 和组件目录已存在                                   | 见模块验收标准及 0018           |
+| [0008 壁纸预览](./0008-wallpaper-preview.md)                | 展示组件及原生操作入口已有                                                   | 见模块验收标准及 0018           |
+| [0009 Add 与创建 Sheet](./0009-create-flow.md)              | Sheet 与生成基础已有                                                         | 见模块验收标准及 0018           |
+| [0010 Android 系统壁纸](./0010-native-wallpaper-android.md) | 原生模块及桥接测试文件存在                                                   | 见模块验收标准及 0018           |
+| [0011 应用、保存与分享](./0011-apply-share-save.md)         | 原生操作链路已有                                                             | 见模块验收标准及 0018           |
+| [0012 首页类型与作品管理](./0012-library.md)                | 类型目录 Card、分页作品和独立预览详情已落实。                                | 大列表性能与真机反馈            |
+| [0013 服务端账号身份与授权](./0013-auth-backend.md)         | Clerk 校验、User upsert 和业务路由账号归属已落实。                           | 真实 Clerk 与跨账号验收         |
+| [0014 Mobile 登录与账号生命周期](./0014-auth-frontend.md)   | 登录保护、token 桥接、账号缓存清理和迟到回调保护已落实。                     | 真实会话与任务恢复验收          |
+| [0015 图片编辑](./0015-image-edit.md)                       | Add Sheet 已保留“即将推出”入口；完整编辑能力列入 P2。                        | E02 完整图片编辑                |
+| [0016 体验与可靠性](./0016-polish.md)                       | 两档画质、限流、反馈组件与收藏基础存在                                       | 见模块验收标准及 0018           |
+| [0017 Lingui 国际化](./0017-i18n-lingui.md)                 | 共享包、Mobile Provider、语言 store 和 Profile 切换已存在                    | 见模块验收标准及 0018           |
+| [0018 Mobile 待办](./0018-mobile-roadmap.md)                | P0 基础与 P1 主流程代码已交付                                                | 真机待验收；后续按 P2 执行      |
 
-- 0000、0001、0002 已完成并通过本地工程化校验。
-- 0003 已从不适合作为生产图片后端的 Codex SDK 迁移到 SiliconFlow 的
-  `black-forest-labs/FLUX.2-pro`。离线 provider、环境校验、mock、错误映射和真实 API
-  spike 脚本已完成。
-- 0003 的真实验收仍需要 `SILICONFLOW_API_KEY`：先验证 `576x1024`
-  文生图与临时 URL 下载，再验证目标设备尺寸。该调用会产生供应商费用，因此不会在自动测试中运行。
-- 0004 的 R2 离线能力已完成，真实 bucket 凭据验收仍待完成。
-- 0005 的 LangGraph 流水线已完成离线 mock 验证，覆盖提示词扩写开关、模式分流、R2 持久化以及失败回填；真实 Provider/R2 验收仍依赖 0003 和 0004 的外部凭据。
-- 0006 的生成任务 API 已完成本地实现与 mock 验证：`POST /generate` 先创建 pending
-  job 并异步运行图，`GET /jobs/:id` 供轮询，`GET /presets` 返回内置预设，`GET /wallpapers` 按匿名
-  `deviceId` 分页查询；真实生成验收仍依赖 0003/0004 的外部凭据。
-- 0007 的 Expo Router 基础已完成：三 Tab、主题/系统字体、React Query、可配置 API
-  client、加载/错误状态与 ≥2K 尺寸推算均通过本地测试和三平台导出。真机需配置局域网
-  `EXPO_PUBLIC_API_URL` 后补做 Tab 切换与 `/health` 连通性验收。
-- 0008 的静态壁纸预览已完成：手机壳裁切、状态栏、锁屏时钟与桌面图标 overlay 可独立测试。0009 的创作闭环已接入预设、chips、想法、生成 job 轮询、失败重试和结果预览，使用 0007 的 ≥2K 目标尺寸。真实设备联调仍依赖局域网
-  `EXPO_PUBLIC_API_URL`，真实图像则另依赖 0003/0004 的外部凭据。
-- 0010 的本地 Android Expo Module、`SET_WALLPAPER` config
-  plugin 和类型化 API 已完成；0011 已把下载、本地应用、相册保存、系统分享及 iOS 降级接到结果页。静态检查与 mock 测试通过，仍需 Android
-  development build 和真机确认三种系统壁纸 target、相册和分享。
-- 0012 已加入安全持久化匿名 deviceId、生成/图库共享标识、分页网格、刷新/空态/详情与预设入口占位；真实 API、生成结果与 0011 操作的设备联调待配置局域网服务。
-- 0013 已实现 Clerk token 验证、`optionalAuth`/`requireAuth`、`/me`
-  upsert 和匿名历史安全绑定，服务端 41 项测试与构建通过；真实 Clerk/JWKS 和 PostgreSQL 验收待凭据。
-- 0014 已接入 ClerkProvider、SecureStore token cache、Google SSO
-  UI、Bearer 注入和登录后历史绑定。真实 OAuth、redirect URL、会话恢复和跨设备同步待 Clerk
-  Dashboard/Google 配置及开发构建设备验收。
+## 集成验收门槛
 
-## 里程碑
+- A/B 账号在同一终端切换，列表、类型、单图、收藏、任务、私有预设、源图和缓存严格隔离。
+- 新账号完成 Add → 风格/提示词/类型 → 单张生成 → 自动归档 → 类型详情 → 单图预览。
+- 数据量超过 50 张时全部类型与作品可访问，任意作品支持独立详情读取。
+- Sheet 关闭、应用重启、断网恢复和签名过期不导致任务或历史作品失联。
+- 编辑占位入口可达；完整编辑交付逐模式验收。
+- Android 三种应用目标、保存和分享通过真机；iOS/Web 按各自能力验收。
 
-- **Pre-M0 工程化门槛**：Bun monorepo、Vite+ 质量门禁、测试编排、缓存、hooks 和 CI 已完成。
-- **M0 基建**：后端基础与 Prisma 数据库已完成；图片和对象存储的外部服务验收待完成。
-- **M0.5 SiliconFlow 图片 spike**：验证 `black-forest-labs/FLUX.2-pro`
-  返回可下载的图片 URL，随后写入 R2。
-- **M1 生成到预览闭环**：0005、0006、0007、0008、0009。
-- **M2 应用、分享与图库**：0010、0011、0012。
-- **M3 登录认证**：0013、0014。
-- **M4 已有图片能力**：0015。
-- **M5 打磨**：0016。
+## 验证口径
 
-## 本期不做
+P1 已实现风格约束、高级选项折叠、账号任务恢复、归档跳转、图片重试、收藏状态及实际尺寸展示。生成、收藏、类型创建和下载增加会话版本校验。
 
-- 完整生产级多租户图片额度、计费和支付体系。
-- iOS 一键设置系统壁纸。
-- 应用商店上架。
+当前通过：服务端 13 个测试文件、44 个测试；Mobile 25 个测试套、61 个测试；workspace
+check；服务端编译及 Android/iOS/Web 导出。Mobile 使用
+`--forceExit`，不代表已排查所有异步句柄。真实 Provider/R2、Clerk
+OAuth 仍需实测；用户明确要求本轮不做真机验收，因此系统壁纸、真实相册权限和分享效果未标为已验收。P1 交付细目及恢复边界见
+[0018](./0018-mobile-roadmap.md)。此前 Review 的源图授权与 key 持久化问题仍在编辑管线中待修复。工程命令见
+[0000](./0000-vite-plus-engineering.md)。

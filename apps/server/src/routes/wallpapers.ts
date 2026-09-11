@@ -1,11 +1,14 @@
 import { Hono } from 'hono';
 import { z } from 'zod';
 
+import type { ClerkAuthService } from '../lib/clerk.js';
+import type { R2Storage } from '../lib/r2.js';
 import { AppError } from '../middleware/error.js';
+import { requireAuth, type AuthVariables } from '../middleware/auth.js';
+import { syncLocalUser, type MeRepository } from './me.js';
 
 const querySchema = z.object({
-  category: z.string().trim().min(1).max(100).optional(),
-  deviceId: z.string().trim().min(1).max(200),
+  categoryId: z.string().trim().min(1).max(200).optional(),
   favorite: z
     .enum(['true', 'false'])
     .transform((value) => value === 'true')
@@ -16,6 +19,7 @@ const querySchema = z.object({
 
 export type WallpaperListItem = {
   category: string;
+  categoryId: string;
   createdAt: Date;
   favorite: boolean;
   height: number | null;
@@ -28,32 +32,46 @@ export type WallpaperListItem = {
 };
 
 export type WallpaperRepository = {
-  listByDeviceId(input: {
-    category?: string;
-    deviceId: string;
+  getById(input: { id: string; userId: string }): Promise<WallpaperListItem | null>;
+  listByUserId(input: {
+    categoryId?: string;
     favorite?: boolean;
     limit: number;
     page: number;
+    userId: string;
   }): Promise<WallpaperListItem[]>;
   setFavorite(input: {
-    deviceId: string;
     favorite: boolean;
     id: string;
+    userId: string;
   }): Promise<WallpaperListItem | null>;
 };
 
-export function createWallpaperRoutes(repository?: WallpaperRepository) {
-  const routes = new Hono();
+export type WallpaperRouteDependencies = {
+  clerk: ClerkAuthService;
+  repository?: WallpaperRepository;
+  storage?: Pick<R2Storage, 'getUrl'>;
+  users?: MeRepository;
+};
+
+export function createWallpaperRoutes({
+  clerk,
+  repository,
+  storage,
+  users,
+}: WallpaperRouteDependencies) {
+  const routes = new Hono<{ Variables: AuthVariables }>();
+  routes.use('*', requireAuth(clerk));
 
   routes.get('/wallpapers', async (context) => {
     const parsed = querySchema.safeParse(context.req.query());
     if (!parsed.success) {
-      throw new AppError('deviceId, page, or limit is invalid.', 400, 'VALIDATION_ERROR');
+      throw new AppError('categoryId, page, or limit is invalid.', 400, 'VALIDATION_ERROR');
     }
 
-    const wallpapers = await (
-      repository ?? (await createPrismaWallpaperRepository())
-    ).listByDeviceId(parsed.data);
+    const user = await syncLocalUser(context.get('user')?.clerkUserId, clerk, users);
+    const resolvedRepository = repository ?? (await createPrismaWallpaperRepository(storage));
+    const wallpapers = await resolvedRepository.listByUserId({ ...parsed.data, userId: user.id });
     const { limit, page } = parsed.data;
 
     return context.json({
@@ -64,15 +82,32 @@ export function createWallpaperRoutes(repository?: WallpaperRepository) {
     });
   });
 
+  routes.get('/wallpapers/:id', async (context) => {
+    const user = await syncLocalUser(context.get('user')?.clerkUserId, clerk, users);
+    const resolvedRepository = repository ?? (await createPrismaWallpaperRepository(storage));
+    const wallpaper = await resolvedRepository.getById({
+      id: context.req.param('id'),
+      userId: user.id,
+    });
+    if (!wallpaper) {
+      throw new AppError('Wallpaper was not found.', 404, 'WALLPAPER_NOT_FOUND');
+    }
+
+    return context.json({ wallpaper });
+  });
+
   routes.patch('/wallpapers/:id/favorite', async (context) => {
     const parsed = favoriteRequestSchema.safeParse(await parseRequestBody(context.req.raw));
     if (!parsed.success) {
       throw new AppError('Favorite request is invalid.', 400, 'VALIDATION_ERROR');
     }
 
-    const wallpaper = await (repository ?? (await createPrismaWallpaperRepository())).setFavorite({
+    const user = await syncLocalUser(context.get('user')?.clerkUserId, clerk, users);
+    const resolvedRepository = repository ?? (await createPrismaWallpaperRepository(storage));
+    const wallpaper = await resolvedRepository.setFavorite({
       ...parsed.data,
       id: context.req.param('id'),
+      userId: user.id,
     });
     if (!wallpaper) {
       throw new AppError('Wallpaper was not found.', 404, 'WALLPAPER_NOT_FOUND');
@@ -85,7 +120,6 @@ export function createWallpaperRoutes(repository?: WallpaperRepository) {
 }
 
 const favoriteRequestSchema = z.object({
-  deviceId: z.string().trim().min(1).max(200),
   favorite: z.boolean(),
 });
 
@@ -97,40 +131,101 @@ async function parseRequestBody(request: Request): Promise<unknown> {
   }
 }
 
-async function createPrismaWallpaperRepository(): Promise<WallpaperRepository> {
+async function createPrismaWallpaperRepository(
+  suppliedStorage?: Pick<R2Storage, 'getUrl'>,
+): Promise<WallpaperRepository> {
   const { prisma } = await import('../lib/db.js');
+  const storage = suppliedStorage ?? (await createStorage());
+
+  const toListItem = async (wallpaper: {
+    category: { id: string; name: string };
+    createdAt: Date;
+    favorite: boolean;
+    height: number | null;
+    id: string;
+    mode: string;
+    quality: string;
+    resultImageKey: string | null;
+    status: string;
+    width: number | null;
+  }): Promise<WallpaperListItem> => ({
+    category: wallpaper.category.name,
+    categoryId: wallpaper.category.id,
+    createdAt: wallpaper.createdAt,
+    favorite: wallpaper.favorite,
+    height: wallpaper.height,
+    id: wallpaper.id,
+    mode: wallpaper.mode,
+    quality: wallpaper.quality,
+    resultImageUrl: wallpaper.resultImageKey
+      ? await storage.getUrl(wallpaper.resultImageKey)
+      : null,
+    status: wallpaper.status,
+    width: wallpaper.width,
+  });
+
+  const whereFor = ({
+    categoryId,
+    favorite,
+    userId,
+  }: {
+    categoryId?: string;
+    favorite?: boolean;
+    userId: string;
+  }) => ({
+    ...(categoryId ? { categoryId } : {}),
+    ...(favorite === undefined ? {} : { favorite }),
+    resultImageKey: { not: null },
+    status: 'succeeded',
+    userId,
+  });
+
+  const getById = async ({ id, userId }: { id: string; userId: string }) => {
+    const wallpaper = await prisma.wallpaper.findFirst({
+      include: { category: { select: { id: true, name: true } } },
+      where: { ...whereFor({ userId }), id },
+    });
+    return wallpaper ? toListItem(wallpaper) : null;
+  };
 
   return {
-    async listByDeviceId({ category, deviceId, favorite, limit, page }) {
+    getById,
+    async listByUserId({ categoryId, favorite, limit, page, userId }) {
       const wallpapers = await prisma.wallpaper.findMany({
-        orderBy: { createdAt: 'desc' },
+        include: { category: { select: { id: true, name: true } } },
+        orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],
         skip: (page - 1) * limit,
         take: limit + 1,
-        where: {
-          ...(category ? { category } : {}),
-          deviceId,
-          ...(favorite === undefined ? {} : { favorite }),
-        },
+        where: whereFor({ categoryId, favorite, userId }),
       });
-      return wallpapers;
+      return Promise.all(wallpapers.map(toListItem));
     },
-    async setFavorite({ deviceId, favorite, id }) {
+    async setFavorite({ favorite, id, userId }) {
       const updated = await prisma.wallpaper.updateMany({
         data: { favorite },
-        where: { deviceId, id },
+        where: { ...whereFor({ userId }), id },
       });
       if (!updated.count) {
         return null;
       }
 
-      const wallpaper = await prisma.wallpaper.findUnique({
-        where: { id },
-      });
-      if (!wallpaper) {
-        return null;
-      }
-
-      return wallpaper;
+      return getById({ id, userId });
     },
   };
+}
+
+async function createStorage(): Promise<Pick<R2Storage, 'getUrl'>> {
+  const [{ loadEnv }, { createR2Storage }] = await Promise.all([
+    import('../config/env.js'),
+    import('../lib/r2.js'),
+  ]);
+  const env = loadEnv();
+  return createR2Storage({
+    accessKeyId: env.R2_ACCESS_KEY_ID,
+    accountId: env.R2_ACCOUNT_ID,
+    bucket: env.R2_BUCKET,
+    endpoint: env.R2_ENDPOINT,
+    publicBaseUrl: env.R2_PUBLIC_BASE_URL,
+    secretAccessKey: env.R2_SECRET_ACCESS_KEY,
+  });
 }

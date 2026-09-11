@@ -1,12 +1,15 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { Collapsible, Host } from '@expo/ui';
+import { useRouter } from 'expo-router';
 import { Pressable, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { ErrorState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
+import { ThemedView } from '@/components/themed-view';
 import { AppIcon } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import {
@@ -19,27 +22,43 @@ import {
   type CreateChipField,
 } from '@/components/create';
 import { useGenerate } from '@/hooks/use-generate';
+import { useCategories } from '@/hooks/use-categories';
 import { useTheme } from '@/hooks/use-theme';
 import { useDeviceSize } from '@/lib/useDeviceSize';
 import { useCreateStore } from '@/stores/create-store';
+import { usePresets } from '@/hooks/use-presets';
+import { getAccountSession, isCurrentAccount } from '@/lib/account-session';
+import { resetCreateWallpaperSession } from '@/lib/create-wallpaper-session';
 
 export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
   const { t } = useLingui();
+  const router = useRouter();
   const theme = useTheme();
   const insets = useSafeAreaInsets();
   const queryClient = useQueryClient();
   const deviceSize = useDeviceSize();
   const category = useCreateStore((state) => state.category);
+  const categoryId = useCreateStore((state) => state.categoryId);
   const chipValues = useCreateStore((state) => state.chipValues);
   const idea = useCreateStore((state) => state.idea);
   const presetId = useCreateStore((state) => state.presetId);
   const quality = useCreateStore((state) => state.quality);
   const setCategory = useCreateStore((state) => state.setCategory);
+  const setCategoryId = useCreateStore((state) => state.setCategoryId);
   const setChip = useCreateStore((state) => state.setChip);
   const setIdea = useCreateStore((state) => state.setIdea);
   const setPresetId = useCreateStore((state) => state.setPresetId);
   const setQuality = useCreateStore((state) => state.setQuality);
   const generation = useGenerate();
+  const categoriesQuery = useCategories();
+  const presetsQuery = usePresets();
+  const validPreset =
+    presetsQuery.isSuccess && presetsQuery.data.presets.some((preset) => preset.id === presetId);
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  useEffect(() => {
+    if (presetsQuery.isSuccess && !validPreset) setPresetId(presetsQuery.data.presets[0]?.id);
+  }, [presetsQuery.data, presetsQuery.isSuccess, setPresetId, validPreset]);
+  const [showEditorNotice, setShowEditorNotice] = useState(false);
   const trimmedCategory = category.trim();
   const trimmedIdea = idea.trim();
   const generationSucceeded =
@@ -47,7 +66,10 @@ export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     if (generationSucceeded) {
-      void queryClient.invalidateQueries({ queryKey: ['wallpapers'] });
+      void Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['wallpapers'] }),
+        queryClient.invalidateQueries({ queryKey: ['categories'] }),
+      ]);
     }
   }, [generationSucceeded, queryClient]);
 
@@ -55,9 +77,24 @@ export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
     setChip(field, value);
   }
 
-  function generateWallpaper() {
+  async function generateWallpaper() {
+    const account = getAccountSession();
+    if (!isCurrentAccount(account) || !validPreset || !trimmedIdea || !trimmedCategory) return;
+    let resolvedCategoryId = categoryId;
+    try {
+      if (!resolvedCategoryId) {
+        const response = await categoriesQuery.createCategory(trimmedCategory);
+        if (!isCurrentAccount(account)) return;
+        resolvedCategoryId = response.category.id;
+        setCategoryId(resolvedCategoryId);
+      }
+    } catch {
+      // The category mutation displays its error and offers retry.
+      return;
+    }
+
     generation.generate({
-      category: trimmedCategory,
+      categoryId: resolvedCategoryId,
       height: deviceSize.targetHeight,
       mode: 'text2img',
       presetId,
@@ -109,11 +146,65 @@ export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
       </View>
 
       {generationSucceeded && generation.job ? (
-        <ResultView job={generation.job} onRegenerate={generation.regenerate} />
+        <ResultView
+          onRetryImage={generation.refreshImage}
+          job={generation.job}
+          onRegenerate={generation.canRegenerate ? generation.regenerate : undefined}
+          onCreateNew={resetCreateWallpaperSession}
+          onViewCategory={() =>
+            router.replace({
+              pathname: '/category/[category]',
+              params: { category: generation.job?.categoryId ?? '' },
+            })
+          }
+          onViewWallpaper={() =>
+            router.replace({
+              pathname: '/category/[category]/[wallpaperId]',
+              params: {
+                category: generation.job?.categoryId ?? '',
+                wallpaperId: generation.job?.wallpaperId ?? '',
+              },
+            })
+          }
+        />
       ) : (
         <View style={{ gap: spacing.lg }}>
           <PresetGrid onSelect={setPresetId} selectedPresetId={presetId} />
-          <ChipsSelector onChange={updateChip} values={chipValues} />
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => setShowEditorNotice((visible) => !visible)}
+            style={({ pressed }) => ({
+              alignItems: 'center',
+              borderColor: theme.border,
+              borderRadius: radius.md,
+              borderWidth: 1,
+              flexDirection: 'row',
+              gap: spacing.sm,
+              opacity: pressed ? 0.75 : 1,
+              padding: spacing.md,
+            })}
+          >
+            <AppIcon color={theme.primary} name="edit" size={18} />
+            <ThemedText style={{ flex: 1 }} variant="label">
+              <Trans>Image editing · Coming soon</Trans>
+            </ThemedText>
+            <ThemedText style={{ color: theme.mutedText }} variant="caption">
+              <Trans>Learn more</Trans>
+            </ThemedText>
+          </Pressable>
+          {showEditorNotice ? (
+            <ThemedView variant="card" style={{ gap: spacing.sm }}>
+              <ThemedText variant="subtitle">
+                <Trans>Edit an existing image</Trans>
+              </ThemedText>
+              <ThemedText style={{ color: theme.mutedText }} variant="body">
+                <Trans>
+                  Editing, extending, enhancing, and extracting a style from an image are planned
+                  for a later update.
+                </Trans>
+              </ThemedText>
+            </ThemedView>
+          ) : null}
           <IdeaInput onChangeText={setIdea} value={idea} />
           <View style={{ gap: spacing.sm }}>
             <ThemedText variant="label">
@@ -123,7 +214,10 @@ export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
               accessibilityLabel={t`Wallpaper category`}
               autoCapitalize="sentences"
               maxLength={100}
-              onChangeText={setCategory}
+              onChangeText={(value) => {
+                setCategory(value);
+                setCategoryId(undefined);
+              }}
               placeholder={t`For example: Quiet nights`}
               placeholderTextColor={theme.mutedText}
               style={{
@@ -139,8 +233,59 @@ export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
               }}
               value={category}
             />
+            {categoriesQuery.categories.length ? (
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs }}>
+                {categoriesQuery.categories.map((item) => {
+                  const selected = item.id === categoryId;
+                  return (
+                    <Pressable
+                      accessibilityRole="button"
+                      accessibilityState={{ selected }}
+                      key={item.id}
+                      onPress={() => {
+                        setCategory(item.name);
+                        setCategoryId(item.id);
+                      }}
+                      style={{
+                        backgroundColor: selected ? theme.primary : theme.surface,
+                        borderColor: selected ? theme.primary : theme.border,
+                        borderRadius: radius.full,
+                        borderWidth: 1,
+                        paddingHorizontal: spacing.sm,
+                        paddingVertical: spacing.xs,
+                      }}
+                    >
+                      <ThemedText
+                        style={{ color: selected ? theme.primaryForeground : theme.text }}
+                        variant="caption"
+                      >
+                        {item.name}
+                      </ThemedText>
+                    </Pressable>
+                  );
+                })}
+              </View>
+            ) : null}
+            {categoriesQuery.createCategoryError ? (
+              <ErrorState
+                message={categoriesQuery.createCategoryError.message}
+                onRetry={() => void generateWallpaper()}
+              />
+            ) : null}
           </View>
-          <QualitySelector onChange={setQuality} value={quality} />
+          <Host matchContents>
+            <Collapsible
+              isOpen={advancedOpen}
+              onOpenChange={setAdvancedOpen}
+              label={t`Advanced options`}
+            />
+          </Host>
+          {advancedOpen ? (
+            <View style={{ gap: spacing.md }}>
+              <ChipsSelector onChange={updateChip} values={chipValues} />
+              <QualitySelector onChange={setQuality} value={quality} />
+            </View>
+          ) : null}
           {generation.cooldownSeconds > 0 && !generation.isGenerating ? (
             <ThemedText style={{ color: theme.mutedText }} variant="caption">
               <Trans>Try again in {generation.cooldownSeconds} seconds.</Trans>
@@ -149,11 +294,20 @@ export function CreateWallpaperScreen({ onClose }: { onClose: () => void }) {
           {generation.error ? (
             <ErrorState message={generation.error.message} onRetry={generation.retry} />
           ) : null}
+          {generation.jobId && !generation.isGenerating ? (
+            <Pressable accessibilityRole="button" onPress={resetCreateWallpaperSession}>
+              <ThemedText variant="label">
+                <Trans>Create a new wallpaper</Trans>
+              </ThemedText>
+            </Pressable>
+          ) : null}
           <GenerateButton
             disabled={
               !trimmedIdea ||
+              !validPreset ||
               !trimmedCategory ||
               generation.isGenerating ||
+              categoriesQuery.isCreatingCategory ||
               generation.cooldownSeconds > 0
             }
             isGenerating={generation.isGenerating}

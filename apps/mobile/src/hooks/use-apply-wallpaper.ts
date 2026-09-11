@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 
 import { setWallpaper, type WallpaperTarget } from '../../modules/expo-wallpaper';
 
-import { downloadWallpaper } from '@/lib/local-wallpaper';
+import { withLocalWallpaper } from '@/lib/local-wallpaper';
 
 export function useApplyWallpaper(imageUrl: string) {
   const { t } = useLingui();
@@ -16,8 +16,7 @@ export function useApplyWallpaper(imageUrl: string) {
       setApplyingTarget(target);
 
       try {
-        const localUri = await downloadWallpaper(imageUrl);
-        await setWallpaper(localUri, target);
+        await withLocalWallpaper(imageUrl, (localUri) => setWallpaper(localUri, target));
       } catch (cause) {
         const nextError =
           cause instanceof Error

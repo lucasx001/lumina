@@ -1,55 +1,29 @@
-# 0004 - r2-storage
+# 0004 — 私有图片存储
 
-> 模块：r2-storage | 优先级：4 | 依赖：0001 | 里程碑：M1 | 状态：外部 R2 验收待完成
->
-> 对应 SPEC：「persist」「Cloudflare R2」
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-封装 Cloudflare
-R2 存取：把 Provider 返回的图片产物持久化到 R2，返回稳定可访问的图片地址，供入库与客户端展示。
+Cloudflare R2 保存源图、壁纸和风格参考图。应用数据库保存稳定 object
+key 与账号所有权，业务 API 验证所属账号后提供读取方式。
 
-## 范围
+支持 buffer/file/临时 URL 持久化；限制下载大小、校验类型，失败记录明确错误。上传签名只授权当前账号的特定对象、类型和有限有效期，完成后登记资产归属。
 
-- In：`uploadFromUrl(url, key)`、`uploadBuffer(buf, key, contentType)`、`uploadFile(path, key, contentType)`、presigned
-  PUT/GET URL、key 生成规则。
-- Out：业务调用时机（在 0005 pipeline 的 persist 节点）。
+受保护的资源读取接口可做到每次访问检查账号；签名 URL 属于短期 bearer 凭据，有效期内持有者可读取，需按 SPEC 的严格边界选择读取策略。过期后重新鉴权获取有效地址，不把过期地址当永久存储标识。
 
-## 涉及文件
+## 实现位置
 
-- `apps/server/src/lib/r2.ts`（S3-compatible R2 客户端单例 + 上传/签名函数）
-- `apps/server/src/config/env.ts`（追加
-  `R2_ACCOUNT_ID/R2_BUCKET/R2_ACCESS_KEY_ID/R2_SECRET_ACCESS_KEY/R2_ENDPOINT/R2_PUBLIC_BASE_URL`）
-- `apps/server/scripts/try-r2.ts`
+- `apps/server/src/lib/r2.ts`
+- `apps/server/src/routes/edit.ts`
+- `apps/server/src/graph/nodes/wallpaper.nodes.ts`
 
-## 实现要点
+## 当前状态
 
-- 依赖：`@aws-sdk/client-s3`、`@aws-sdk/s3-request-presigner`。
-- key 规则：`wallpapers/{yyyymm}/{cuid}.png`，避免碰撞；可按用户/匿名设备前缀。
-- `uploadBuffer`/`uploadFile`：把 Codex provider 返回的本地图片产物上传到 R2。
-- `uploadFromUrl`：stream 下载外部临时图再上传到 R2，注意大图内存，优先流式。
-- 访问策略二选一：
-  - MVP 简化：R2 bucket 绑定 public/custom domain，返回公共 `resultImageUrl`。
-  - 私有策略：对象保持私有，API 返回短期签名 GET URL；入库存 object key，展示时按需签名。
-- 前端上传已有图片时，优先由后端发 presigned PUT URL，客户端直传 R2，然后把 object key 交回 API。
+R2 上传和签名基础已存在；稳定 key、账号资源授权及历史图片读取见 A05。
 
-## 独立测试
+## 验收标准
 
-- 脚本 `apps/server/scripts/try-r2.ts`：上传本地 buffer/file，打印 object key、公共 URL 或签名 GET
-  URL；浏览器/`curl` 能访问且内容正确。
-- 测试 presigned PUT：客户端或 curl 上传一张小图，再用签名 GET 读取。
-
-## 完成标准 (DoD)
-
-- [ ] 能把 Provider 图片产物落盘到 R2 并返回稳定可访问地址或 object key。
-- [ ] 公共 URL 或签名 URL 可被客户端访问。
-- [x] R2 配置全部来自 env，无硬编码密钥。
-
-## 验证记录
-
-- 离线测试覆盖 buffer/file/URL 流式上传、按月 key、公共 URL、签名 GET/PUT、内容类型和结构化错误。
-- 实现使用 S3-compatible AWS SDK v3，R2 配置仅来自现有环境变量；`try:r2`
-  可用于后续真实 bucket 验收。
-- 当前工作区没有 R2 环境文件或 bucket 凭据，因此未运行真实上传、浏览器访问或 presigned
-  URL 端到端测试；这两项保持未勾选。
-- 2026-07-25 已复核离线实现：服务端构建、R2/env 模块静态检查和 6 个文件共 22 个服务端测试均通过；真实 bucket 验收仍需提供 R2 凭据。
+- [ ] 历史壁纸在访问凭据过期后仍能经鉴权获取。
+- [ ] 其他账号不能获取源图/结果图的访问权限。
+- [ ] 真实上传、读取、下载失败和内容校验通过；日志不暴露签名凭据。

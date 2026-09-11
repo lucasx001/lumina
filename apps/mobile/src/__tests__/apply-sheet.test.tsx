@@ -2,6 +2,7 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react-native';
 import { Platform } from 'react-native';
 
 import { ApplySheet } from '@/components/apply';
+import { changeAccountSession } from '@/lib/account-session';
 
 jest.mock('../../modules/expo-wallpaper', () => ({
   setWallpaper: jest.fn(),
@@ -10,7 +11,11 @@ jest.mock('../../modules/expo-wallpaper', () => ({
 jest.mock(
   'expo-file-system',
   () => ({
-    File: Object.assign(jest.fn(), { downloadFileAsync: jest.fn() }),
+    File: Object.assign(
+      jest.fn(() => ({ exists: true, delete: jest.fn() })),
+      { downloadFileAsync: jest.fn() },
+    ),
+    Directory: jest.fn(() => ({ create: jest.fn(), exists: true, delete: jest.fn() })),
     Paths: { cache: 'cache' },
   }),
   { virtual: true },
@@ -44,6 +49,8 @@ const mockSharingAvailable = jest.requireMock('expo-sharing').isAvailableAsync a
 
 describe('ApplySheet', () => {
   beforeEach(() => {
+    changeAccountSession(null);
+    changeAccountSession('user-a');
     Platform.OS = 'android';
     mockSetWallpaper.mockReset();
     mockDownloadFile.mockReset();
@@ -66,6 +73,36 @@ describe('ApplySheet', () => {
 
     await waitFor(() =>
       expect(mockSetWallpaper).toHaveBeenCalledWith('file:///cache/wallpaper.jpg', 'both'),
+    );
+  });
+
+  it.each(['home', 'lock', 'both'] as const)('passes the %s target to Android', async (target) => {
+    const screen = render(
+      <ApplySheet imageUrl="https://images.example/wallpaper.jpg" onDismiss={jest.fn()} visible />,
+    );
+    fireEvent.press(screen.getByTestId(`apply-wallpaper-${target}`));
+    await waitFor(() =>
+      expect(mockSetWallpaper).toHaveBeenCalledWith('file:///cache/wallpaper.jpg', target),
+    );
+  });
+
+  it('keeps a failed download retryable and asks for a fresh image URL', async () => {
+    const onRetryImage = jest.fn();
+    mockDownloadFile.mockRejectedValueOnce(new Error('Download expired'));
+    const screen = render(
+      <ApplySheet
+        imageUrl="https://images.example/wallpaper.jpg"
+        onDismiss={jest.fn()}
+        onRetryImage={onRetryImage}
+        visible
+      />,
+    );
+    fireEvent.press(screen.getByTestId('apply-wallpaper-lock'));
+    await waitFor(() => expect(onRetryImage).toHaveBeenCalledTimes(1));
+    expect(screen.getByText('Download expired')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('apply-wallpaper-lock'));
+    await waitFor(() =>
+      expect(mockSetWallpaper).toHaveBeenCalledWith('file:///cache/wallpaper.jpg', 'lock'),
     );
   });
 
@@ -129,7 +166,7 @@ describe('ApplySheet', () => {
     expect(onDismiss).not.toHaveBeenCalled();
   });
 
-  it('uses the iOS save-only fallback and explains the system step', () => {
+  it('offers iOS save and share while explaining the manual system step', () => {
     Platform.OS = 'ios';
     const screen = render(
       <ApplySheet imageUrl="https://images.example/wallpaper.jpg" onDismiss={jest.fn()} visible />,
@@ -137,7 +174,7 @@ describe('ApplySheet', () => {
 
     expect(screen.getByTestId('save-wallpaper')).toBeTruthy();
     expect(screen.queryByTestId('apply-wallpaper-home')).toBeNull();
-    expect(screen.queryByTestId('share-wallpaper')).toBeNull();
+    expect(screen.getByTestId('share-wallpaper')).toBeTruthy();
     expect(screen.getByTestId('apply-ios-hint')).toBeTruthy();
   });
 });

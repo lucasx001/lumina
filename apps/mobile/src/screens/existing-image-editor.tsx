@@ -28,6 +28,7 @@ type ExistingImageEditorProps = {
 export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   const { t } = useLingui();
   const category = useCreateStore((state) => state.category);
+  const categoryId = useCreateStore((state) => state.categoryId);
   const instruction = useCreateStore((state) => state.instruction);
   const mode = useCreateStore((state) => state.mode);
   const sourceImageUrl = useCreateStore((state) => state.sourceImageUrl);
@@ -61,7 +62,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
             ? 'Extract a reusable wallpaper style from this image.'
             : instruction;
     generation.generate({
-      category: category.trim(),
+      categoryId: categoryId ?? '',
       height: deviceSize.targetHeight,
       mode: modeToRun,
       quality: 'hd',
@@ -142,7 +143,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
             value={instruction}
           />
           <ActionButton
-            disabled={!category.trim() || !instruction.trim() || generation.isGenerating}
+            disabled={!categoryId || !instruction.trim() || generation.isGenerating}
             label={t`Start editing`}
             onPress={() => run('edit')}
           />
@@ -150,7 +151,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
       ) : null}
       {mode === 'style' ? (
         <StyleToPresetForm
-          disabled={!category.trim()}
+          disabled={!categoryId}
           instruction={instruction}
           isSubmitting={generation.isGenerating}
           onChangeInstruction={setInstruction}
@@ -159,7 +160,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
       ) : null}
       {mode === 'outpaint' || mode === 'upscale' ? (
         <ActionButton
-          disabled={!category.trim() || generation.isGenerating}
+          disabled={!categoryId || generation.isGenerating}
           label={mode === 'outpaint' ? t`Extend to screen ratio` : t`Enhance wallpaper`}
           onPress={() => run(mode)}
         />

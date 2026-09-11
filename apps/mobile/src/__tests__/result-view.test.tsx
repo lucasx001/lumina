@@ -37,5 +37,31 @@ describe('ResultView', () => {
     fireEvent.press(screen.getByTestId('regenerate-button'));
     expect(onRegenerate).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId('open-apply-sheet')).toBeTruthy();
+    expect(screen.getByText('1080 × 2400 px')).toBeTruthy();
+  });
+
+  it('opens the archived category and wallpaper without assuming a resolution tier', () => {
+    const onViewCategory = jest.fn();
+    const onViewWallpaper = jest.fn();
+    const screen = render(
+      <ResultView
+        job={{
+          ...job,
+          category: 'Nature',
+          categoryId: 'cat',
+          wallpaperId: 'wall',
+          width: 512,
+          height: 768,
+        }}
+        onViewCategory={onViewCategory}
+        onViewWallpaper={onViewWallpaper}
+      />,
+    );
+    expect(screen.getByText('512 × 768 px')).toBeTruthy();
+    fireEvent.press(screen.getByText('View category'));
+    fireEvent.press(screen.getByText('View wallpaper'));
+    expect(onViewCategory).toHaveBeenCalledTimes(1);
+    expect(onViewWallpaper).toHaveBeenCalledTimes(1);
+    expect(screen.queryByTestId('regenerate-button')).toBeNull();
   });
 });

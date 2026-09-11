@@ -12,9 +12,12 @@ describe('generation runner', () => {
 
     await runner.run({
       category: 'night skies',
+      categoryId: 'category-a',
+      clerkUserId: 'user-a',
       height: 2400,
       mode: 'text2img',
       userInputs: { idea: 'a calm night sky' },
+      userId: 'local-1',
       wallpaperId: 'job-1',
       width: 1080,
     });
@@ -41,9 +44,12 @@ describe('generation runner', () => {
 
     await runner.run({
       category: 'retries',
+      categoryId: 'category-a',
+      clerkUserId: 'user-a',
       height: 2400,
       mode: 'text2img',
       userInputs: { idea: 'retry wallpaper' },
+      userId: 'local-1',
       width: 1080,
     });
 

@@ -1,293 +1,102 @@
-# Lumina - AI Wallpaper App MVP
+# Lumina 产品规格
 
-## Context
+> 产品基线：2026-09-06。本文定义最终产品形态；代码落实情况见 [实施清单](./progress.md) 与
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-Lumina is an Android-first AI wallpaper app for international users. Users choose a preset, add a
-few ideas, generate a 2K+ wallpaper that matches their device aspect ratio, preview it in a phone
-mockup, apply it to the Android home/lock screen, save it to photos, and share it.
+## 产品定位与核心路径
 
-| Decision     | New direction                        | Impact                                                                                                                                                                 |
-| ------------ | ------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Target stage | **Lean MVP**                         | Keep compliance, moderation, watermarking, store launch, and payments out of scope for the first build. Leave extension points only.                                   |
-| Platform     | **Android first**                    | Android can set wallpaper through `WallpaperManager`; iOS remains save/share only because apps cannot directly set system wallpaper.                                   |
-| Auth         | **Clerk + Google SSO**               | Remove custom SMS, WeChat OAuth, and app-issued JWT. The app uses Clerk sessions; the server verifies Clerk auth and stores `clerkUserId`.                             |
-| Storage      | **Cloudflare R2**                    | Replace Alibaba OSS with R2 through S3-compatible APIs and presigned URLs or public/custom-domain reads.                                                               |
-| AI images    | **SiliconFlow FLUX.2 Flex provider** | Replace DashScope/Wanxiang/Qwen/VIAPI with a server-side `SiliconFlowImageProvider` using `black-forest-labs/FLUX.2-pro`; persist each short-lived provider URL to R2. |
-| Database     | **Neon Postgres or hosted Postgres** | Keep Prisma + PostgreSQL, but target international hosted Postgres instead of Alibaba RDS.                                                                             |
+Lumina 是以 Android 为主要平台的 AI 壁纸应用。用户登录账号后，通过简短输入生成一张壁纸，按类型管理自己的作品，预览桌面与锁屏效果，并应用、保存或分享。
 
-Important boundary: SiliconFlow API keys are server-only secrets. The image-generation response URL
-is short-lived, so the server must download it immediately, validate it, and store the final asset
-in R2 before exposing a URL to the mobile client. The first real API spike proves FLUX.2 Flex
-text-to-image and temporary-URL download only; editing, outpainting, upscaling, and style extraction
-remain separate later milestones until their provider-specific contracts are verified.
+1. 点击底部 Add 按钮，打开 Bottom Sheet。
+2. 在 Sheet 中选择风格，输入简单提示词，选择壁纸类型，点击生成。
+3. 服务端完成生成和持久化后，壁纸自动保存到当前账号所选类型下。
+4. 首页展示该账号全部壁纸类型的 Card；点击 Card 进入类型详情，浏览该类型的全部作品。
+5. 点击任意作品进入独立预览页，切换桌面/锁屏预览，设置系统壁纸、保存到本地或分享。
+6. 图片编辑入口可见、可达，标注“即将推出”；完整编辑能力属于后续交付范围。
 
-Implementation must still follow `AGENTS.md`: when writing Expo code, check the exact SDK 56 docs at
-https://docs.expo.dev/versions/v56.0.0/. For SiliconFlow, Clerk, and R2 APIs, verify current
-official docs before hardcoding model names, auth flows, SDK options, or storage behavior.
+## 术语与类型规则
 
----
+| 概念                 | 含义                                                                     |
+| -------------------- | ------------------------------------------------------------------------ |
+| 风格（Preset）       | 影响生成画面，如极简、自然、动漫；内置风格共享，自定义风格仅所属账号可见 |
+| 提示词               | 用户对内容的一段简单描述                                                 |
+| 壁纸类型（Category） | 当前账号的作品归档集合，与风格分别选择                                   |
+| 应用目标             | 桌面、锁屏或两者；在预览操作时选择                                       |
+| 生成任务             | 一次生成请求的执行状态，属于发起账号                                     |
 
-## Architecture Overview
+类型交互采用以下产品规则：优先选择当前账号已有类型，也可在选择器内创建并选中一个类型，以支持首次使用。名称去除首尾空白、长度 1–100 字符，同一账号内按规范化名称唯一；不同账号可以使用同名类型。类型具有稳定 ID，名称仅用于显示。首页展示全部类型（包括空类型），数量和封面由服务端按成功作品汇总；空类型显示占位封面和创作入口。该规则是本轮为“选择类型”补齐的实现约定。
 
-```text
-Expo App (Android-first, @expo/ui native-first)
-  |- Create flow: preset + theme/tone/mood chips + short idea -> generate
-  |- Preview: generated image inside phone mockup, lock/home preview toggle
-  |- Apply: local Kotlin module expo-wallpaper (home/lock/both)
-  |- Save/share: expo-media-library / expo-sharing
-  |- Profile: Clerk Google SSO, user identity, library
-  |
-  | HTTPS (Clerk session token)
-  v
-apps/server/ (Node + TypeScript + Hono)
-  |- Clerk auth middleware: verify Clerk session/JWT, map to local User
-  |- /generate -> create job, return jobId; /jobs/:id -> poll
-  |- /presets, /wallpapers, /uploads/presign
-  |- LangGraph.js: resolvePreset -> enrichPrompt -> route -> generate/edit -> persist
-  |- Prisma -> PostgreSQL (local / Neon / hosted Postgres)
-  |- ImageProvider: SiliconFlowImageProvider using FLUX.2 Flex
-  |- Object storage: Cloudflare R2 through S3-compatible client
-  v
-SiliconFlow FLUX.2 Flex + Cloudflare R2
-```
+## 页面与行为
 
-**Async generation mode**: `POST /generate` returns a local `jobId` immediately. The server runs the
-generation in-process for MVP, updates `Wallpaper.status`, stores the final image in R2, and the app
-polls `GET /jobs/:jobId`. No Redis, queue, or Trigger.dev is required in MVP.
+### 首页与导航
 
----
+底部导航由 Home、Add、Profile 组成。Add 是打开创建 Sheet 的动作。Home 展示类型名称、封面、成功作品数量；类型很多时可分页加载，但必须能够访问全部类型。首页提供加载、空数据、失败重试及下拉刷新状态；请求尚未完成时不能判定账号没有作品。
 
-## Tech Stack And New Dependencies
+### 创建 Sheet
 
-**Frontend (existing Expo SDK 56 app)**
+主流程按“风格 → 提示词 → 类型 → 生成”排列。提交需要有效风格、非空提示词和类型。色调/情绪等补充参数及画质选项可放在高级设置中，避免挤占主流程。每次成功请求产出一张壁纸。重复点击不产生并行重复任务。
 
-- `@clerk/expo` for Clerk sessions and Google SSO.
-- `expo-secure-store` for Clerk token cache.
-- `expo-image-picker` for existing-image flows.
-- `expo-media-library`, `expo-sharing`, `expo-file-system` for save/share/local file handoff.
-- `@tanstack/react-query` for polling and server state.
-- Optional `zustand` for small local UI state.
-- Local native module `modules/expo-wallpaper` built with Expo Modules API + Kotlin.
-- UI remains **native-first**: `@expo/ui` + `expo-glass-effect` + `expo-symbols` + `StyleSheet`; do
-  **not** add NativeWind.
-- Reuse `example/` theme components/hooks as the UI blueprint.
+Sheet 支持向下滑动关闭、关闭按钮和系统返回，输入时适配键盘与安全区。关闭 Sheet 不影响已提交任务；重新打开或重启应用后能找回当前账号的未完成任务。完成后提示“已保存到 {类型}”，可直接打开该壁纸预览或进入所属类型。失败显示原因和重试动作，不计入成功作品数量。
 
-**Backend `apps/server/`**
+### 类型详情与壁纸预览
 
-- `hono` + `@hono/node-server`, `typescript`, `tsx`.
-- `prisma` + `@prisma/client`.
-- `@langchain/langgraph` + `@langchain/core`.
-- `@clerk/backend` or Clerk JWT/JWKS verification.
-- Server-side `fetch` for the SiliconFlow image-generation API.
-- `@aws-sdk/client-s3` + `@aws-sdk/s3-request-presigner` for Cloudflare R2.
-- `zod` for input/env validation.
+类型详情按创建时间倒序展示成功作品，支持分页、刷新、空态及加载失败重试。预览页通过壁纸 ID 独立获取详情，支持直接进入和冷启动打开。展示真实图片尺寸、所属类型、生成时间以及收藏状态；图片加载失败时可重试。
 
----
+Android 提供设置桌面、锁屏、两者、保存相册、系统分享。iOS 提供保存相册和手动设置说明；系统分享按平台能力开放。Web 提供可用的预览与下载能力，并清楚表达平台可用操作。成功提示以原生操作实际结果为准，权限拒绝或下载失败时提供可执行的恢复路径。
 
-## Data Model (Prisma `apps/server/prisma/schema.prisma`)
+### 图片编辑与个人页
 
-Naming convention remains mandatory: Prisma model and field names use camelCase; database tables and
-columns use snake_case. Every scalar field gets `@map("...")`; every model gets `@@map("...")`;
-every model has `createdAt` and `updatedAt`.
+Add
+Sheet 提供次级“图片编辑 · 即将推出”入口，可进入说明页或说明面板。占位入口不上传图片、不创建生成任务，不展示虚假的编辑成功状态。后续支持图片编辑、扩图、增强、提取风格；结果归属于当前账号，图片作品保存到选定类型。
 
-```prisma
-model User {
-  id            String      @id @default(cuid()) @map("id")
-  clerkUserId   String      @unique @map("clerk_user_id")
-  googleSubject String?     @unique @map("google_subject")
-  email         String?     @unique @map("email")
-  nickname      String?     @map("nickname")
-  avatarUrl     String?     @map("avatar_url")
-  wallpapers    Wallpaper[]
-  presets       Preset[]
-  createdAt     DateTime    @default(now()) @map("created_at")
-  updatedAt     DateTime    @updatedAt @map("updated_at")
+Profile 展示当前账号、退出登录、语言、关于、隐私和应用分享。界面语言可作为本地界面偏好保存；壁纸业务数据始终以账号为准。
 
-  @@map("user")
-}
+## 账号与数据边界
 
-model Preset {
-  id             String   @id @default(cuid()) @map("id")
-  name           String   @map("name")
-  category       String   @map("category")
-  coverImageUrl  String?  @map("cover_image_url")
-  promptTemplate String   @map("prompt_template")
-  negativePrompt String?  @map("negative_prompt")
-  styleRefUrl    String?  @map("style_ref_url")
-  params         Json?    @map("params")
-  isBuiltIn      Boolean  @default(false) @map("is_built_in")
-  ownerUserId    String?  @map("owner_user_id")
-  owner          User?    @relation(fields: [ownerUserId], references: [id])
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+账号是壁纸业务的 single source of
+truth。所有生成、查询、收藏、编辑和资产读取均以服务端校验后的 Clerk 身份映射到本地 User，业务归属由服务端确定。未登录或会话失效的业务请求返回 401；其他账号的资源返回统一的不可访问结果（404）。
 
-  @@map("preset")
-}
+- Wallpaper 必须拥有 userId 和 categoryId；Category 必须拥有 userId。
+- 风格解析允许内置风格或当前账号自定义风格。
+- 类型、作品、任务、收藏、源图片和自定义风格均严格隔离。
+- Query 缓存、生成会话、编辑输入和临时下载文件按账号隔离；退出或切换账号立即失效。
+- 切换前发出的请求即使稍后完成，也不能更新新账号界面或触发保存、分享、设壁纸。
+- 同一账号在不同终端访问同一服务端数据集合。
+- 屏幕比例、像素尺寸、系统权限用于图片适配和原生操作，不参与业务身份。
+- 用户主动导出到系统相册或分享出去的文件由用户管理，不属于应用内账号缓存。
 
-model Wallpaper {
-  id             String   @id @default(cuid()) @map("id")
-  deviceId       String?  @map("device_id") // anonymous history before Clerk binding
-  userId         String?  @map("user_id")
-  user           User?    @relation(fields: [userId], references: [id])
-  presetId       String?  @map("preset_id")
-  mode           String   @map("mode") // text2img | outpaint | edit | style | upscale
-  prompt         String   @map("prompt")
-  sourceImageUrl String?  @map("source_image_url")
-  resultImageUrl String?  @map("result_image_url")
-  width          Int?     @map("width")
-  height         Int?     @map("height")
-  status         String   @default("pending") @map("status")
-  providerTask   String?  @map("provider_task") // SiliconFlow seed or image call id
-  error          String?  @map("error")
-  createdAt      DateTime @default(now()) @map("created_at")
-  updatedAt      DateTime @updatedAt @map("updated_at")
+图片资产使用私有存储。数据库保存稳定 object
+key；每次读取先验证所属账号。严格要求每次读取均鉴权时，采用受保护的资源接口；短期签名地址仅是有期限的访问凭据，有效期内持有链接即可访问，不能等同于每次读取都验证账号。
 
-  @@index([deviceId])
-  @@map("wallpaper")
-}
-```
+## 技术与接口契约
 
-MVP can continue using `Wallpaper.status` as the job table. If Clerk anonymous sessions are not
-enabled, keep a local `deviceId` only for anonymous history and bind it after sign-in.
+Mobile 使用 Expo SDK 56、Expo Router、React Native 原生 UI、社区 Bottom Sheet、Clerk、React
+Query、Zustand 与 Lingui。后端使用 Hono、Prisma/PostgreSQL、LangGraph 与 Cloudflare
+R2；图片 Provider 由服务端配置，密钥仅在服务端保存。
 
----
+以下为目标契约，具体响应字段由实现与测试同步维护：
 
-## Backend Design `apps/server/src/`
+| 接口                           | 行为                                                           |
+| ------------------------------ | -------------------------------------------------------------- |
+| GET /me                        | 当前账号信息                                                   |
+| GET /presets                   | 内置及当前账号的自定义风格                                     |
+| GET /categories                | 当前账号全部类型及成功作品数量、封面，支持完整遍历             |
+| POST /categories               | 当前账号内创建类型，同名返回已有类型或明确冲突                 |
+| POST /generate                 | 风格、提示词、categoryId、尺寸、画质；返回 jobId               |
+| GET /jobs                      | 当前账号可恢复的任务列表                                       |
+| GET /jobs/:id                  | 当前账号任务状态，成功时提供 wallpaperId、categoryId、实际尺寸 |
+| GET /wallpapers                | 当前账号作品，支持 categoryId、收藏过滤和分页                  |
+| GET /wallpapers/:id            | 当前账号单张作品详情                                           |
+| PATCH /wallpapers/:id/favorite | 当前账号作品的收藏状态                                         |
+| GET /wallpapers/:id/image      | 经账号鉴权读取图片或获取受控访问凭据                           |
+| POST /uploads/presign          | 完整编辑功能阶段：为当前账号签发源图上传权限                   |
 
-- **Auth** `middleware/auth.ts`: verify Clerk auth on incoming requests. Expose `optionalAuth` for
-  anonymous generation and `requireAuth` for profile/library actions. The backend does not mint
-  primary auth JWTs; it trusts Clerk and maps Clerk users into local `User`.
-- **Provider abstraction** `providers/types.ts`:
-  `interface ImageProvider { textToImage(spec); editImage(spec); outpaint(spec); upscale(spec); extractStyle(spec); }`.
-- **SiliconFlow provider** `providers/siliconflow.ts`: calls `POST /v1/images/generations` with a
-  server-side Bearer API key, defaults to `black-forest-labs/FLUX.2-pro`, and returns the
-  short-lived image URL plus model, seed, and timing metadata. The generation pipeline downloads and
-  writes the image bytes to R2 immediately.
-- **Provider capability boundary**: M1 only enables text-to-image. The existing-image operations
-  remain explicit unsupported operations until SiliconFlow's FLUX.2 image-input contracts are
-  verified and implemented in M4.
-- **LangGraph graph** `graph/wallpaper.graph.ts`:
-  1. `resolvePreset` - combine preset template, chips, idea, and target W x H.
-  2. `enrichPrompt` - optional future prompt-enrichment implementation that rewrites a short idea
-     into a professional image prompt.
-  3. `route` - branch by `mode`: `text2img`, `outpaint`, `edit`, `style`, `upscale`.
-  4. `generate/edit` - call `ImageProvider`.
-  5. `persist` - upload final bytes to R2 and update `Wallpaper`.
-  6. Leave TODO slots for moderation, watermarking, and policy checks.
-- **Routes**:
-  - `POST /generate`
-  - `GET /jobs/:id`
-  - `GET /presets`
-  - `GET /wallpapers`
-  - `POST /uploads/presign`
-  - `GET /me`
-  - `POST /me/bind-device`
-- **Seed** `prisma/seed.ts`: create 6-8 built-in international wallpaper presets.
+生成状态为 pending → processing → succeeded /
+failed。只有图片已持久化且记录完整才返回 succeeded；失败任务可查询、重试，但不作为可用作品呈现。重启与网络重连后从服务端恢复状态，客户端不以 Sheet 生命周期决定任务是否存在。
 
----
+## 交付与验收
 
-## Frontend Design `apps/mobile/src/`
+优先完成账号边界和完整数据访问，再完成创建归档、编辑占位入口和真机操作闭环。详细排序与代码证据见
+[0018](./0018-mobile-roadmap.md)。数据库、API、客户端类型及测试以同一目标契约实现，开发期不承担历史版本兼容义务。
 
-- **Routes**: `(tabs)/index` for create, `(tabs)/library` for wallpaper library, `(tabs)/profile`
-  for Clerk profile/sign-in.
-- **Root layout** `apps/mobile/src/app/_layout.tsx`: wrap the app in `ClerkProvider` and React Query
-  `QueryClientProvider`.
-- **Auth UI**:
-  - Prefer Clerk's Expo native Google SSO path in development builds.
-  - For Expo Go/prototyping, use Clerk browser-based OAuth where appropriate.
-  - Use `useAuth()` to obtain a token for backend calls and inject it into
-    `apps/mobile/src/lib/api.ts`.
-- **Create** `apps/mobile/src/features/create/`: preset grid, chips, one-line idea, generate button,
-  progress state, result state.
-- **Preview** `apps/mobile/src/components/WallpaperPreview.tsx`: phone mockup with lock/home preview
-  toggle.
-- **Apply/share/save** `apps/mobile/src/features/apply/`: download R2 result locally with
-  `expo-file-system`, call `modules/expo-wallpaper`, save to media library, share with system share
-  sheet.
-- **Library** `apps/mobile/src/features/library/`: generated wallpaper grid and custom preset
-  management.
-- **Edit existing image** `apps/mobile/src/features/edit/`: pick image, upload to R2 through
-  presigned URL, then run edit/outpaint/upscale/style extraction jobs.
-- **Native wallpaper module** `modules/expo-wallpaper/`: Kotlin Expo module with
-  `setWallpaper(uri, target)` using Android `WallpaperManager`.
-
----
-
-## Milestones
-
-- **Pre-M0 Engineering gate (complete)**: `docs/0000-vite-plus-engineering.md` established the Bun
-  workspace monorepo and Vite+ formatting, lint/type checks, task orchestration, caching, hooks, and
-  CI. The mobile/server development and build entry points have passed local acceptance.
-- **M0 Foundation**: install dependencies; create `apps/server/`; Prisma schema and local migration;
-  env validation for Clerk, R2, Postgres, and SiliconFlow; provider interface; R2 client.
-- **M0.5 SiliconFlow image spike**: write `apps/server/scripts/try-siliconflow-image.ts` to prove
-  `black-forest-labs/FLUX.2-pro` can return a programmatically downloadable text-to-image result
-  through the SiliconFlow API. This milestone gates M1.
-- **M1 Generate -> preview loop**: `SiliconFlowImageProvider.textToImage`, minimal graph, R2 upload,
-  `/generate`, `/jobs/:id`, seed presets, app create page, polling, phone preview. Demo: preset ->
-  2K+ image -> preview.
-- **M2 Apply/share/library**: Kotlin wallpaper module, Android dev build, set home/lock/both, share,
-  save, library grid.
-- **M3 Auth**: Clerk Google SSO, backend Clerk verification, secure token cache, local user mapping,
-  anonymous history binding.
-- **M4 Existing-image tools**: upload source image to R2, edit/outpaint/upscale/style extraction
-  branches, custom preset creation.
-- **M5 Polish**: draft/high-quality modes, filters, favorites, empty/error states, rate limits,
-  retries, cost/credit guardrails.
-
----
-
-## Key Files
-
-- New: `apps/server/` (`src/index.ts`, `src/app.ts`, `src/config/env.ts`, `src/middleware/auth.ts`,
-  `src/providers/{types,siliconflow,index}.ts`, `src/lib/r2.ts`, `src/graph/*`, `src/routes/*`,
-  `prisma/schema.prisma`, `prisma/seed.ts`).
-- New: `apps/server/scripts/try-siliconflow-image.ts`, `apps/server/scripts/try-r2.ts`.
-- New: `modules/expo-wallpaper/`.
-- New: `apps/mobile/src/features/{auth,create,apply,library,edit}/`,
-  `apps/mobile/src/components/WallpaperPreview.tsx`, `apps/mobile/src/lib/api.ts`.
-- Modify: `apps/mobile/src/app/_layout.tsx`, `apps/mobile/src/app/(tabs)/*`, `apps/mobile/app.json`,
-  `apps/mobile/package.json`.
-- Reuse: `example/src/components`, `example/src/hooks`, `example/src/constants/theme.ts`.
-
----
-
-## Verification
-
-1. **SiliconFlow provider spike**: run `apps/server/scripts/try-siliconflow-image.ts`; verify FLUX.2
-   Flex returns a downloadable text-to-image URL and the server can upload its bytes to R2.
-2. **Backend**: start local Postgres, run Prisma migration/seed, start server, call
-   `POST /generate`, poll `GET /jobs/:id` until `succeeded`, verify `resultImageUrl` points to R2
-   and the image meets the requested size.
-3. **Storage**: run `apps/server/scripts/try-r2.ts`; verify upload, signed GET URL, and optional
-   public/custom-domain URL.
-4. **Auth**: sign in with Google through Clerk, call `/me`, verify the server maps the Clerk user
-   into local `User`, and verify protected requests reject missing/invalid auth.
-5. **Frontend + native module**: run a development build; complete preset -> generation -> preview
-   -> apply to Android home/lock screen; verify save/share.
-6. **Existing-image flows**: pick a photo, upload to R2, run edit/outpaint/upscale/style extraction,
-   then reuse the custom preset.
-7. **Failure paths**: invalid auth, R2 failure, SiliconFlow rate limit, image blocked/failed,
-   network failure -> task becomes `failed` and app shows an actionable error state.
-
----
-
-## Explicitly Not In MVP
-
-- App Store / Play Store launch.
-- Payments or membership tiers.
-- Production-grade multi-tenant image generation quotas, billing, or user-visible credit system.
-- iOS one-tap wallpaper setting.
-- Full moderation pipeline, watermarking, or policy enforcement beyond provider-level safeguards and
-  TODO slots.
-
-## Risks / Needs Confirmation
-
-- SiliconFlow FLUX.2 Flex availability, allowed dimensions, and model-specific controls must be
-  proven with a real API key before committing to the M1 pipeline.
-- SiliconFlow API quotas, billing, and content restrictions need a production policy before public
-  multi-user launch.
-- R2 public access strategy must be chosen: public bucket/custom domain for simple display, or
-  private bucket plus signed GET URLs for tighter control.
-- Clerk Google SSO requires correct Google OAuth credentials and native app configuration for
-  Android/iOS development builds.
+本期不包含支付会员、应用商店发布、复杂图层/蒙版编辑器；图片编辑完整能力作为明确后续任务保留。外部模型可用性、实际尺寸和真机能力必须实测，mock 测试通过不能代替端到端验收。

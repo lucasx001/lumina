@@ -1,64 +1,43 @@
-# 0014 - auth-frontend
+# 0014 — Mobile 登录与账号生命周期
 
-> 模块：auth-frontend | 优先级：14 | 依赖：0007,0013 | 里程碑：M3 对应 SPEC：「我的/登录」「Clerk +
-> Google SSO」
->
-> 状态：本地 Provider、token 注入、界面和 mock 验证完成；真实 Google
-> OAuth 与跨设备历史同步待 Clerk 配置/设备验收。
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-在 Expo App 中接入 Clerk 和 Google SSO，完成登录 UI、会话恢复、token 缓存，并把 Clerk
-token 注入后端 API 请求。MVP 允许匿名使用，仅在需要同步历史或跨设备时引导登录。
+用户通过 Clerk 支持的登录方式进入应用，界面提供登录、注册、密码重置与 Google
+SSO 能力。认证页面按 OpenDesign 的 390 ×
+844 手机稿呈现，SecureStore 保存会话凭据；API 请求获取当前 token，业务页面等待会话恢复后进入。
 
-## 范围
+Profile 显示当前账号、退出登录、语言、关于、隐私和应用分享。所有壁纸归账号，登录状态与后端授权必须一致。
 
-- In：`ClerkProvider`、Google SSO 登录按钮、profile 页面、`expo-secure-store` token cache、auth
-  hook、API token 注入、登录后同步 deviceId 历史。
-- Out：后端鉴权逻辑（0013）、Clerk Dashboard/Google OAuth 后台配置。
+账号变更时停止旧查询/轮询，清除私有 Query 缓存、生成/编辑/预览状态和临时文件，旧请求回调不得写入新会话。401 引导重新登录，取消登录不留下半激活状态。
 
-## 涉及文件
+## 实现位置
 
 - `apps/mobile/src/app/_layout.tsx`
-- `apps/mobile/src/app/(tabs)/profile.tsx`
-- `apps/mobile/src/features/auth/LoginSheet.tsx`、`GoogleSignInButton.tsx`
-- `apps/mobile/src/features/auth/useAuth.ts`
-- `apps/mobile/src/lib/api.ts`
-- `apps/mobile/src/lib/clerkTokenCache.ts`
+- `apps/mobile/src/screens/sign-in.tsx`
+- `apps/mobile/src/screens/sign-up.tsx`
+- `apps/mobile/src/screens/password-reset.tsx`
+- `apps/mobile/src/screens/profile.tsx`
+- `apps/mobile/src/hooks/use-auth.ts`
+- `apps/mobile/src/components/auth/api-token-bridge.tsx`
 
-## 实现要点
+## 当前状态
 
-- 依赖：`@clerk/expo`、`expo-secure-store`。
-- 在 `_layout.tsx` 包裹 `ClerkProvider`，配置 publishable key 和 SecureStore token cache。
-- Google SSO：使用 Clerk Expo 推荐流程；开发阶段确认 Expo Go 与 development
-  build 的行为差异，生产以 development/native build 配置为准。
-- `apiFetch` 调用 Clerk `getToken()`，有 token 时加 `Authorization: Bearer <token>`。
-- 匿名优先：未登录也能生成（带 deviceId）；登录后调用 `/me/bind-device` 合并历史。
-- profile 页显示 Google 账号、头像、登录/退出状态。
+登录页面、注册页面、密码找回页面、路由保护与 token 桥接已有。三页共享暖白 Cafe 视觉：左上角 Lumina 品牌、kicker
+/ 展示标题 / 说明文字、带边框输入框、陶土色主按钮和底部账号切换入口；找回密码初始态保留设计稿中的装饰图形，后续验证码和新密码步骤沿用同一布局。注册页包含称呼字段并传入 Clerk
+`firstName`，Google 能力保留在认证基础设施中但不占用 OpenDesign 邮箱主流程的视觉位置。完整账号切换状态边界见 A03–A04、N02。真实 OAuth 与会话恢复需实测。
 
-## 独立测试
+## OpenDesign 页面验收
 
-- 未登录可正常出图（匿名）。
-- Google 登录成功后 `profile` 显示已登录。
-- 重启 App 后 Clerk 会话恢复。
-- 登录后库 Tab 能看到原匿名生成的历史（绑定生效）。
+- 登录页可输入邮箱和密码，显示忘记密码入口，并跳转注册页和密码找回页。
+- 注册页收集称呼、邮箱、密码和确认密码；提交后发送邮箱验证码，验证后完成 Clerk 会话。
+- 密码找回页依次支持邮箱、验证码和新密码；任一步失败都通过现有 Toast 错误反馈。
+- 认证状态保留在 Clerk 流程中，OpenDesign 的视觉改动不改变 SecureStore、路由保护和账号隔离边界。
 
-## 完成标准 (DoD)
+## 验收标准
 
-- [x] ClerkProvider + SecureStore token cache 已接入。
-- [x] Google SSO 登录/退出界面与 session 激活流程已实现。
-- [x] API 请求可自动注入 Clerk token。
-- [x] 匿名 -> 登录的历史绑定请求已接入。
-
-## 验证记录
-
-- Root layout 使用 `ClerkProvider` 与官方 SecureStore token cache；`ApiTokenBridge` 将 Clerk
-  `getToken` 注册给 API client，请求在 token 可用时自动附加 `Authorization: Bearer ...`。
-- Profile 提供匿名说明、Google
-  SSO 登录、头像/账号、历史同步状态、错误与退出；Google 流程使用 Clerk 的 browser-based
-  `useSSO({ strategy: 'oauth_google' })`，兼容 Expo Go。登录完成后复用匿名 SecureStore deviceId 调用
-  `/me/bind-device`。
-- API token provider 与 Google 按钮的 Jest 测试已通过；后续移动端全量 12 个套件、29 项断言和
-  `vp check` 均通过。
-- 必须设置 `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY`、Clerk Dashboard redirect URL 和 Google
-  OAuth 后，才能在 Expo Go/ development build 真正验证登录、会话恢复和跨设备历史同步。
+- [ ] 登录/取消/失败/注册/密码重置/重启恢复可用。
+- [ ] A→退出→B 不显示 A 的壁纸、预设或任务；进行中请求不能污染 B。
+- [ ] 账号过期时停止业务操作并提供登录入口。

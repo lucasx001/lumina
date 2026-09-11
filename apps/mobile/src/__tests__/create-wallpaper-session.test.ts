@@ -5,7 +5,7 @@ import { useGenerationStore } from '@/stores/generation-store';
 import { resetCreateWallpaperSession } from '@/lib/create-wallpaper-session';
 
 const request: GenerateRequest = {
-  category: 'Rainy nights',
+  categoryId: 'category-rainy-nights',
   height: 2400,
   mode: 'text2img',
   quality: 'draft',

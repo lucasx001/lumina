@@ -1,5 +1,5 @@
-import { createReadStream } from 'node:fs';
-import { stat } from 'node:fs/promises';
+import { readFile, stat } from 'node:fs/promises';
+import { imageSize } from 'image-size';
 
 import {
   GetObjectCommand,
@@ -46,6 +46,8 @@ export class R2StorageError extends Error {
 }
 
 export type R2Object = {
+  width?: number;
+  height?: number;
   key: string;
   url: string;
 };
@@ -54,9 +56,12 @@ export type GenerateWallpaperKeyOptions = {
   extension?: string;
   id?: string;
   now?: Date;
+  ownerId?: string;
 };
 
-export type GenerateSourceImageKeyOptions = GenerateWallpaperKeyOptions;
+export type GenerateSourceImageKeyOptions = GenerateWallpaperKeyOptions & {
+  ownerId?: string;
+};
 
 type S3Command = GetObjectCommand | PutObjectCommand;
 
@@ -87,7 +92,8 @@ export function generateWallpaperKey(options: GenerateWallpaperKeyOptions = {}):
   }
 
   const month = `${now.getUTCFullYear()}${String(now.getUTCMonth() + 1).padStart(2, '0')}`;
-  return `wallpapers/${month}/${id}.${extension}`;
+  const ownerPrefix = options.ownerId ? `${validateOwnerId(options.ownerId)}/` : '';
+  return `wallpapers/${ownerPrefix}${month}/${id}.${extension}`;
 }
 
 export function generateSourceImageKey(options: GenerateSourceImageKeyOptions = {}): string {
@@ -115,7 +121,8 @@ export class R2Storage {
   async uploadFile(filePath: string, key: string, contentType: string): Promise<R2Object> {
     try {
       const file = await stat(filePath);
-      return await this.upload(key, createReadStream(filePath), contentType, file.size);
+      if (file.size > MAX_REMOTE_IMAGE_BYTES) throw remoteImageTooLarge(MAX_REMOTE_IMAGE_BYTES);
+      return await this.upload(key, await readFile(filePath), contentType, file.size);
     } catch (error) {
       throw asStorageError('R2_UPLOAD_FAILED', `Failed to upload file at ${filePath}.`, error);
     }
@@ -207,7 +214,16 @@ export class R2Storage {
       throw asStorageError('R2_UPLOAD_FAILED', `Failed to upload ${validatedKey} to R2.`, error);
     }
 
-    return { key: validatedKey, url: await this.getUrl(validatedKey) };
+    let dimensions: { width?: number; height?: number } = {};
+    if (Buffer.isBuffer(body)) {
+      try {
+        const { width, height } = imageSize(body);
+        dimensions = { width, height };
+      } catch {
+        // Unknown formats must not be labelled with the requested dimensions.
+      }
+    }
+    return { key: validatedKey, url: await this.getUrl(validatedKey), ...dimensions };
   }
 
   private async createSignedUrl(
@@ -325,6 +341,14 @@ function normalizeExtension(extension: string): string {
   }
 
   return normalizedExtension;
+}
+
+function validateOwnerId(ownerId: string): string {
+  if (!/^[a-zA-Z0-9][a-zA-Z0-9_-]*$/.test(ownerId)) {
+    throw new R2StorageError('R2_INVALID_KEY', 'The owner ID contains unsupported characters.');
+  }
+
+  return ownerId;
 }
 
 function validateContentType(contentType: string): string {

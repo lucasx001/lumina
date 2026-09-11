@@ -76,7 +76,10 @@ export async function runWallpaperGraph(
       throw new Error('Wallpaper graph completed without creating a wallpaper.');
     }
 
-    const wallpaper = await dependencies.wallpapers.update(state.wallpaperId, {});
+    const wallpaper = await dependencies.wallpapers.update(
+      { id: state.wallpaperId, userId: input.userId },
+      {},
+    );
     logger.info('wallpaper graph completed', {
       durationMs: Math.round(performance.now() - startedAt),
       wallpaperId: wallpaper.id,
@@ -85,7 +88,10 @@ export async function runWallpaperGraph(
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Wallpaper generation failed.';
     if (wallpaperId) {
-      await dependencies.wallpapers.update(wallpaperId, { error: message, status: 'failed' });
+      await dependencies.wallpapers.update(
+        { id: wallpaperId, userId: input.userId },
+        { error: message, status: 'failed' },
+      );
     }
     logger.error('wallpaper graph failed', {
       durationMs: Math.round(performance.now() - startedAt),
@@ -178,8 +184,34 @@ async function resolveDependencies(
         secretAccessKey: env.R2_SECRET_ACCESS_KEY,
       }),
     wallpapers: supplied.wallpapers ?? {
-      create: (data) => prisma.wallpaper.create({ data }),
-      update: (id, data) => prisma.wallpaper.update({ data, where: { id } }),
+      create: (data) =>
+        prisma.wallpaper.create({
+          data: {
+            categoryId: data.categoryId,
+            height: data.height,
+            mode: data.mode,
+            presetId: data.presetId,
+            prompt: data.prompt,
+            quality: data.quality ?? 'hd',
+            sourceImageKey: data.sourceImageKey,
+            status: data.status,
+            userId: data.userId,
+            width: data.width,
+          },
+        }),
+      update: async ({ id, userId }, data) => {
+        const result = await prisma.wallpaper.updateMany({ where: { id, userId }, data });
+        if (result.count === 0) {
+          throw new Error(`Wallpaper ${id} was not found for the authenticated user.`);
+        }
+
+        const wallpaper = await prisma.wallpaper.findFirst({ where: { id, userId } });
+        if (!wallpaper) {
+          throw new Error(`Wallpaper ${id} was not found for the authenticated user.`);
+        }
+
+        return wallpaper;
+      },
     },
   };
 }

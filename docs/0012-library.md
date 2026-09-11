@@ -1,50 +1,29 @@
-# 0012 — library
+# 0012 — 首页类型与作品管理
 
-> 模块：library ｜ 优先级：12 ｜ 依赖：0007,0006 ｜ 里程碑：M2 对应 SPEC：「壁纸库/自定义预设」
->
-> 状态：本地列表、详情和 mock 验证完成；真实 API 数据及 0011 原生操作待设备/服务联调。
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-「壁纸库」Tab：展示用户（或匿名 deviceId）历史生成的壁纸网格，点击可重新预览/应用/分享；并预留自定义预设管理入口（自定义预设的产生在 0015）。
+首页是当前账号的类型目录，每个 Card 展示名称、成功作品数与封面；全部类型可访问，空类型提供创作入口。类型是归档集合，风格是生成参数，两者独立。
 
-## 范围
+点击类型进入详情，成功作品按时间倒序分页展示，支持刷新、空态、分页错误重试；点击任意作品进入独立预览。收藏状态归账号，可提供收藏筛选。
 
-- In：壁纸网格列表（分页/下拉刷新）、详情查看（接 0008 预览 + 0011 操作）、空态。
-- Out：自定义预设的生成逻辑（0015）、跨设备同步（依赖 0013 登录）。
+类型目录及计数由服务端提供；单图详情根据 ID 查询。列表、计数和收藏在生成成功或操作完成后保持一致。
 
-## 涉及文件
+## 实现位置
 
-- `apps/mobile/src/app/(tabs)/library.tsx`
-- `apps/mobile/src/features/library/WallpaperGrid.tsx`、`WallpaperDetail.tsx`、`useWallpapers.ts`（`GET /wallpapers`）
-- （预留）`apps/mobile/src/features/library/PresetManager.tsx`
+- `apps/mobile/src/screens/home.tsx`
+- `apps/mobile/src/screens/category-detail.tsx`
+- `apps/mobile/src/screens/wallpaper-preview.tsx`
+- `apps/mobile/src/hooks/use-wallpapers.ts`
 
-## 实现要点
+## 当前状态
 
-- `useWallpapers`：React Query 拉 `GET /wallpapers?deviceId|userId`，瀑布/网格用
-  `expo-image`（开启缓存/占位）。
-- 点击进详情：复用 `WallpaperPreview`（0008）+ `ApplySheet`（0011）。
-- 空态：引导去创作页。
-- 自定义预设区先占位（列表为空），等 0015 接入风格提取后填充。
+类型 Card、双列作品和预览路由已有；完整目录、分页、计数及单图详情见 D01–D03。
 
-## 独立测试
+## 验收标准
 
-- 先用 0009 生成几张 → 进库 Tab 看到网格；点开能预览并触发应用/分享。
-- 后端无数据时显示空态且可跳创作。
-
-## 完成标准 (DoD)
-
-- [x] 历史壁纸网格正确加载与分页（mock API 覆盖）。
-- [x] 详情可预览，并为应用 + 分享操作保留可选接入点。
-- [x] 空态友好；自定义预设入口已预留。
-
-## 验证记录
-
-- `GET /wallpapers` 已具备类型化响应、游标分页和 React
-  Query 无限查询；图书馆支持下拉刷新、载入更多、错误重试、空态跳转创作以及 `expo-image` 缓存网格。
-- 匿名访问使用 SecureStore 保存的随机 UUID，创作请求与图库查询复用此
-  `deviceId`；不使用硬件指纹。详情复用
-  `WallpaperPreview`，并允许 0011 的操作面板作为可选 action 注入。
-- 添加网格、详情、查询与匿名 ID 测试；后续移动端全量 Jest 12 个套件、29 项断言和全仓 `vp check`
-  通过。
-- 真实生成内容、分页 API 与 Android/iOS 操作面板需在配置 `EXPO_PUBLIC_API_URL` 和设备环境后联调。
+- [ ] 超过 50 张和多个类型的数据集不遗漏类型或作品。
+- [ ] 空类型、加载、错误、刷新与图片加载失败可恢复。
+- [ ] A/B 类型、作品和收藏严格隔离；直接打开任意作品可正确鉴权。

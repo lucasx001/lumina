@@ -1,57 +1,25 @@
-# 0001 - backend-foundation
+# 0001 — 后端基础
 
-> 模块：backend-foundation | 优先级：1 | 依赖：无 | 里程碑：M0 | 状态：完成（2026-07-25）
->
-> 对应 SPEC：「后端设计」「技术栈与新增依赖」
+> 产品要求以 [SPEC](./SPEC.md) 为准。实施状态见 [progress](./progress.md)，代码差距见
+> [Mobile 待办](./0018-mobile-roadmap.md)。
 
-## 目标
+## 目标与约定
 
-搭好独立后端工程 `apps/server/`（Node + TypeScript +
-Hono），提供统一配置、日志、错误处理、CORS 与健康检查，成为后续所有后端模块的承载骨架。
+后端以 Hono 提供 JSON
+API、健康检查、结构化错误、CORS 与日志。PostgreSQL、Clerk、R2 和 Provider 配置由环境变量校验；密钥只在服务端使用。
 
-## 范围
+## 实现位置
 
-- In：`apps/server/` 工程初始化、依赖、`tsconfig`、脚本（dev/build/start）、`.env` 加载与校验、Hono
-  app、`GET /health`、统一错误中间件、CORS。
-- Out：业务路由（0006/0013）、Prisma（0002）、Provider（0003）、R2 存储（0004）。
+- `apps/server/src/app.ts`
+- `apps/server/src/config/env.ts`
+- `apps/server/src/middleware/error.ts`
+- `apps/server/src/lib/logger.ts`
 
-## 涉及文件
+## 当前状态
 
-- `apps/server/package.json`、`apps/server/tsconfig.json`、`apps/server/.env.example`、`apps/server/.gitignore`
-- `apps/server/src/index.ts`（启动 `@hono/node-server`）
-- `apps/server/src/app.ts`（Hono 实例 + 中间件挂载）
-- `apps/server/src/config/env.ts`（用 `zod` 校验环境变量并导出类型化 config）
-- `apps/server/src/lib/logger.ts`、`apps/server/src/middleware/error.ts`
+现有工程、环境校验和路由挂载已具备。业务接口强鉴权与账号上下文按 0013 验收。
 
-## 实现要点
+## 验收标准
 
-- 依赖：`hono`、`@hono/node-server`、`zod`、`tsx`、`typescript`、`@types/node`。
-- `env.ts` 校验：
-  - 基础：`PORT`、`DATABASE_URL`
-  - Clerk：`CLERK_SECRET_KEY`、`CLERK_PUBLISHABLE_KEY`
-  - R2：`R2_ACCOUNT_ID`、`R2_BUCKET`、`R2_ACCESS_KEY_ID`、`R2_SECRET_ACCESS_KEY`、`R2_ENDPOINT`、`R2_PUBLIC_BASE_URL`（可选）
-  - Codex：`CODEX_PROVIDER_ENABLED`、`CODEX_MODEL`、`CODEX_WORKDIR`、`CODEX_IMAGE_TIMEOUT_MS`
-- `.env.example` 列全所有 key（值留空），`.env` 加入 `.gitignore`。
-- 统一响应/错误结构：`{ ok: boolean, data?, error? }`；错误中间件捕获并转 JSON。
-- 脚本：`dev`=`tsx watch src/index.ts`，`build`=`tsc`，`start`=`node dist/src/index.js`。
-
-## 独立测试
-
-- `bun --filter=@lumina/server run dev` 启动后：`curl http://localhost:3000/health` 返回
-  `{ ok: true }`。
-- 故意删掉一个必填 env，启动应给出明确校验错误并退出。
-
-## 完成标准 (DoD)
-
-- [x] `apps/server/` 可独立 `bun --filter=@lumina/server run dev` 启动且无报错。
-- [x] `/health` 返回 200 + `{ ok: true }`。
-- [x] env 校验覆盖 Clerk、R2、Postgres、Codex provider 配置。
-- [x] 统一错误中间件对未捕获异常返回结构化 JSON。
-
-## 验证记录
-
-- 使用临时完整环境变量启动 `bun --filter=@lumina/server run dev`，`GET /health` 返回
-  `{ "ok": true }`；验证进程随后已停止。
-- `bun run lint`、`bun --filter=@lumina/server run build`、`bun run test` 通过。
-- `env.test.ts` 覆盖默认配置、必填环境变量缺失和 Codex 启用时的依赖字段；`app.test.ts`
-  覆盖健康检查及未处理异常的结构化 500 响应。
+- [ ] 健康检查可用，错误响应含稳定 code/message，不泄露内部凭据。
+- [ ] 配置缺失时启动明确失败；生成与资产业务请求具备账号上下文。

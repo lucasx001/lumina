@@ -13,6 +13,8 @@ import Toast from 'react-native-toast-message';
 import { ApiTokenBridge } from '@/components/auth';
 import { MobileI18nProvider } from '@/components/i18n-provider';
 import { useTheme } from '@/hooks/use-theme';
+import { useAccountSessionLifecycle } from '@/hooks/use-account-session';
+import { useGenerationRecovery } from '@/hooks/use-generation-recovery';
 import { clerkTokenCache } from '@/lib/clerkTokenCache';
 import { queryClient } from '@/lib/queryClient';
 import { createWallpaperOverlayOptions } from '@/navigation/create-wallpaper-overlay-options';
@@ -44,6 +46,7 @@ export default function RootLayout() {
         <ClerkProvider publishableKey={publishableKey} tokenCache={clerkTokenCache}>
           <ApiTokenBridge />
           <QueryClientProvider client={queryClient}>
+            <AccountSessionLifecycle />
             <ThemeProvider value={navigationTheme}>
               <Host colorScheme="light" style={{ flex: 1 }}>
                 <StatusBar style="dark" />
@@ -58,6 +61,12 @@ export default function RootLayout() {
       </MobileI18nProvider>
     </GestureHandlerRootView>
   );
+}
+
+function AccountSessionLifecycle() {
+  useAccountSessionLifecycle();
+  useGenerationRecovery();
+  return null;
 }
 
 export function RootNavigator() {

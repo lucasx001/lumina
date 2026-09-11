@@ -12,10 +12,21 @@ import type { GenerationJob } from '@/lib/api';
 
 type ResultViewProps = {
   job: GenerationJob;
-  onRegenerate: () => void;
+  onRegenerate?: () => void;
+  onCreateNew?: () => void;
+  onViewCategory?: () => void;
+  onViewWallpaper?: () => void;
+  onRetryImage?: () => void;
 };
 
-export function ResultView({ job, onRegenerate }: ResultViewProps) {
+export function ResultView({
+  job,
+  onRegenerate,
+  onCreateNew,
+  onViewCategory,
+  onViewWallpaper,
+  onRetryImage,
+}: ResultViewProps) {
   const { t } = useLingui();
   const [mode, setMode] = useState<WallpaperPreviewMode>('lock-screen');
   const [isApplySheetVisible, setIsApplySheetVisible] = useState(false);
@@ -36,10 +47,13 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
           <Trans>Your wallpaper is ready</Trans>
         </ThemedText>
         <ThemedText selectable style={{ color: theme.mutedText }} variant="caption">
-          {job.quality === 'draft'
-            ? t`Quick preview · Low resolution`
-            : t`High resolution · Full 2K+`}
+          {job.width && job.height ? `${job.width} × ${job.height} px` : t`Resolution unavailable`}
         </ThemedText>
+        {job.category ? (
+          <ThemedText variant="body">
+            <Trans>Saved to {job.category}</Trans>
+          </ThemedText>
+        ) : null}
       </View>
       <View style={{ flexDirection: 'row', gap: spacing.sm }}>
         {(
@@ -82,6 +96,7 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
         })}
       </View>
       <WallpaperPreview
+        onRetryImage={onRetryImage}
         height={previewHeight}
         image={{ uri: job.resultImageUrl }}
         mode={mode}
@@ -95,13 +110,24 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
           justifyContent: 'center',
         }}
       >
-        <Button
-          icon="refresh"
-          label={t`Regenerate`}
-          onPress={onRegenerate}
-          testID="regenerate-button"
-          variant="secondary"
-        />
+        {onRegenerate ? (
+          <Button
+            icon="refresh"
+            label={t`Regenerate`}
+            onPress={onRegenerate}
+            testID="regenerate-button"
+            variant="secondary"
+          />
+        ) : null}
+        {onCreateNew ? (
+          <Button label={t`Create a new wallpaper`} onPress={onCreateNew} variant="secondary" />
+        ) : null}
+        {onViewCategory && job.categoryId ? (
+          <Button label={t`View category`} onPress={onViewCategory} variant="secondary" />
+        ) : null}
+        {onViewWallpaper && job.wallpaperId ? (
+          <Button label={t`View wallpaper`} onPress={onViewWallpaper} variant="secondary" />
+        ) : null}
         <Button
           icon="download"
           label={t`Apply and save`}
@@ -110,6 +136,7 @@ export function ResultView({ job, onRegenerate }: ResultViewProps) {
         />
       </View>
       <ApplySheet
+        onRetryImage={onRetryImage}
         imageUrl={job.resultImageUrl}
         onDismiss={() => setIsApplySheetVisible(false)}
         visible={isApplySheetVisible}

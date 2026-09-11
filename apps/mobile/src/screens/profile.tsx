@@ -20,7 +20,7 @@ export function ProfileScreen() {
   const router = useRouter();
   const theme = useTheme();
   const { t } = useLingui();
-  const { authError, bindError, isLoaded, isSignedIn, isSyncingHistory, signOut, user } = useAuth();
+  const { authError, isLoaded, isSignedIn, signOut, user } = useAuth();
   const googleAccount = useMemo(
     () =>
       user?.externalAccounts.find((account: { emailAddress?: string | null; provider: string }) =>
@@ -34,7 +34,7 @@ export function ProfileScreen() {
   const accountDetail = isLoaded
     ? isSignedIn
       ? (googleAccount?.emailAddress ?? user?.primaryEmailAddress?.emailAddress)
-      : t`Saved on this device`
+      : t`Account data is private to you`
     : t`Restoring sign-in state…`;
 
   const toggleInformation = (section: Exclude<ExpandedInformation, null>) => {
@@ -92,17 +92,12 @@ export function ProfileScreen() {
         >
           {accountDetail}
         </ThemedText>
-        {isSyncingHistory ? (
-          <ThemedText style={{ color: theme.primary }} variant="caption">
-            <Trans>Syncing device history…</Trans>
-          </ThemedText>
-        ) : null}
       </View>
 
-      {bindError || authError ? (
+      {authError ? (
         <ThemedView variant="card" style={{ borderColor: theme.error }}>
           <ThemedText style={{ color: theme.error }} variant="caption">
-            {(bindError ?? authError)?.message}
+            {authError.message}
           </ThemedText>
         </ThemedView>
       ) : null}
@@ -136,8 +131,8 @@ export function ProfileScreen() {
         {expandedInformation === 'privacy' ? (
           <InformationPanel>
             <Trans>
-              An account is required to create and manage wallpapers. Your session also keeps
-              wallpaper history connected across devices.
+              An account is required to create and manage wallpapers. Your wallpaper data belongs to
+              this account and is isolated from other accounts.
             </Trans>
           </InformationPanel>
         ) : null}

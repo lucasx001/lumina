@@ -100,6 +100,10 @@ describe('authentication screens', () => {
     });
     const screen = render(<SignInScreen />);
 
+    expect(screen.getByText('Welcome back')).toBeTruthy();
+    expect(screen.getByText('Let the idea keep growing.')).toBeTruthy();
+    expect(screen.queryByLabelText('Continue with Google')).toBeNull();
+
     fireEvent.changeText(screen.getByTestId('sign-in-email'), 'person@example.com');
     fireEvent.changeText(screen.getByTestId('sign-in-password'), 'correct-horse-battery');
     fireEvent.press(screen.getByTestId('sign-in-submit'));
@@ -131,12 +135,18 @@ describe('authentication screens', () => {
     });
     const screen = render(<SignUpScreen />);
 
+    fireEvent.changeText(screen.getByTestId('sign-up-name'), 'Lumina creator');
     fireEvent.changeText(screen.getByTestId('sign-up-email'), 'new@example.com');
     fireEvent.changeText(screen.getByTestId('sign-up-password'), 'correct-horse-battery');
     fireEvent.changeText(screen.getByTestId('sign-up-confirm-password'), 'correct-horse-battery');
     fireEvent.press(screen.getByTestId('sign-up-submit'));
 
     await waitFor(() => expect(mockSignUp.verifications.sendEmailCode).toHaveBeenCalledTimes(1));
+    expect(mockSignUp.password).toHaveBeenCalledWith({
+      emailAddress: 'new@example.com',
+      firstName: 'Lumina creator',
+      password: 'correct-horse-battery',
+    });
     fireEvent.changeText(screen.getByTestId('sign-up-verification-code'), '123456');
     fireEvent.press(screen.getByTestId('sign-up-verify'));
 
