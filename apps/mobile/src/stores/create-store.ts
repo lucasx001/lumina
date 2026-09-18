@@ -13,6 +13,7 @@ type CreateState = {
   mode?: ExistingImageMode;
   presetId?: string;
   quality: GenerationQuality;
+  sourceImageKey?: string;
   sourceImageUrl?: string;
 };
 
@@ -26,7 +27,7 @@ type CreateActions = {
   setMode: (mode: ExistingImageMode | undefined) => void;
   setPresetId: (presetId: string | undefined) => void;
   setQuality: (quality: GenerationQuality) => void;
-  setSourceImageUrl: (sourceImageUrl: string | undefined) => void;
+  setSourceImage: (sourceImage: { key: string; previewUrl: string } | undefined) => void;
 };
 
 export type CreateStore = CreateState & CreateActions;
@@ -40,6 +41,7 @@ const initialCreateState: CreateState = {
   mode: undefined,
   presetId: undefined,
   quality: 'draft',
+  sourceImageKey: undefined,
   sourceImageUrl: undefined,
 };
 
@@ -55,5 +57,6 @@ export const useCreateStore = create<CreateStore>()((set) => ({
   setMode: (mode) => set({ mode }),
   setPresetId: (presetId) => set({ presetId }),
   setQuality: (quality) => set({ quality }),
-  setSourceImageUrl: (sourceImageUrl) => set({ sourceImageUrl }),
+  setSourceImage: (sourceImage) =>
+    set({ sourceImageKey: sourceImage?.key, sourceImageUrl: sourceImage?.previewUrl }),
 }));

@@ -65,6 +65,40 @@ describe('runWallpaperGraph', () => {
 
     expect(harness.specs[0]).toMatchObject({ height: 1280, quality: 'standard', width: 576 });
   });
+
+  it('resolves an account-owned source key only for provider use', async () => {
+    const harness = createHarness();
+    await runWallpaperGraph(
+      {
+        ...graphInput,
+        mode: 'edit',
+        sourceImageKey: 'sources/local-1/202609/source.png',
+        userInputs: { idea: 'make it warmer' },
+      },
+      harness.dependencies,
+    );
+
+    expect(harness.specs[0]?.sourceImageUrl).toBe(
+      'https://r2.example/sources/local-1/202609/source.png',
+    );
+    expect(harness.wallpaper.sourceImageKey).toBe('sources/local-1/202609/source.png');
+  });
+
+  it('rejects a source key from another account before provider access', async () => {
+    const harness = createHarness();
+    await expect(
+      runWallpaperGraph(
+        {
+          ...graphInput,
+          mode: 'edit',
+          sourceImageKey: 'sources/local-2/202609/source.png',
+          userInputs: { idea: 'make it warmer' },
+        },
+        harness.dependencies,
+      ),
+    ).rejects.toThrow('source image is not owned');
+    expect(harness.calls).toEqual([]);
+  });
 });
 
 function createHarness(options: { providerError?: Error } = {}) {
@@ -104,12 +138,15 @@ function createHarness(options: { providerError?: Error } = {}) {
               id,
               negativePrompt: 'watermark',
               promptTemplate: 'A minimal {{idea}} composition, {{width}}x{{height}}.',
-              styleRefUrl: null,
+              styleRefKey: null,
             }
           : null;
       },
     },
     storage: {
+      async getUrl(key) {
+        return `https://r2.example/${key}`;
+      },
       async uploadBuffer(_buffer, key, contentType) {
         uploads.push({ contentType, key });
         return { key, url: `https://r2.example/${key}` };

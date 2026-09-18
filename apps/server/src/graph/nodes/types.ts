@@ -7,7 +7,7 @@ export type PresetRecord = {
   id: string;
   negativePrompt: string | null;
   promptTemplate: string;
-  styleRefUrl: string | null;
+  styleRefKey: string | null;
 };
 
 export type CustomPresetData = {
@@ -18,7 +18,7 @@ export type CustomPresetData = {
   name: string;
   ownerClerkUserId: string;
   promptTemplate: string;
-  styleRefUrl: string;
+  styleRefKey: string;
 };
 
 export type WallpaperRepository = {
@@ -58,6 +58,6 @@ export type WallpaperGraphDependencies = {
     createCustom?(data: CustomPresetData): Promise<PresetRecord>;
     findById(id: string, clerkUserId?: string): Promise<PresetRecord | null>;
   };
-  storage: Pick<R2Storage, 'uploadBuffer' | 'uploadFile' | 'uploadFromUrl'>;
+  storage: Pick<R2Storage, 'getUrl' | 'uploadBuffer' | 'uploadFile' | 'uploadFromUrl'>;
   wallpapers: WallpaperRepository;
 };

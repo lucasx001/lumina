@@ -137,6 +137,32 @@ describe('ApplySheet', () => {
     });
   });
 
+  it('does not finish a system action after the account session changes', async () => {
+    let resolveSetWallpaper!: () => void;
+    mockSetWallpaper.mockImplementation(
+      () =>
+        new Promise<void>((resolve) => {
+          resolveSetWallpaper = resolve;
+        }),
+    );
+    const onDismiss = jest.fn();
+    const screen = render(
+      <ApplySheet imageUrl="https://images.example/wallpaper.jpg" onDismiss={onDismiss} visible />,
+    );
+
+    fireEvent.press(screen.getByTestId('apply-wallpaper-home'));
+    await waitFor(() => expect(mockSetWallpaper).toHaveBeenCalled());
+    changeAccountSession('user-b');
+    await act(async () => {
+      resolveSetWallpaper();
+    });
+
+    expect(onDismiss).not.toHaveBeenCalled();
+    expect(await screen.findByTestId('apply-sheet-error')).toHaveTextContent(
+      'Account session changed. Please try again.',
+    );
+  });
+
   it('requests library permission before saving and shares a local file', async () => {
     const screen = render(
       <ApplySheet imageUrl="https://images.example/wallpaper.jpg" onDismiss={jest.fn()} visible />,

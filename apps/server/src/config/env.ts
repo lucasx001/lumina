@@ -26,6 +26,7 @@ const envSchema = z
     R2_ACCESS_KEY_ID: nonEmptyString,
     R2_SECRET_ACCESS_KEY: nonEmptyString,
     R2_ENDPOINT: z.url(),
+    // Kept for deployment compatibility; R2 assets are always served by signed URLs.
     R2_PUBLIC_BASE_URL: z.url().optional(),
     SILICONFLOW_PROVIDER_ENABLED: z.stringbool().default(false),
     SILICONFLOW_API_KEY: nonEmptyString.optional(),

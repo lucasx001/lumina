@@ -1,5 +1,5 @@
 import Constants from 'expo-constants';
-import { getAccountSession } from '@/lib/account-session';
+import { getAccountSession, requireCurrentAccount } from '@/lib/account-session';
 
 export type HealthResponse = { ok: boolean };
 
@@ -19,7 +19,7 @@ export type GenerateRequest = {
   mode: GenerationMode;
   quality: GenerationQuality;
   presetId?: string;
-  sourceImageUrl?: string;
+  sourceImageKey?: string;
   userInputs: GenerationUserInputs;
   width: number;
 };
@@ -30,6 +30,11 @@ export type PresignedUpload = {
   key: string;
   sourceImageUrl: string;
   uploadUrl: string;
+};
+
+export type UploadedSourceImage = {
+  key: string;
+  previewUrl: string;
 };
 
 export type GenerationJobStatus = 'failed' | 'pending' | 'processing' | 'succeeded';
@@ -258,9 +263,11 @@ export function createSourceImageUpload(contentType: string): Promise<PresignedU
 export async function uploadSourceImage(
   localUri: string,
   contentType: 'image/jpeg' | 'image/png' | 'image/webp',
-): Promise<string> {
+): Promise<UploadedSourceImage> {
+  const account = getAccountSession();
+  requireCurrentAccount(account);
   const upload = await createSourceImageUpload(contentType);
-  const localResponse = await fetch(localUri);
+  const localResponse = await fetch(localUri, { signal: account.signal });
   if (!localResponse.ok) {
     throw new ApiError(
       'The selected image could not be read.',
@@ -272,6 +279,7 @@ export async function uploadSourceImage(
     body: await localResponse.blob(),
     headers: { 'Content-Type': contentType },
     method: 'PUT',
+    signal: account.signal,
   });
   if (!uploadResponse.ok) {
     throw new ApiError(
@@ -280,7 +288,8 @@ export async function uploadSourceImage(
       'UPLOAD_FAILED',
     );
   }
-  return upload.sourceImageUrl;
+  requireCurrentAccount(account);
+  return { key: upload.key, previewUrl: upload.sourceImageUrl };
 }
 
 export function getGenerationJob(jobId: string): Promise<GenerationJob> {
@@ -305,6 +314,10 @@ export function getWallpapers({ categoryId, favorite, limit = 20, page = 1 }: Wa
 
 export function getWallpaper(id: string): Promise<{ wallpaper: WallpaperListItem }> {
   return apiFetch<{ wallpaper: WallpaperListItem }>(`/wallpapers/${encodeURIComponent(id)}`);
+}
+
+export function getWallpaperImage(id: string): Promise<{ url: string }> {
+  return apiFetch<{ url: string }>(`/wallpapers/${encodeURIComponent(id)}/image`);
 }
 
 export function setWallpaperFavorite(

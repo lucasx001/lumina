@@ -29,6 +29,10 @@ function createClient(): {
   return { client: { send }, send };
 }
 
+function signedUrlDependency(): Pick<R2StorageDependencies, 'getSignedUrl'> {
+  return { getSignedUrl: async () => 'https://signed.example.com/image' };
+}
+
 describe('generateWallpaperKey', () => {
   it('creates a date-partitioned image key', () => {
     expect(
@@ -49,7 +53,7 @@ describe('R2Storage', () => {
     const { client } = createClient();
     const storage = createR2Storage(
       { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client },
+      { client, ...signedUrlDependency() },
     );
     const png = Buffer.from(
       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jmXcAAAAASUVORK5CYII=',
@@ -59,11 +63,11 @@ describe('R2Storage', () => {
       storage.uploadBuffer(png, 'wallpapers/test.png', 'image/png'),
     ).resolves.toMatchObject({ width: 1, height: 1 });
   });
-  it('uploads a buffer and returns a public URL', async () => {
+  it('uploads a buffer and returns a signed URL', async () => {
     const { client, send } = createClient();
     const storage = createR2Storage(
       { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client },
+      { client, ...signedUrlDependency() },
     );
     const image = Buffer.from('image bytes');
 
@@ -71,7 +75,7 @@ describe('R2Storage', () => {
       storage.uploadBuffer(image, 'wallpapers/202607/image.png', 'image/png'),
     ).resolves.toEqual({
       key: 'wallpapers/202607/image.png',
-      url: 'https://images.example.com/wallpapers/202607/image.png',
+      url: 'https://signed.example.com/image',
     });
 
     const command = send.mock.calls[0]?.[0];
@@ -94,7 +98,7 @@ describe('R2Storage', () => {
       );
     const storage = createR2Storage(
       { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client, fetch },
+      { client, fetch, ...signedUrlDependency() },
     );
 
     await storage.uploadFromUrl(
@@ -120,7 +124,7 @@ describe('R2Storage', () => {
     await writeFile(filePath, 'image bytes');
     const storage = createR2Storage(
       { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client },
+      { client, ...signedUrlDependency() },
     );
 
     await storage.uploadFile(filePath, 'wallpapers/202607/image.png', 'image/png');

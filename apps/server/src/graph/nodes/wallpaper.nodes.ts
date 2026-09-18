@@ -1,4 +1,4 @@
-import { generateWallpaperKey } from '../../lib/r2.js';
+import { generateWallpaperKey, isOwnedSourceImageKey } from '../../lib/r2.js';
 import { ImageProviderError, type ImageSpec } from '../../providers/types.js';
 import type { WallpaperGraphState } from '../state.js';
 import type { WallpaperGraphDependencies } from './types.js';
@@ -7,6 +7,15 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
   return {
     resolvePreset: async (state: WallpaperGraphState) => {
       validateDimensions(state);
+      if (state.sourceImageKey && !isOwnedSourceImageKey(state.sourceImageKey, state.userId)) {
+        throw new ImageProviderError(
+          'INVALID_INPUT',
+          'The source image is not owned by this account.',
+        );
+      }
+      const sourceImageUrl = state.sourceImageKey
+        ? await dependencies.storage.getUrl(state.sourceImageKey)
+        : undefined;
       const preset = state.presetId
         ? await dependencies.presets.findById(state.presetId, state.clerkUserId)
         : null;
@@ -30,7 +39,7 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
           presetId: state.presetId,
           prompt,
           quality: state.quality ?? 'hd',
-          sourceImageKey: state.sourceImageUrl,
+          sourceImageKey: state.sourceImageKey,
           status: 'pending',
           userId: state.userId,
           width: state.width,
@@ -43,7 +52,10 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
       return {
         negativePrompt: preset?.negativePrompt ?? undefined,
         prompt,
-        styleRefUrl: preset?.styleRefUrl ?? undefined,
+        sourceImageUrl,
+        styleRefUrl: preset?.styleRefKey
+          ? await dependencies.storage.getUrl(preset.styleRefKey)
+          : undefined,
         wallpaperId,
       };
     },
@@ -80,7 +92,7 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
       const result = state.providerResult;
 
       if (state.mode === 'style') {
-        if (!state.clerkUserId || !state.sourceImageUrl || !result.style) {
+        if (!state.clerkUserId || !state.sourceImageKey || !state.sourceImageUrl || !result.style) {
           throw new ImageProviderError(
             'INVALID_ARTIFACT',
             'Style extraction requires an authenticated owner, source image, and style metadata.',
@@ -93,7 +105,7 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
         await dependencies.presets.createCustom({
           ...result.style,
           ownerClerkUserId: state.clerkUserId,
-          styleRefUrl: state.sourceImageUrl,
+          styleRefKey: state.sourceImageKey,
         });
         await dependencies.wallpapers.update(
           { id: state.wallpaperId, userId: state.userId },
@@ -101,7 +113,7 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
             error: null,
             providerTask: result.providerTask,
             prompt: state.prompt,
-            resultImageKey: state.sourceImageUrl,
+            resultImageKey: state.sourceImageKey,
             status: 'succeeded',
             width: state.width,
             height: state.height,

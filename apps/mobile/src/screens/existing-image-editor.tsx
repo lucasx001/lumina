@@ -32,10 +32,11 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   const instruction = useCreateStore((state) => state.instruction);
   const mode = useCreateStore((state) => state.mode);
   const sourceImageUrl = useCreateStore((state) => state.sourceImageUrl);
+  const sourceImageKey = useCreateStore((state) => state.sourceImageKey);
   const setCategory = useCreateStore((state) => state.setCategory);
   const setInstruction = useCreateStore((state) => state.setInstruction);
   const setMode = useCreateStore((state) => state.setMode);
-  const setSourceImageUrl = useCreateStore((state) => state.setSourceImageUrl);
+  const setSourceImage = useCreateStore((state) => state.setSourceImage);
   const generation = useGenerate('edit');
   const queryClient = useQueryClient();
   const theme = useTheme();
@@ -50,7 +51,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   }, [isStyleComplete, queryClient]);
 
   function run(modeToRun: ExistingImageMode, requestedInstruction?: string) {
-    if (!sourceImageUrl) {
+    if (!sourceImageUrl || !sourceImageKey) {
       return;
     }
     const defaultInstruction =
@@ -66,7 +67,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
       height: deviceSize.targetHeight,
       mode: modeToRun,
       quality: 'hd',
-      sourceImageUrl,
+      sourceImageKey,
       userInputs: {
         idea: requestedInstruction ?? defaultInstruction,
       },
@@ -98,7 +99,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
 
   return (
     <ThemedView variant="card" style={{ gap: spacing.lg }}>
-      <ImagePickerEntry onUploaded={setSourceImageUrl} sourceImageUrl={sourceImageUrl} />
+      <ImagePickerEntry onUploaded={setSourceImage} sourceImageUrl={sourceImageUrl} />
       <View style={{ gap: spacing.sm }}>
         <ThemedText variant="label">
           <Trans>Save to category</Trans>

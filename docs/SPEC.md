@@ -76,20 +76,20 @@ R2；图片 Provider 由服务端配置，密钥仅在服务端保存。
 
 以下为目标契约，具体响应字段由实现与测试同步维护：
 
-| 接口                           | 行为                                                           |
-| ------------------------------ | -------------------------------------------------------------- |
-| GET /me                        | 当前账号信息                                                   |
-| GET /presets                   | 内置及当前账号的自定义风格                                     |
-| GET /categories                | 当前账号全部类型及成功作品数量、封面，支持完整遍历             |
-| POST /categories               | 当前账号内创建类型，同名返回已有类型或明确冲突                 |
-| POST /generate                 | 风格、提示词、categoryId、尺寸、画质；返回 jobId               |
-| GET /jobs                      | 当前账号可恢复的任务列表                                       |
-| GET /jobs/:id                  | 当前账号任务状态，成功时提供 wallpaperId、categoryId、实际尺寸 |
-| GET /wallpapers                | 当前账号作品，支持 categoryId、收藏过滤和分页                  |
-| GET /wallpapers/:id            | 当前账号单张作品详情                                           |
-| PATCH /wallpapers/:id/favorite | 当前账号作品的收藏状态                                         |
-| GET /wallpapers/:id/image      | 经账号鉴权读取图片或获取受控访问凭据                           |
-| POST /uploads/presign          | 完整编辑功能阶段：为当前账号签发源图上传权限                   |
+| 接口                           | 行为                                                                                    |
+| ------------------------------ | --------------------------------------------------------------------------------------- |
+| GET /me                        | 当前账号信息                                                                            |
+| GET /presets                   | 内置及当前账号的自定义风格                                                              |
+| GET /categories                | 当前账号全部类型及成功作品数量、封面，支持完整遍历                                      |
+| POST /categories               | 当前账号内创建类型，同名返回已有类型或明确冲突                                          |
+| POST /generate                 | 风格、提示词、categoryId、尺寸、画质；编辑模式提交账号归属的 sourceImageKey；返回 jobId |
+| GET /jobs                      | 当前账号可恢复的任务列表                                                                |
+| GET /jobs/:id                  | 当前账号任务状态，成功时提供 wallpaperId、categoryId、实际尺寸                          |
+| GET /wallpapers                | 当前账号作品，支持 categoryId、收藏过滤和分页                                           |
+| GET /wallpapers/:id            | 当前账号单张作品详情                                                                    |
+| PATCH /wallpapers/:id/favorite | 当前账号作品的收藏状态                                                                  |
+| GET /wallpapers/:id/image      | 当前账号鉴权后重新签发结果图短期读取凭据                                                |
+| POST /uploads/presign          | 为当前账号签发限定对象、类型和时效的源图上传权限                                        |
 
 生成状态为 pending → processing → succeeded /
 failed。只有图片已持久化且记录完整才返回 succeeded；失败任务可查询、重试，但不作为可用作品呈现。重启与网络重连后从服务端恢复状态，客户端不以 Sheet 生命周期决定任务是否存在。

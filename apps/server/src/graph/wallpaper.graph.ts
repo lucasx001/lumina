@@ -148,30 +148,46 @@ async function resolveDependencies(
         name,
         ownerClerkUserId,
         promptTemplate,
-        styleRefUrl,
+        styleRefKey,
       }) =>
-        prisma.preset.create({
-          data: {
-            category,
-            name,
-            owner: {
-              connectOrCreate: {
-                create: { clerkUserId: ownerClerkUserId },
-                where: { clerkUserId: ownerClerkUserId },
+        prisma.preset
+          .create({
+            data: {
+              category,
+              name,
+              owner: {
+                connectOrCreate: {
+                  create: { clerkUserId: ownerClerkUserId },
+                  where: { clerkUserId: ownerClerkUserId },
+                },
               },
+              params: { colorKeywords, compositionKeywords, materialKeywords },
+              promptTemplate,
+              styleRefUrl: styleRefKey,
             },
-            params: { colorKeywords, compositionKeywords, materialKeywords },
-            promptTemplate,
-            styleRefUrl,
-          },
-        }),
-      findById: (id, clerkUserId) =>
-        prisma.preset.findFirst({
+          })
+          .then((preset) => ({
+            id: preset.id,
+            negativePrompt: preset.negativePrompt,
+            promptTemplate: preset.promptTemplate,
+            styleRefKey: preset.styleRefUrl,
+          })),
+      findById: async (id, clerkUserId) => {
+        const preset = await prisma.preset.findFirst({
           where: {
             id,
             OR: [{ isBuiltIn: true }, ...(clerkUserId ? [{ owner: { clerkUserId } }] : [])],
           },
-        }),
+        });
+        return preset
+          ? {
+              id: preset.id,
+              negativePrompt: preset.negativePrompt,
+              promptTemplate: preset.promptTemplate,
+              styleRefKey: preset.styleRefUrl,
+            }
+          : null;
+      },
     },
     storage:
       supplied.storage ??

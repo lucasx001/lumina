@@ -120,6 +120,41 @@ describe('generation API', () => {
     ).toBe(404);
   });
 
+  it('rejects source image keys owned by another account', async () => {
+    const fixture = createAuthFixture();
+    const app = createApp({
+      clerk: fixture.clerk,
+      generation: {
+        categories: {
+          async findById() {
+            return { id: 'category-a', name: 'Nature' };
+          },
+        },
+        jobs: createJobs(),
+        runner: { async run() {} },
+      },
+      me: fixture.users,
+    });
+
+    const response = await app.request('/generate', {
+      body: JSON.stringify({
+        categoryId: 'category-a',
+        height: 2400,
+        mode: 'edit',
+        sourceImageKey: 'sources/local-2/202609/source.png',
+        userInputs: { idea: 'make it warmer' },
+        width: 1080,
+      }),
+      headers: { ...authHeaders(), 'content-type': 'application/json' },
+      method: 'POST',
+    });
+
+    expect(response.status).toBe(404);
+    await expect(response.json()).resolves.toMatchObject({
+      error: { code: 'SOURCE_IMAGE_NOT_FOUND' },
+    });
+  });
+
   it('only returns a job to its owning account', async () => {
     const fixture = createAuthFixture();
     const jobs = createJobs([

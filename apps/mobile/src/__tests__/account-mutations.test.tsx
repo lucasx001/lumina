@@ -3,10 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
 import { useGenerate } from '@/hooks/use-generate';
 import { useWallpaper } from '@/hooks/use-wallpaper';
+import { useWallpapers } from '@/hooks/use-wallpapers';
 import { changeAccountSession } from '@/lib/account-session';
 import { useGenerationStore } from '@/stores/generation-store';
 import {
   createGeneration,
+  getWallpapers,
   getWallpaper,
   setWallpaperFavorite,
   type GenerateRequest,
@@ -17,6 +19,7 @@ jest.mock('@clerk/expo', () => ({ useAuth: () => ({ userId: mockUserId }) }));
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   createGeneration: jest.fn(),
+  getWallpapers: jest.fn(),
   getGenerationJob: jest.fn(),
   getWallpaper: jest.fn(),
   setWallpaperFavorite: jest.fn(),
@@ -116,6 +119,52 @@ describe('account mutation responses', () => {
       complete({ wallpaper: { ...wallpaper, favorite: true } });
     });
     expect(client.getQueryData(['wallpaper', 'b', 'wallpaper-a'])).toBeUndefined();
+    hook.unmount();
+    client.clear();
+  });
+
+  it('does not invalidate the new account after an old list favorite response', async () => {
+    const wallpaper = {
+      id: 'wallpaper-a',
+      categoryId: 'cat-a',
+      category: 'A',
+      favorite: false,
+      createdAt: '',
+      height: 1,
+      width: 1,
+      mode: 'text2img' as const,
+      status: 'succeeded' as const,
+      resultImageUrl: 'https://image.example/a.png',
+    };
+    jest.mocked(getWallpapers).mockResolvedValue({
+      hasMore: false,
+      items: [wallpaper],
+      limit: 20,
+      page: 1,
+    });
+    let complete!: (value: { wallpaper: typeof wallpaper }) => void;
+    jest.mocked(setWallpaperFavorite).mockImplementation(
+      () =>
+        new Promise((resolve) => {
+          complete = resolve;
+        }),
+    );
+    const { wrapper, client } = setup();
+    const invalidate = jest.spyOn(client, 'invalidateQueries');
+    const hook = renderHook(() => useWallpapers(), { wrapper });
+    await waitFor(() => expect(hook.result.current.wallpapers).toHaveLength(1));
+    act(() => hook.result.current.toggleFavorite(wallpaper));
+    await waitFor(() => expect(setWallpaperFavorite).toHaveBeenCalled());
+    act(() => {
+      mockUserId = 'b';
+      changeAccountSession('b');
+      client.clear();
+    });
+    hook.rerender({});
+    await act(async () => {
+      complete({ wallpaper: { ...wallpaper, favorite: true } });
+    });
+    expect(invalidate).not.toHaveBeenCalledWith({ queryKey: ['wallpapers', 'b'] });
     hook.unmount();
     client.clear();
   });

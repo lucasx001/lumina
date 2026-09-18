@@ -9,7 +9,7 @@ Prisma +
 PostgreSQL 管理 User、Category、Preset、Wallpaper。User.clerkUserId 唯一；Category 含 id、userId、name、normalizedName，同一账号内 normalizedName 唯一。Wallpaper.userId 与 categoryId 为必填，且所选类型必须属于同一账号。Preset 为内置或账号私有。
 
 Wallpaper 保存 presetId、mode、prompt、源图与结果 object
-key、实际宽高、status、quality、favorite 和错误信息。任务记录与作品可以共用 Wallpaper，但成功作品查询只计 succeeded 且有可用产物的记录。类型/作品/收藏查询索引以 userId 为首要归属字段。
+key、实际宽高、status、quality、favorite 和错误信息。任务记录与作品可以共用 Wallpaper，但成功作品查询只计 succeeded 且有可用产物的记录。类型/作品/收藏查询索引以 userId 为首要归属字段。源图 key 必须带账号分区；读取前由服务端校验账号并重新签名。
 
 所有持久化标量映射 snake_case 列（@map），关系导航字段不加 @map；每个模型含 createdAt、updatedAt 和 @@map。数据库约束或事务必须确保作品与类型的账号一致。源图元数据也必须登记所有者。
 
@@ -18,15 +18,17 @@ key、实际宽高、status、quality、favorite 和错误信息。任务记录�
 ## 实现位置
 
 - `apps/server/prisma/schema.prisma`
+- `apps/server/prisma/migrations/20260826000000_initial_schema/migration.sql`
 - `apps/server/prisma/seed.ts`
 - `apps/server/src/lib/db.ts`
 
 ## 当前状态
 
-目标账号/类型结构尚未全部落实，见 A02、A03、C01。
+目标账号/类型结构已落实。两个开发期迁移已合并为单个最终初始化迁移，直接创建当前 Prisma
+schema 的账号、类型和壁纸结构。产品尚未发布，因此该初始化迁移不承担历史数据兼容或旧字段回填。
 
 ## 验收标准
 
-- [ ] 首次登录用户可直接建任务，userId 不为空。
-- [ ] A/B 同名类型独立，跨账号 categoryId 写入被拒绝。
+- [x] 首次登录用户可直接建任务，userId 不为空。
+- [x] A/B 同名类型独立，跨账号 categoryId 写入被拒绝。
 - [ ] 建库、种子及外键约束可重复验证；类型计数只含成功作品。

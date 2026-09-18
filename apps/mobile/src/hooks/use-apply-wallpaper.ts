@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 
 import { setWallpaper, type WallpaperTarget } from '../../modules/expo-wallpaper';
 
+import { getAccountSession, requireCurrentAccount } from '@/lib/account-session';
 import { withLocalWallpaper } from '@/lib/local-wallpaper';
 
 export function useApplyWallpaper(imageUrl: string) {
@@ -16,7 +17,12 @@ export function useApplyWallpaper(imageUrl: string) {
       setApplyingTarget(target);
 
       try {
-        await withLocalWallpaper(imageUrl, (localUri) => setWallpaper(localUri, target));
+        const account = getAccountSession();
+        await withLocalWallpaper(imageUrl, async (localUri) => {
+          requireCurrentAccount(account);
+          await setWallpaper(localUri, target);
+          requireCurrentAccount(account);
+        });
       } catch (cause) {
         const nextError =
           cause instanceof Error

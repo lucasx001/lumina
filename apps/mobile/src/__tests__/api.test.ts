@@ -6,6 +6,7 @@ import {
   getCategories,
   getGenerationJob,
   getWallpaper,
+  getWallpaperImage,
   getPresets,
   getWallpapers,
   resolveApiBaseUrl,
@@ -163,6 +164,7 @@ describe('api client', () => {
     expect(getCategories).toBeInstanceOf(Function);
     expect(getGenerationJob).toBeInstanceOf(Function);
     expect(getWallpaper).toBeInstanceOf(Function);
+    expect(getWallpaperImage).toBeInstanceOf(Function);
     expect(getPresets).toBeInstanceOf(Function);
     expect(getWallpapers).toBeInstanceOf(Function);
   });

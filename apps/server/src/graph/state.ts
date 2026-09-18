@@ -22,7 +22,7 @@ export type WallpaperGraphInput = {
   mode: WallpaperMode;
   quality?: WallpaperQuality;
   presetId?: string;
-  sourceImageUrl?: string;
+  sourceImageKey?: string;
   userId: string;
   userInputs: WallpaperUserInputs;
   wallpaperId?: string;
@@ -35,6 +35,7 @@ export type WallpaperGraphState = WallpaperGraphInput & {
   prompt?: string;
   providerResult?: ImageResult;
   resultImageUrl?: string;
+  sourceImageUrl?: string;
   styleRefUrl?: string;
   wallpaperId?: string;
 };
@@ -52,6 +53,7 @@ export const WallpaperGraphAnnotation = Annotation.Root({
   height: Annotation<number>,
   prompt: Annotation<string | undefined>,
   negativePrompt: Annotation<string | undefined>,
+  sourceImageKey: Annotation<string | undefined>,
   sourceImageUrl: Annotation<string | undefined>,
   styleRefUrl: Annotation<string | undefined>,
   providerResult: Annotation<ImageResult | undefined>,

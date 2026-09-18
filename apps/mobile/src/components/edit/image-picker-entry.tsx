@@ -9,10 +9,11 @@ import { ThemedText } from '@/components/themed-text';
 import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
-import { uploadSourceImage } from '@/lib/api';
+import { uploadSourceImage, type UploadedSourceImage } from '@/lib/api';
+import { getAccountSession, requireCurrentAccount } from '@/lib/account-session';
 
 type ImagePickerEntryProps = {
-  onUploaded: (sourceImageUrl: string) => void;
+  onUploaded: (sourceImage: UploadedSourceImage) => void;
   sourceImageUrl?: string;
 };
 
@@ -27,7 +28,9 @@ export function ImagePickerEntry({ onUploaded, sourceImageUrl }: ImagePickerEntr
 
   async function chooseImage() {
     setError(undefined);
+    const account = getAccountSession();
     try {
+      requireCurrentAccount(account);
       const result = await ImagePicker.launchImageLibraryAsync({
         allowsEditing: true,
         mediaTypes: ['images'],
@@ -43,14 +46,14 @@ export function ImagePickerEntry({ onUploaded, sourceImageUrl }: ImagePickerEntr
         throw new Error(t`Choose a JPEG, PNG, or WebP image.`);
       }
 
-      setLocalUri(asset.uri);
       setIsUploading(true);
-      onUploaded(
-        await uploadSourceImage(
-          asset.uri,
-          contentType as 'image/jpeg' | 'image/png' | 'image/webp',
-        ),
+      const uploaded = await uploadSourceImage(
+        asset.uri,
+        contentType as 'image/jpeg' | 'image/png' | 'image/webp',
       );
+      requireCurrentAccount(account);
+      setLocalUri(asset.uri);
+      onUploaded(uploaded);
     } catch (reason) {
       const nextError =
         reason instanceof Error ? reason : new Error(t`Image upload failed. Try again.`);

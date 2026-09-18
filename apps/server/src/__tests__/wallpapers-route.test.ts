@@ -60,9 +60,17 @@ describe('wallpaper routes', () => {
     expect(detail.status).toBe(200);
     await expect(detail.json()).resolves.toMatchObject({ wallpaper: { id: 'wallpaper-a' } });
 
+    const image = await app.request('/wallpapers/wallpaper-a/image', { headers: authHeaders() });
+    expect(image.status).toBe(200);
+    await expect(image.json()).resolves.toEqual({ url: wallpaper.resultImageUrl });
+
     const otherAccount = await app.request('/wallpapers/wallpaper-a', {
       headers: authHeaders('token-user-b'),
     });
     expect(otherAccount.status).toBe(404);
+    const otherImage = await app.request('/wallpapers/wallpaper-a/image', {
+      headers: authHeaders('token-user-b'),
+    });
+    expect(otherImage.status).toBe(404);
   });
 });

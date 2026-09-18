@@ -20,12 +20,13 @@ const dependencies: WallpaperGraphDependencies = {
             negativePrompt: 'text, watermark',
             promptTemplate:
               'A polished {{idea}} wallpaper in a {{tone}} tone, {{width}}x{{height}}.',
-            styleRefUrl: null,
+            styleRefKey: null,
           }
         : null;
     },
   },
   storage: {
+    getUrl: async (key) => `https://r2.example/${key}`,
     async uploadBuffer(_buffer, key) {
       return { key, url: `https://offline-r2.example/${key}` };
     },

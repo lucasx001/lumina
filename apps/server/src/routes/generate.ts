@@ -8,6 +8,7 @@ import {
   generationRateLimiter,
   type GenerationRateLimiter,
 } from '../lib/generation-rate-limiter.js';
+import { isOwnedSourceImageKey } from '../lib/r2.js';
 import { AppError } from '../middleware/error.js';
 import { requireAuth, type AuthVariables } from '../middleware/auth.js';
 import { syncLocalUser, type LocalUser, type MeRepository } from './me.js';
@@ -28,7 +29,7 @@ const generateRequestSchema = z.object({
   mode: z.enum(wallpaperModes),
   quality: z.enum(wallpaperQualities).default('hd'),
   presetId: z.string().trim().min(1).max(200).optional(),
-  sourceImageUrl: z.url().optional(),
+  sourceImageKey: z.string().trim().min(1).max(500).optional(),
   userInputs: userInputsSchema,
   width: z.number().int().min(256).max(8_192),
 });
@@ -57,7 +58,7 @@ export type GenerationJobRepository = {
     presetId?: string;
     prompt: string;
     quality: string;
-    sourceImageUrl?: string;
+    sourceImageKey?: string;
     status: string;
     userId: string;
     width: number;
@@ -88,7 +89,7 @@ export function createGenerateRoutes(dependencies: GenerateRouteDependencies) {
     }
 
     if (
-      (parsed.data.mode !== 'text2img' && !parsed.data.sourceImageUrl) ||
+      (parsed.data.mode !== 'text2img' && !parsed.data.sourceImageKey) ||
       (parsed.data.mode !== 'style' && !Object.values(parsed.data.userInputs).some(Boolean))
     ) {
       throw new AppError('Invalid generation request.', 400, 'VALIDATION_ERROR');
@@ -104,6 +105,9 @@ export function createGenerateRoutes(dependencies: GenerateRouteDependencies) {
       throw new AppError('Authentication is required.', 401, 'UNAUTHORIZED');
     }
     const category = await resolveCategory(parsed.data.categoryId, user, dependencies.categories);
+    if (parsed.data.sourceImageKey && !isOwnedSourceImageKey(parsed.data.sourceImageKey, user.id)) {
+      throw new AppError('Source image was not found.', 404, 'SOURCE_IMAGE_NOT_FOUND');
+    }
     const jobs = dependencies.jobs ?? (await createPrismaJobRepository());
     const input = parsed.data;
     const rateLimit = (dependencies.rateLimiter ?? generationRateLimiter).check(
@@ -133,7 +137,7 @@ export function createGenerateRoutes(dependencies: GenerateRouteDependencies) {
       presetId: input.presetId,
       prompt: initialPrompt(input.userInputs),
       quality: input.quality,
-      sourceImageUrl: input.sourceImageUrl,
+      sourceImageKey: input.sourceImageKey,
       status: 'pending',
       userId: user.id,
       width: input.width,
@@ -146,7 +150,7 @@ export function createGenerateRoutes(dependencies: GenerateRouteDependencies) {
       mode: input.mode,
       presetId: input.presetId,
       quality: input.quality,
-      sourceImageUrl: input.sourceImageUrl,
+      sourceImageKey: input.sourceImageKey,
       userId: user.id,
       userInputs: input.userInputs,
       wallpaperId: job.id,
@@ -303,9 +307,9 @@ async function createPrismaJobRepository(): Promise<GenerationJobRepository> {
       );
     },
     create: async (data) => {
-      const { sourceImageUrl, ...jobData } = data;
+      const { sourceImageKey, ...jobData } = data;
       const job = await prisma.wallpaper.create({
-        data: { ...jobData, sourceImageKey: sourceImageUrl },
+        data: { ...jobData, sourceImageKey },
       });
       return {
         categoryId: job.categoryId,

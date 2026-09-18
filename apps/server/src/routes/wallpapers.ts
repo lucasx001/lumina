@@ -96,6 +96,20 @@ export function createWallpaperRoutes({
     return context.json({ wallpaper });
   });
 
+  routes.get('/wallpapers/:id/image', async (context) => {
+    const user = await syncLocalUser(context.get('user')?.clerkUserId, clerk, users);
+    const resolvedRepository = repository ?? (await createPrismaWallpaperRepository(storage));
+    const wallpaper = await resolvedRepository.getById({
+      id: context.req.param('id'),
+      userId: user.id,
+    });
+    if (!wallpaper?.resultImageUrl) {
+      throw new AppError('Wallpaper image was not found.', 404, 'WALLPAPER_IMAGE_NOT_FOUND');
+    }
+
+    return context.json({ url: wallpaper.resultImageUrl });
+  });
+
   routes.patch('/wallpapers/:id/favorite', async (context) => {
     const parsed = favoriteRequestSchema.safeParse(await parseRequestBody(context.req.raw));
     if (!parsed.success) {
