@@ -44,5 +44,17 @@ build。数据库、EAS、部署与需凭据的外部验收不作为可复用本
 
 ## 验证要求
 
+### GitHub Actions 耗时优化
+
+CI 将格式与类型检查、Mobile 测试、Server 测试以及三个应用构建拆成六个并行任务。每个构建独享 runner，避免 Expo 与 Next.js 争抢 CPU 和内存；Mobile 仍导出全部平台。所有任务完成后由原有的 quality 检查汇总，任意失败、取消或跳过均不能通过。同一分支或 PR 的新提交会取消旧运行，避免重复任务占用队列。
+
+依赖缓存继续由 setup-vp 管理，Bun 固定为 1.3.11。额外持久化 Jest 转译缓存与 Next.js 的 .next/cache；缓存键包含锁文件和提交，允许同依赖版本复用旧缓存。Jest 按 jest-expo 的转译范围加入 Lingui 和 MessageFormat 的 ESM 依赖，避免将所有加载的依赖都交给 Babel。暂不按路径跳过任务，保留每次提交的完整验证覆盖。
+
+Mobile CI 直接执行 expo
+export，避免 build 自动触发同名生命周期 prebuild 脚本而生成原生工程。公共测试 setup mock
+Clerk，防止无关组件测试初始化真实 SDK 并遗留 MessagePort；认证测试仍通过各自的 mock 验证认证状态。不得用 forceExit 掩盖未释放的句柄。
+
+优化后的真实耗时需在 Actions 中对比同类提交的冷缓存与热缓存运行：分别记录安装、检查、测试和各应用构建耗时，同时区分排队时间与执行时间。并行任务可能增加总 runner 分钟数，主要目标是缩短等待全部检查完成的时间。
+
 文档调整检查格式、内部链接、路径和产品表述。功能实现先跑相关测试，再完成 AGENTS.md 要求的检查、完整测试和生产构建；PR 包含范围、验证与 UI 截图。真机和外部服务结果与 mock 测试分别记录。改写 Expo/React
 Native 代码前读取 [SDK 56 文档](https://docs.expo.dev/versions/v56.0.0/)。

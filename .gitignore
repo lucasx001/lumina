@@ -9,6 +9,7 @@ apps/server/prisma/generated/
 .superpowers/
 .worktrees/
 coverage/
+.cache/
 
 # Expo
 .expo/
