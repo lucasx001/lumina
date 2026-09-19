@@ -1,5 +1,18 @@
 type TestMessage = string | { id?: string; message?: string };
 
+// Unit tests must not initialize Clerk's native runtime and its MessagePorts.
+// Authentication suites provide their own per-test implementations.
+jest.mock('@clerk/expo', () => ({
+  ClerkProvider: ({ children }: { children: unknown }) => children,
+  useAuth: jest.fn(() => ({
+    isLoaded: true,
+    isSignedIn: false,
+    userId: null,
+    getToken: jest.fn().mockResolvedValue(null),
+  })),
+  useUser: jest.fn(() => ({ isLoaded: true, isSignedIn: false, user: null })),
+}));
+
 jest.mock('react-native-toast-message', () => {
   const Toast = Object.assign(() => null, { show: jest.fn(), hide: jest.fn() });
   return { __esModule: true, default: Toast };
