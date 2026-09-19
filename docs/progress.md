@@ -34,6 +34,7 @@
 | [0016 体验与可靠性](./0016-polish.md)                       | 两档画质、限流、反馈组件与收藏基础存在                                               | 见模块验收标准及 0018              |
 | [0017 Lingui 国际化](./0017-i18n-lingui.md)                 | 共享包、Mobile Provider、语言 store 和 Profile 切换已存在                            | 见模块验收标准及 0018              |
 | [0018 Mobile 待办](./0018-mobile-roadmap.md)                | P0/P1 代码与自动化验证已交付                                                         | 真机与外部服务验收；后续按 P2 执行 |
+| [0019 Railway 服务端容器部署](./0019-railway-server.md)     | Docker 两阶段构建、Railway 配置和健康检查已加入                                      | Railway 实际部署与外部服务验收     |
 
 ## 集成验收门槛
 
