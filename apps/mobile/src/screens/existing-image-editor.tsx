@@ -10,8 +10,11 @@ import { Button } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
 import { ResultView } from '@/components/create';
 import { useGenerate } from '@/hooks/use-generate';
+import { useCategories } from '@/hooks/use-categories';
 import { useTheme } from '@/hooks/use-theme';
 import { useCreateStore } from '@/stores/create-store';
+import { getAccountSession, isCurrentAccount } from '@/lib/account-session';
+import { resetCreateWallpaperSession } from '@/lib/create-wallpaper-session';
 import type { WallpaperSize } from '@/lib/useDeviceSize';
 
 import {
@@ -34,10 +37,12 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
   const sourceImageUrl = useCreateStore((state) => state.sourceImageUrl);
   const sourceImageKey = useCreateStore((state) => state.sourceImageKey);
   const setCategory = useCreateStore((state) => state.setCategory);
+  const setCategoryId = useCreateStore((state) => state.setCategoryId);
   const setInstruction = useCreateStore((state) => state.setInstruction);
   const setMode = useCreateStore((state) => state.setMode);
   const setSourceImage = useCreateStore((state) => state.setSourceImage);
   const generation = useGenerate('edit');
+  const categoriesQuery = useCategories();
   const queryClient = useQueryClient();
   const theme = useTheme();
   const hasResult =
@@ -50,10 +55,24 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
     }
   }, [isStyleComplete, queryClient]);
 
-  function run(modeToRun: ExistingImageMode, requestedInstruction?: string) {
+  async function run(modeToRun: ExistingImageMode, requestedInstruction?: string) {
     if (!sourceImageUrl || !sourceImageKey) {
       return;
     }
+    const account = getAccountSession();
+    if (!isCurrentAccount(account)) return;
+    let resolvedCategoryId = categoryId;
+    try {
+      if (!resolvedCategoryId && category.trim()) {
+        const response = await categoriesQuery.createCategory(category.trim());
+        if (!isCurrentAccount(account)) return;
+        resolvedCategoryId = response.category.id;
+        setCategoryId(resolvedCategoryId);
+      }
+    } catch {
+      return;
+    }
+    if (!resolvedCategoryId) return;
     const defaultInstruction =
       modeToRun === 'outpaint'
         ? 'Extend the image to fit my screen naturally.'
@@ -63,7 +82,7 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
             ? 'Extract a reusable wallpaper style from this image.'
             : instruction;
     generation.generate({
-      categoryId: categoryId ?? '',
+      categoryId: resolvedCategoryId,
       height: deviceSize.targetHeight,
       mode: modeToRun,
       quality: 'hd',
@@ -94,7 +113,13 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
         </ThemedView>
       );
     }
-    return <ResultView job={generation.job} onRegenerate={generation.regenerate} />;
+    return (
+      <ResultView
+        job={generation.job}
+        onCreateNew={resetCreateWallpaperSession}
+        onRegenerate={generation.regenerate}
+      />
+    );
   }
 
   return (
@@ -107,7 +132,10 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
         <TextInput
           accessibilityLabel={t`Wallpaper category`}
           maxLength={100}
-          onChangeText={setCategory}
+          onChangeText={(value) => {
+            setCategory(value);
+            setCategoryId(undefined);
+          }}
           placeholder={t`For example: Quiet nights`}
           placeholderTextColor={theme.mutedText}
           style={{
@@ -120,6 +148,33 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
           }}
           value={category}
         />
+        {categoriesQuery.categories.length ? (
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: spacing.xs }}>
+            {categoriesQuery.categories.map((item) => {
+              const selected = item.id === categoryId;
+              return (
+                <Button
+                  key={item.id}
+                  label={item.name}
+                  onPress={() => {
+                    setCategory(item.name);
+                    setCategoryId(item.id);
+                  }}
+                  size="sm"
+                  variant={selected ? 'primary' : 'secondary'}
+                />
+              );
+            })}
+          </View>
+        ) : null}
+        {categoriesQuery.createCategoryError ? (
+          <ErrorState
+            message={categoriesQuery.createCategoryError}
+            onRetry={() => {
+              if (mode) void run(mode);
+            }}
+          />
+        ) : null}
       </View>
       {sourceImageUrl ? <EditModePicker onSelect={setMode} selectedMode={mode} /> : null}
       {mode === 'edit' ? (
@@ -144,31 +199,38 @@ export function ExistingImageEditor({ deviceSize }: ExistingImageEditorProps) {
             value={instruction}
           />
           <ActionButton
-            disabled={!categoryId || !instruction.trim() || generation.isGenerating}
+            disabled={
+              !category.trim() ||
+              !instruction.trim() ||
+              generation.isGenerating ||
+              categoriesQuery.isCreatingCategory
+            }
             label={t`Start editing`}
-            onPress={() => run('edit')}
+            onPress={() => void run('edit')}
           />
         </View>
       ) : null}
       {mode === 'style' ? (
         <StyleToPresetForm
-          disabled={!categoryId}
+          disabled={!category.trim() || categoriesQuery.isCreatingCategory}
           instruction={instruction}
           isSubmitting={generation.isGenerating}
           onChangeInstruction={setInstruction}
-          onSubmit={(value) => run('style', value)}
+          onSubmit={(value) => void run('style', value)}
         />
       ) : null}
       {mode === 'outpaint' || mode === 'upscale' ? (
         <ActionButton
-          disabled={!categoryId || generation.isGenerating}
+          disabled={
+            !category.trim() || generation.isGenerating || categoriesQuery.isCreatingCategory
+          }
           label={mode === 'outpaint' ? t`Extend to screen ratio` : t`Enhance wallpaper`}
-          onPress={() => run(mode)}
+          onPress={() => void run(mode)}
         />
       ) : null}
       {generation.isGenerating ? <LoadingState label={t`Processing your image…`} /> : null}
       {generation.error ? (
-        <ErrorState message={generation.error.message} onRetry={generation.retry} />
+        <ErrorState message={generation.error} onRetry={generation.retry} />
       ) : null}
     </ThemedView>
   );

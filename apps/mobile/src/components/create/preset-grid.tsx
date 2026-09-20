@@ -139,10 +139,7 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
       {presetsQuery.isPending ? (
         <LoadingState label={t`Loading presets…`} />
       ) : presetsQuery.isError ? (
-        <ErrorState
-          message={presetsQuery.error.message}
-          onRetry={() => void presetsQuery.refetch()}
-        />
+        <ErrorState message={presetsQuery.error} onRetry={() => void presetsQuery.refetch()} />
       ) : !presets.length ? (
         <ErrorState
           message={t`No styles are available. Refresh to try again.`}

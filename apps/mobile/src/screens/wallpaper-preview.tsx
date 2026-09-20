@@ -42,10 +42,7 @@ export function WallpaperPreviewScreen() {
   }
   if (wallpaperQuery.error) {
     return (
-      <ErrorState
-        message={wallpaperQuery.error.message}
-        onRetry={() => void wallpaperQuery.refetch()}
-      />
+      <ErrorState message={wallpaperQuery.error} onRetry={() => void wallpaperQuery.refetch()} />
     );
   }
   if (!wallpaper) {

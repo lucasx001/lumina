@@ -1,7 +1,7 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { RemoteImage } from '@/components/remote-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { Pressable, ScrollView, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
@@ -23,7 +23,48 @@ export function CategoryDetailScreen() {
   const wallpapers = useWallpapers({ categoryId }, 50);
   const category = categoriesQuery.categories.find((item) => item.id === categoryId);
   const error = categoriesQuery.error ?? wallpapers.error;
-  const columns = splitColumns(wallpapers.wallpapers);
+  const rows = chunkRows(wallpapers.wallpapers);
+  const listHeader = (
+    <View style={{ gap: spacing.md }}>
+      <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
+        <Pressable
+          accessibilityLabel={t`Back to Home`}
+          accessibilityRole="button"
+          onPress={() => router.back()}
+          style={({ pressed }) => ({
+            alignItems: 'center',
+            borderColor: theme.border,
+            borderRadius: radius.full,
+            borderWidth: 1,
+            height: 48,
+            justifyContent: 'center',
+            opacity: pressed ? 0.72 : 1,
+            width: 48,
+          })}
+        >
+          <AppIcon color={theme.text} name="arrow-left" size={20} />
+        </Pressable>
+        <View style={{ alignItems: 'center', flex: 1 }}>
+          <ThemedText numberOfLines={1} variant="title">
+            {category?.name ?? t`Wallpaper category`}
+          </ThemedText>
+          <ThemedText style={{ color: theme.mutedText }} variant="caption">
+            <Trans>{wallpapers.wallpapers.length} wallpapers</Trans>
+          </ThemedText>
+        </View>
+        <View style={{ width: 48 }} />
+      </View>
+      {error ? <ErrorState message={error} onRetry={() => void wallpapers.refetch()} /> : null}
+      {wallpapers.isPending || categoriesQuery.isPending ? (
+        <LoadingState label={t`Loading wallpapers…`} />
+      ) : null}
+      {!wallpapers.isPending && !wallpapers.error && !wallpapers.wallpapers.length ? (
+        <ThemedText style={{ color: theme.mutedText, textAlign: 'center' }} variant="body">
+          <Trans>No wallpapers in this category yet.</Trans>
+        </ThemedText>
+      ) : null}
+    </View>
+  );
 
   return (
     <>
@@ -32,87 +73,67 @@ export function CategoryDetailScreen() {
         edges={['top', 'left', 'right']}
         style={{ backgroundColor: theme.background, flex: 1 }}
       >
-        <ScrollView
+        <FlatList
           contentContainerStyle={{
-            gap: spacing.md,
+            gap: spacing.sm,
             padding: spacing.md,
             paddingBottom: spacing.xxl,
           }}
-          contentInsetAdjustmentBehavior="automatic"
-        >
-          <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.sm }}>
-            <Pressable
-              accessibilityLabel={t`Back to Home`}
-              accessibilityRole="button"
-              onPress={() => router.back()}
-              style={({ pressed }) => ({
-                alignItems: 'center',
-                borderColor: theme.border,
-                borderRadius: radius.full,
-                borderWidth: 1,
-                height: 48,
-                justifyContent: 'center',
-                opacity: pressed ? 0.72 : 1,
-                width: 48,
-              })}
-            >
-              <AppIcon color={theme.text} name="arrow-left" size={20} />
-            </Pressable>
-            <View style={{ alignItems: 'center', flex: 1 }}>
-              <ThemedText numberOfLines={1} variant="title">
-                {category?.name ?? t`Wallpaper category`}
-              </ThemedText>
-              <ThemedText style={{ color: theme.mutedText }} variant="caption">
-                <Trans>{wallpapers.wallpapers.length} wallpapers</Trans>
-              </ThemedText>
-            </View>
-            <View style={{ width: 48 }} />
-          </View>
-
-          {error ? (
-            <ErrorState message={error.message} onRetry={() => void wallpapers.refetch()} />
-          ) : null}
-          {wallpapers.isPending || categoriesQuery.isPending ? (
-            <LoadingState label={t`Loading wallpapers…`} />
-          ) : null}
-          {!wallpapers.isPending && !wallpapers.error && !wallpapers.wallpapers.length ? (
-            <ThemedText style={{ color: theme.mutedText, textAlign: 'center' }} variant="body">
-              <Trans>No wallpapers in this category yet.</Trans>
-            </ThemedText>
-          ) : null}
-          <View style={{ alignItems: 'flex-start', flexDirection: 'row', gap: spacing.sm }}>
-            {columns.map((items, columnIndex) => (
-              <View key={columnIndex} style={{ flex: 1, gap: spacing.sm }}>
-                {items.map((wallpaper, itemIndex) => (
+          data={rows}
+          initialNumToRender={8}
+          keyExtractor={(_, index) => `row-${index}`}
+          ListFooterComponent={
+            wallpapers.hasNextPage ? (
+              <Pressable
+                accessibilityRole="button"
+                disabled={wallpapers.isFetchingNextPage}
+                onPress={() => void wallpapers.fetchNextPage()}
+                style={{ alignItems: 'center', padding: spacing.md }}
+              >
+                <ThemedText style={{ color: theme.primary }} variant="label">
+                  {wallpapers.isFetchingNextPage ? t`Loading…` : t`Load more`}
+                </ThemedText>
+              </Pressable>
+            ) : null
+          }
+          ListHeaderComponent={listHeader}
+          maxToRenderPerBatch={8}
+          onEndReached={() => {
+            if (wallpapers.hasNextPage && !wallpapers.isFetchingNextPage) {
+              void wallpapers.fetchNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.6}
+          refreshControl={
+            <RefreshControl
+              onRefresh={() => void wallpapers.refetch()}
+              refreshing={wallpapers.isRefetching}
+              tintColor={theme.primary}
+            />
+          }
+          removeClippedSubviews
+          renderItem={({ item: row }) => (
+            <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+              {row.map((wallpaper, index) => (
+                <View key={wallpaper.id} style={{ flex: 1 }}>
                   <WallpaperTile
-                    onRetryImage={() => void wallpapers.refetch()}
-                    index={itemIndex + columnIndex}
-                    key={wallpaper.id}
+                    index={index}
                     onPress={() =>
                       router.push({
                         params: { category: categoryId, wallpaperId: wallpaper.id },
                         pathname: '/category/[category]/[wallpaperId]',
                       })
                     }
+                    onRetryImage={() => void wallpapers.refetch()}
                     wallpaper={wallpaper}
                   />
-                ))}
-              </View>
-            ))}
-          </View>
-          {wallpapers.hasNextPage ? (
-            <Pressable
-              accessibilityRole="button"
-              disabled={wallpapers.isFetchingNextPage}
-              onPress={() => void wallpapers.fetchNextPage()}
-              style={{ alignItems: 'center', padding: spacing.md }}
-            >
-              <ThemedText style={{ color: theme.primary }} variant="label">
-                {wallpapers.isFetchingNextPage ? t`Loading…` : t`Load more`}
-              </ThemedText>
-            </Pressable>
-          ) : null}
-        </ScrollView>
+                </View>
+              ))}
+              {row.length === 1 ? <View style={{ flex: 1 }} /> : null}
+            </View>
+          )}
+          windowSize={7}
+        />
       </SafeAreaView>
     </>
   );
@@ -169,12 +190,10 @@ function WallpaperTile({
   );
 }
 
-function splitColumns(items: WallpaperListItem[]): [WallpaperListItem[], WallpaperListItem[]] {
-  return items.reduce<[WallpaperListItem[], WallpaperListItem[]]>(
-    (columns, item, index) => {
-      columns[index % 2].push(item);
-      return columns;
-    },
-    [[], []],
-  );
+function chunkRows(items: WallpaperListItem[]): WallpaperListItem[][] {
+  const rows: WallpaperListItem[][] = [];
+  for (let index = 0; index < items.length; index += 2) {
+    rows.push(items.slice(index, index + 2));
+  }
+  return rows;
 }
