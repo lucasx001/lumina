@@ -21,8 +21,7 @@ key 与账号所有权，业务 API 验证所属账号后提供读取方式。
 ## 当前状态
 
 R2 上传和签名基础已存在。结果图和源图只保存稳定 object
-key；所有读取地址均为短期签名 URL，`R2_PUBLIC_BASE_URL`
-仅为旧部署配置保留且不会生成公开地址。生成请求只能提交 `sources/{localUserId}/...`
+key；所有读取地址均为短期签名 URL。生成请求只能提交 `sources/{localUserId}/...`
 的源图 key，服务端按账号前缀校验后才会签发 Provider 使用的 URL。`GET /wallpapers/:id/image`
 在每次请求时重新鉴权并签发结果图 URL。
 

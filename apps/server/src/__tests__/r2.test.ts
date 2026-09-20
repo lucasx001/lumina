@@ -51,10 +51,7 @@ describe('generateWallpaperKey', () => {
 describe('R2Storage', () => {
   it('reads actual dimensions from the persisted image bytes', async () => {
     const { client } = createClient();
-    const storage = createR2Storage(
-      { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client, ...signedUrlDependency() },
-    );
+    const storage = createR2Storage(config, { client, ...signedUrlDependency() });
     const png = Buffer.from(
       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jmXcAAAAASUVORK5CYII=',
       'base64',
@@ -65,10 +62,7 @@ describe('R2Storage', () => {
   });
   it('uploads a buffer and returns a signed URL', async () => {
     const { client, send } = createClient();
-    const storage = createR2Storage(
-      { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client, ...signedUrlDependency() },
-    );
+    const storage = createR2Storage(config, { client, ...signedUrlDependency() });
     const image = Buffer.from('image bytes');
 
     await expect(
@@ -96,10 +90,7 @@ describe('R2Storage', () => {
       .mockResolvedValue(
         new Response('image bytes', { headers: { 'content-type': 'image/webp; charset=binary' } }),
       );
-    const storage = createR2Storage(
-      { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client, fetch, ...signedUrlDependency() },
-    );
+    const storage = createR2Storage(config, { client, fetch, ...signedUrlDependency() });
 
     await storage.uploadFromUrl(
       'https://provider.example.com/image.webp',
@@ -122,10 +113,7 @@ describe('R2Storage', () => {
     const folder = await mkdtemp(join(tmpdir(), 'lumina-r2-'));
     const filePath = join(folder, 'image.png');
     await writeFile(filePath, 'image bytes');
-    const storage = createR2Storage(
-      { ...config, publicBaseUrl: 'https://images.example.com' },
-      { client, ...signedUrlDependency() },
-    );
+    const storage = createR2Storage(config, { client, ...signedUrlDependency() });
 
     await storage.uploadFile(filePath, 'wallpapers/202607/image.png', 'image/png');
 

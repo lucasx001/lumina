@@ -63,7 +63,6 @@ async function createStorage(): Promise<Pick<R2Storage, 'createPresignedPutUrl' 
     accountId: env.R2_ACCOUNT_ID,
     bucket: env.R2_BUCKET,
     endpoint: env.R2_ENDPOINT,
-    publicBaseUrl: env.R2_PUBLIC_BASE_URL,
     secretAccessKey: env.R2_SECRET_ACCESS_KEY,
   });
 }

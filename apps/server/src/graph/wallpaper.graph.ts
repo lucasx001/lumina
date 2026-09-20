@@ -11,7 +11,7 @@ import {
   type WallpaperUserInputs,
 } from './state.js';
 import { createWallpaperNodes } from './nodes/wallpaper.nodes.js';
-import type { PromptEnricher, WallpaperGraphDependencies } from './nodes/types.js';
+import type { WallpaperGraphDependencies } from './nodes/types.js';
 
 export type { WallpaperGraphDependencies };
 export type {
@@ -32,7 +32,6 @@ export function createWallpaperGraph(dependencies: WallpaperGraphDependencies): 
   return (
     new StateGraph(WallpaperGraphAnnotation)
       .addNode('resolvePreset', nodes.resolvePreset)
-      .addNode('enrichPrompt', nodes.enrichPrompt)
       .addNode('generate', nodes.generate)
       .addNode('edit', nodes.edit)
       .addNode('outpaint', nodes.outpaint)
@@ -40,9 +39,8 @@ export function createWallpaperGraph(dependencies: WallpaperGraphDependencies): 
       .addNode('upscale', nodes.upscale)
       .addNode('persist', nodes.persist)
       .addEdge(START, 'resolvePreset')
-      .addEdge('resolvePreset', 'enrichPrompt')
       // TODO: moderation / watermark / policy checks
-      .addConditionalEdges('enrichPrompt', routeMode, {
+      .addConditionalEdges('resolvePreset', routeMode, {
         text2img: 'generate',
         edit: 'edit',
         outpaint: 'outpaint',
@@ -128,15 +126,8 @@ async function resolveDependencies(
     import('../providers/index.js'),
   ]);
   const env = loadEnv();
-  const enrichPrompt = env.ENRICH_PROMPT
-    ? createOpenAIPromptEnricher({
-        OPENAI_API_KEY: env.OPENAI_API_KEY as string,
-        OPENAI_PROMPT_MODEL: env.OPENAI_PROMPT_MODEL as string,
-      })
-    : undefined;
 
   return {
-    enrichPrompt: supplied.enrichPrompt ?? enrichPrompt,
     imageProvider: supplied.imageProvider ?? getImageProvider(env),
     onWallpaperCreated,
     presets: supplied.presets ?? {
@@ -196,7 +187,6 @@ async function resolveDependencies(
         accountId: env.R2_ACCOUNT_ID,
         bucket: env.R2_BUCKET,
         endpoint: env.R2_ENDPOINT,
-        publicBaseUrl: env.R2_PUBLIC_BASE_URL,
         secretAccessKey: env.R2_SECRET_ACCESS_KEY,
       }),
     wallpapers: supplied.wallpapers ?? {
@@ -230,62 +220,4 @@ async function resolveDependencies(
       },
     },
   };
-}
-
-function createOpenAIPromptEnricher(env: {
-  OPENAI_API_KEY: string;
-  OPENAI_PROMPT_MODEL: string;
-}): PromptEnricher {
-  return async (state) => {
-    const response = await fetch('https://api.openai.com/v1/responses', {
-      body: JSON.stringify({
-        input: `Expand this wallpaper prompt into a concise, professional image-generation prompt. Preserve the subject and avoid any text or watermark instructions.\n\n${state.prompt}`,
-        model: env.OPENAI_PROMPT_MODEL,
-      }),
-      headers: {
-        Authorization: `Bearer ${env.OPENAI_API_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      method: 'POST',
-    });
-
-    if (!response.ok) {
-      throw new Error(`OpenAI prompt enrichment failed: HTTP ${response.status}.`);
-    }
-
-    const outputText = extractResponseOutputText(await response.json());
-    if (!outputText) {
-      throw new Error('OpenAI prompt enrichment returned no text.');
-    }
-
-    return outputText;
-  };
-}
-
-function extractResponseOutputText(payload: unknown): string | undefined {
-  if (!payload || typeof payload !== 'object') {
-    return undefined;
-  }
-
-  const response = payload as {
-    output?: Array<{ content?: Array<{ text?: unknown; type?: unknown }> }>;
-    output_text?: unknown;
-  };
-  if (typeof response.output_text === 'string' && response.output_text.trim()) {
-    return response.output_text.trim();
-  }
-
-  for (const item of response.output ?? []) {
-    for (const content of item.content ?? []) {
-      if (
-        content.type === 'output_text' &&
-        typeof content.text === 'string' &&
-        content.text.trim()
-      ) {
-        return content.text.trim();
-      }
-    }
-  }
-
-  return undefined;
 }

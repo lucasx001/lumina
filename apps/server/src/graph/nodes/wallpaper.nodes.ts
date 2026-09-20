@@ -59,13 +59,6 @@ export function createWallpaperNodes(dependencies: WallpaperGraphDependencies) {
         wallpaperId,
       };
     },
-    enrichPrompt: async (state: WallpaperGraphState) => {
-      if (!dependencies.enrichPrompt) {
-        return {};
-      }
-
-      return { prompt: await dependencies.enrichPrompt(state) };
-    },
     generate: async (state: WallpaperGraphState) => ({
       providerResult: await dependencies.imageProvider.textToImage(toImageSpec(state)),
     }),
