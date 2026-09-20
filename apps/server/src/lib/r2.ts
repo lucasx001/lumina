@@ -24,8 +24,6 @@ export type R2Config = {
   accessKeyId: string;
   bucket: string;
   endpoint: string;
-  /** Deprecated compatibility field; all asset URLs are signed regardless of this value. */
-  publicBaseUrl?: string;
   secretAccessKey: string;
 };
 

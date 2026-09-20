@@ -1,5 +1,6 @@
 import { useLingui } from '@lingui/react/macro';
 import { useCallback, useState } from 'react';
+import { Platform } from 'react-native';
 
 import { Asset, requestPermissionsAsync } from 'expo-media-library';
 import { isAvailableAsync, shareAsync } from 'expo-sharing';
@@ -21,6 +22,11 @@ export function useSaveAndShare(imageUrl: string) {
     try {
       const account = getAccountSession();
       requireCurrentAccount(account);
+      if (Platform.OS === 'web') {
+        await downloadWebImage(imageUrl);
+        requireCurrentAccount(account);
+        return;
+      }
       const permission = await requestPermissionsAsync(true, ['photo']);
       requireCurrentAccount(account);
       if (permission.status !== 'granted') {
@@ -66,4 +72,20 @@ export function useSaveAndShare(imageUrl: string) {
   }, [imageUrl, t]);
 
   return { activeAction, error, saveWallpaper, shareWallpaper };
+}
+
+async function downloadWebImage(imageUrl: string) {
+  const response = await fetch(imageUrl);
+  if (!response.ok) throw new Error('Unable to download wallpaper.');
+  const blob = await response.blob();
+  const objectUrl = URL.createObjectURL(blob);
+  try {
+    const anchor = document.createElement('a');
+    anchor.href = objectUrl;
+    anchor.download = 'lumina-wallpaper.jpg';
+    anchor.rel = 'noreferrer';
+    anchor.click();
+  } finally {
+    URL.revokeObjectURL(objectUrl);
+  }
 }

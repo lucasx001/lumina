@@ -7,8 +7,9 @@
 
 通过 ImageProvider 提供 textToImage、editImage、outpaint、upscale、extractStyle 能力边界。每次文生图返回一张图片，输出按实际尺寸记录。供应商临时结果必须持久化到 R2 后交付。
 
-Provider 在服务端配置。当前工厂在 OPENAI_IMAGE_PROVIDER_ENABLED 时选择 codex.ts 中的 OpenAI
-HTTP 实现，否则按 SILICONFLOW_PROVIDER_ENABLED 选择 SiliconFlow 或 mock。模型名及请求限制由配置和实际 Provider 验证，不写成固定产品承诺。
+Provider 在服务端配置。当前工厂按 SILICONFLOW_PROVIDER_ENABLED 选择 SiliconFlow 或 mock。模型名及请求限制由配置和实际 Provider 验证，不写成固定产品承诺。
+
+提示词由预设模板和用户输入直接组合，不再执行额外的模型润色。SiliconFlow 的 FLUX.2 适配支持文生图、图片编辑和扩图；放大和风格提取仍返回结构化能力错误。
 
 未支持的操作返回结构化能力错误。Provider 认证、限流、超时与服务失败需要区分；临时失败有限重试，失败不能伪装成成功图片。
 
@@ -17,7 +18,6 @@ HTTP 实现，否则按 SILICONFLOW_PROVIDER_ENABLED 选择 SiliconFlow 或 mock
 - `apps/server/src/providers/types.ts`
 - `apps/server/src/providers/index.ts`
 - `apps/server/src/providers/siliconflow.ts`
-- `apps/server/src/providers/codex.ts`
 - `apps/server/src/providers/mock.ts`
 
 ## 当前状态

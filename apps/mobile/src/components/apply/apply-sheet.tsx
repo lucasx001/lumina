@@ -109,12 +109,24 @@ export function ApplySheet({ imageUrl, onDismiss, visible, onRetryImage }: Apply
               ))}
             </>
           ) : Platform.OS === 'web' ? (
-            <ThemedText variant="caption">
-              <Trans>
-                Web cannot set system wallpaper. Save the image from your browser, then apply it in
-                system settings.
-              </Trans>
-            </ThemedText>
+            <>
+              <ThemedText variant="caption">
+                <Trans>
+                  Web cannot set system wallpaper. Download the image, then apply it in system
+                  settings.
+                </Trans>
+              </ThemedText>
+              <Button
+                disabled={disabled}
+                fullWidth
+                icon="download"
+                label={activeAction === 'save' ? t`Downloading…` : t`Download image`}
+                loading={activeAction === 'save'}
+                onPress={() => void runAction(saveWallpaper, t`Wallpaper downloaded.`)}
+                testID="download-wallpaper"
+                variant="primary"
+              />
+            </>
           ) : (
             <ThemedText
               style={{ color: theme.mutedText }}

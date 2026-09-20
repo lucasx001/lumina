@@ -17,8 +17,7 @@ export function GenerationTasks() {
   const active = jobs.filter((job) => job.status === 'pending' || job.status === 'processing');
   const latestFinished = jobs.find((job) => job.status === 'succeeded' || job.status === 'failed');
   const visible = [...active, ...(latestFinished ? [latestFinished] : [])];
-  if (query.error)
-    return <ErrorState message={query.error.message} onRetry={() => void query.refetch()} />;
+  if (query.error) return <ErrorState message={query.error} onRetry={() => void query.refetch()} />;
   if (!visible.length) return null;
   return (
     <View style={{ gap: spacing.sm }}>

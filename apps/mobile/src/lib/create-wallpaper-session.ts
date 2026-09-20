@@ -4,4 +4,5 @@ import { useGenerationStore } from '@/stores/generation-store';
 export function resetCreateWallpaperSession() {
   useCreateStore.getState().reset();
   useGenerationStore.getState().reset('create');
+  useGenerationStore.getState().reset('edit');
 }

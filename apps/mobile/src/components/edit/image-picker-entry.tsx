@@ -84,7 +84,7 @@ export function ImagePickerEntry({ onUploaded, sourceImageUrl }: ImagePickerEntr
         />
       ) : null}
       {isUploading ? <LoadingState label={t`Uploading image securely…`} /> : null}
-      {error ? <ErrorState message={error.message} onRetry={() => void chooseImage()} /> : null}
+      {error ? <ErrorState message={error} onRetry={() => void chooseImage()} /> : null}
       <Button
         disabled={isUploading}
         icon="upload"

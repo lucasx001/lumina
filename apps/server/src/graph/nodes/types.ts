@@ -1,7 +1,6 @@
 import type { Wallpaper } from '../../../prisma/generated/prisma/client.js';
 import type { R2Storage } from '../../lib/r2.js';
 import type { ImageProvider } from '../../providers/types.js';
-import type { WallpaperGraphState } from '../state.js';
 
 export type PresetRecord = {
   id: string;
@@ -48,10 +47,7 @@ export type WallpaperRepository = {
   ): Promise<Wallpaper>;
 };
 
-export type PromptEnricher = (state: WallpaperGraphState) => Promise<string>;
-
 export type WallpaperGraphDependencies = {
-  enrichPrompt?: PromptEnricher;
   imageProvider: ImageProvider;
   onWallpaperCreated?: (wallpaperId: string) => void;
   presets: {

@@ -68,9 +68,7 @@ export function HomeScreen() {
         ) : null}
       </View>
 
-      {error ? (
-        <ErrorState message={error.message} onRetry={() => void categoriesQuery.refetch()} />
-      ) : null}
+      {error ? <ErrorState message={error} onRetry={() => void categoriesQuery.refetch()} /> : null}
       <GenerationTasks />
       {categoriesQuery.isLoading ? <LoadingState label={t`Loading categories…`} /> : null}
       {!error && !categoriesQuery.isLoading && !categories.length ? (

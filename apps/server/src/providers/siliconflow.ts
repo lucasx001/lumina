@@ -6,7 +6,7 @@ import {
 } from './types.js';
 
 export const DEFAULT_SILICONFLOW_IMAGE_MODEL = 'black-forest-labs/FLUX.2-pro';
-const SILICONFLOW_IMAGE_ENDPOINT = 'https://api.siliconflow.com/v1/images/generations';
+const SILICONFLOW_IMAGE_ENDPOINT = 'https://api.siliconflow.cn/v1/images/generations';
 
 type SiliconFlowImageResponse = {
   images?: Array<{ url?: unknown }>;
@@ -33,6 +33,26 @@ export class SiliconFlowImageProvider implements ImageProvider {
   }
 
   async textToImage(spec: ImageSpec): Promise<ImageResult> {
+    return this.requestImage(spec);
+  }
+
+  async editImage(spec: ImageSpec): Promise<ImageResult> {
+    return this.requestImage(requireSourceImage(spec, 'edit_image'));
+  }
+
+  async outpaint(spec: ImageSpec): Promise<ImageResult> {
+    return this.requestImage(requireSourceImage(spec, 'outpaint'));
+  }
+
+  async upscale(_spec: ImageSpec): Promise<ImageResult> {
+    throw unsupportedOperation('upscale');
+  }
+
+  async extractStyle(_spec: ImageSpec): Promise<ImageResult> {
+    throw unsupportedOperation('extract_style');
+  }
+
+  private async requestImage(spec: ImageSpec): Promise<ImageResult> {
     validateSpec(spec);
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), this.options.timeoutMs);
@@ -63,22 +83,6 @@ export class SiliconFlowImageProvider implements ImageProvider {
       clearTimeout(timeout);
     }
   }
-
-  async editImage(_spec: ImageSpec): Promise<ImageResult> {
-    throw unsupportedOperation('edit_image');
-  }
-
-  async outpaint(_spec: ImageSpec): Promise<ImageResult> {
-    throw unsupportedOperation('outpaint');
-  }
-
-  async upscale(_spec: ImageSpec): Promise<ImageResult> {
-    throw unsupportedOperation('upscale');
-  }
-
-  async extractStyle(_spec: ImageSpec): Promise<ImageResult> {
-    throw unsupportedOperation('extract_style');
-  }
 }
 
 export function mapSiliconFlowError(error: unknown, timedOut = false): ImageProviderError {
@@ -98,12 +102,24 @@ function toRequestBody(model: string, spec: ImageSpec): Record<string, unknown> 
     model,
     prompt: spec.prompt,
     image_size: `${spec.width}x${spec.height}`,
-    batch_size: 1,
     output_format: 'png',
     ...(spec.negativePrompt ? { negative_prompt: spec.negativePrompt } : {}),
     ...(spec.seed === undefined ? {} : { seed: spec.seed }),
     ...(spec.quality === 'high' ? { inference_steps: 50 } : {}),
+    ...(spec.sourceImageUrl ? { input_image: spec.sourceImageUrl } : {}),
+    ...(spec.styleRefUrl ? { input_image_2: spec.styleRefUrl } : {}),
   };
+}
+
+function requireSourceImage(spec: ImageSpec, operation: string): ImageSpec {
+  if (!spec.sourceImageUrl) {
+    throw new ImageProviderError(
+      'INVALID_INPUT',
+      `SiliconFlow ${operation} requires a source image URL.`,
+    );
+  }
+
+  return spec;
 }
 
 async function mapSiliconFlowResponseError(response: Response): Promise<ImageProviderError> {
@@ -208,6 +224,15 @@ function validateSpec(spec: ImageSpec): void {
 
   if (spec.seed !== undefined && (!Number.isInteger(spec.seed) || spec.seed < 0)) {
     throw new ImageProviderError('INVALID_INPUT', 'Image seed must be a non-negative integer.');
+  }
+
+  for (const [name, value] of [
+    ['source image', spec.sourceImageUrl],
+    ['style reference image', spec.styleRefUrl],
+  ] as const) {
+    if (value !== undefined && !isHttpsUrl(value)) {
+      throw new ImageProviderError('INVALID_INPUT', `${name} URL must use HTTPS.`);
+    }
   }
 }
 

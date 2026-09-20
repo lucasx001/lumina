@@ -26,19 +26,10 @@ const envSchema = z
     R2_ACCESS_KEY_ID: nonEmptyString,
     R2_SECRET_ACCESS_KEY: nonEmptyString,
     R2_ENDPOINT: z.url(),
-    // Kept for deployment compatibility; R2 assets are always served by signed URLs.
-    R2_PUBLIC_BASE_URL: z.url().optional(),
     SILICONFLOW_PROVIDER_ENABLED: z.stringbool().default(false),
     SILICONFLOW_API_KEY: nonEmptyString.optional(),
     SILICONFLOW_IMAGE_MODEL: nonEmptyString.default('black-forest-labs/FLUX.2-pro'),
     SILICONFLOW_IMAGE_TIMEOUT_MS: z.coerce.number().int().positive().default(120000),
-    ENRICH_PROMPT: z.stringbool().default(false),
-    OPENAI_API_KEY: nonEmptyString.optional(),
-    OPENAI_PROMPT_MODEL: nonEmptyString.optional(),
-    OPENAI_IMAGE_PROVIDER_ENABLED: z.stringbool().default(false),
-    OPENAI_IMAGE_MODEL: nonEmptyString.default('gpt-image-2'),
-    OPENAI_IMAGE_TIMEOUT_MS: z.coerce.number().int().positive().default(120000),
-    OPENAI_STYLE_MODEL: nonEmptyString.default('gpt-5.6'),
     CORS_ORIGIN: z.string().optional(),
   })
   .superRefine((env, context) => {
@@ -47,30 +38,6 @@ const envSchema = z
         code: 'custom',
         message: 'SILICONFLOW_API_KEY is required when SILICONFLOW_PROVIDER_ENABLED is true.',
         path: ['SILICONFLOW_API_KEY'],
-      });
-    }
-
-    if (env.ENRICH_PROMPT && !env.OPENAI_API_KEY) {
-      context.addIssue({
-        code: 'custom',
-        message: 'OPENAI_API_KEY is required when ENRICH_PROMPT is true.',
-        path: ['OPENAI_API_KEY'],
-      });
-    }
-
-    if (env.ENRICH_PROMPT && !env.OPENAI_PROMPT_MODEL) {
-      context.addIssue({
-        code: 'custom',
-        message: 'OPENAI_PROMPT_MODEL is required when ENRICH_PROMPT is true.',
-        path: ['OPENAI_PROMPT_MODEL'],
-      });
-    }
-
-    if (env.OPENAI_IMAGE_PROVIDER_ENABLED && !env.OPENAI_API_KEY) {
-      context.addIssue({
-        code: 'custom',
-        message: 'OPENAI_API_KEY is required when OPENAI_IMAGE_PROVIDER_ENABLED is true.',
-        path: ['OPENAI_API_KEY'],
       });
     }
   });

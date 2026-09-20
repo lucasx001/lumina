@@ -18,7 +18,6 @@ describe('loadEnv', () => {
     const config = loadEnv(validEnv);
 
     expect(config.PORT).toBe(3000);
-    expect(config.ENRICH_PROMPT).toBe(false);
     expect(config.SILICONFLOW_PROVIDER_ENABLED).toBe(false);
     expect(config.SILICONFLOW_IMAGE_MODEL).toBe('black-forest-labs/FLUX.2-pro');
     expect(getCorsOrigins(config)).toEqual([]);
@@ -54,15 +53,5 @@ describe('loadEnv', () => {
     expect(() => loadSiliconFlowEnv({ SILICONFLOW_PROVIDER_ENABLED: 'true' })).toThrow(
       'SILICONFLOW_API_KEY',
     );
-  });
-
-  it('requires OpenAI configuration when prompt enrichment is enabled', () => {
-    expect(() => loadEnv({ ...validEnv, ENRICH_PROMPT: 'true' })).toThrow(
-      'OPENAI_API_KEY is required',
-    );
-
-    expect(() =>
-      loadEnv({ ...validEnv, ENRICH_PROMPT: 'true', OPENAI_API_KEY: 'sk-test' }),
-    ).toThrow('OPENAI_PROMPT_MODEL is required');
   });
 });

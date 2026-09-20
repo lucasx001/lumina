@@ -11,7 +11,6 @@ const storage = createR2Storage({
   accountId: config.R2_ACCOUNT_ID,
   bucket: config.R2_BUCKET,
   endpoint: config.R2_ENDPOINT,
-  publicBaseUrl: config.R2_PUBLIC_BASE_URL,
   secretAccessKey: config.R2_SECRET_ACCESS_KEY,
 });
 const filePath = process.argv[2];
