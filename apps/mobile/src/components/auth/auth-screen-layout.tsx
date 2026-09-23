@@ -120,11 +120,8 @@ export function AuthScreenLayout({
             <View style={{ gap: 18, marginTop: 34 }}>{children}</View>
             {legalNote ? <View style={{ marginTop: 12 }}>{legalNote}</View> : null}
 
-            <View style={{ alignItems: 'center', gap: spacing.sm, marginTop: 'auto' }}>
-              {footer}
-            </View>
             {showGoogle ? (
-              <>
+              <View style={{ gap: spacing.sm, marginTop: spacing.xl }}>
                 <View style={{ alignItems: 'center', flexDirection: 'row', gap: spacing.md }}>
                   <View style={{ backgroundColor: theme.border, flex: 1, height: 1 }} />
                   <ThemedText style={{ color: theme.mutedText }} variant="caption">
@@ -138,8 +135,11 @@ export function AuthScreenLayout({
                   isLoading={googleLoading}
                   onPress={onGooglePress}
                 />
-              </>
+              </View>
             ) : null}
+            <View style={{ alignItems: 'center', gap: spacing.sm, marginTop: 'auto' }}>
+              {footer}
+            </View>
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

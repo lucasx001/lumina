@@ -84,6 +84,8 @@ export function SignInScreen() {
       googleLoading={isGoogleLoading}
       kicker={t`Welcome back`}
       onGooglePress={() => void signInWithGoogle()}
+      showGoogle
+      socialLabel={t`Or continue with`}
       title={t`Let the idea keep growing.`}
     >
       <AuthTextField

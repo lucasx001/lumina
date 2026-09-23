@@ -5,7 +5,12 @@ import * as SecureStore from 'expo-secure-store';
 import { useLocaleStore } from '@/stores/locale-store';
 
 jest.mock('@lumina/i18n/mobile', () => ({
-  createMobileI18n: jest.fn(async (locale: string) => ({ locale })),
+  createMobileI18n: jest.fn(async (locale: string) => ({
+    locale,
+    load: jest.fn(),
+    activate: jest.fn(),
+  })),
+  loadMobileMessages: jest.fn(async () => ({})),
   mobileLocaleStorageKey: 'lumina.locale',
 }));
 
@@ -44,11 +49,14 @@ describe('useLocaleStore', () => {
     jest.mocked(SecureStore.setItemAsync).mockResolvedValue();
 
     await useLocaleStore.getState().initialize();
+    const originalI18n = useLocaleStore.getState().i18n;
     await useLocaleStore.getState().setLocale('zh-CN');
 
     expect(getLocales).toHaveBeenCalled();
     expect(createMobileI18n).toHaveBeenNthCalledWith(1, 'en');
     expect(SecureStore.setItemAsync).toHaveBeenCalledWith(mobileLocaleStorageKey, 'zh-CN');
     expect(useLocaleStore.getState().locale).toBe('zh-CN');
+    expect(useLocaleStore.getState().i18n).toBe(originalI18n);
+    expect(createMobileI18n).toHaveBeenCalledTimes(1);
   });
 });

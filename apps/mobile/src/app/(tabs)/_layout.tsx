@@ -41,7 +41,7 @@ export default function TabLayout() {
             router.push('/create-wallpaper');
           },
         }}
-        name="(add)"
+        name="add"
         options={{
           tabBarIcon: () => (
             <View

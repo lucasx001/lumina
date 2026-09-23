@@ -1038,6 +1038,27 @@ msgstr "Sign in with Google to keep your private wallpaper space available anywh
 msgid "Wallpaper saved to Photos."
 msgstr "Wallpaper saved to Photos."
 
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Or continue with"
+msgstr "Or continue with"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Use at least 8 characters with a mix of letters, numbers, and symbols."
+msgstr "Use at least 8 characters with a mix of letters, numbers, and symbols."
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Password strength: weak"
+msgstr "Password strength: weak"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Password strength: fair"
+msgstr "Password strength: fair"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Password strength: strong"
+msgstr "Password strength: strong"
+
 #: apps/mobile/src/components/create/preset-grid.tsx
 msgid "No styles are available. Refresh to try again."
 msgstr "No styles are available. Refresh to try again."

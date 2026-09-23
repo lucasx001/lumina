@@ -1,7 +1,7 @@
 import { useLingui } from '@lingui/react/macro';
 import { Image, type ImageProps } from 'expo-image';
 import { useState } from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import { Button } from '@/components/ui';
 
 /** Remounts a failed image without caching private account images on disk. */
@@ -12,6 +12,7 @@ export function RemoteImage(props: ImageProps & { onRetry?: () => void }) {
 function RetryableImage({ style, onRetry, ...props }: ImageProps & { onRetry?: () => void }) {
   const { t } = useLingui();
   const [failed, setFailed] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [attempt, setAttempt] = useState(0);
   return (
     <View style={[style, { overflow: 'hidden' }]}>
@@ -19,10 +20,26 @@ function RetryableImage({ style, onRetry, ...props }: ImageProps & { onRetry?: (
         {...props}
         key={attempt}
         cachePolicy="memory"
-        style={{ width: '100%', height: '100%' }}
-        onError={() => setFailed(true)}
-        onLoad={() => setFailed(false)}
+        style={StyleSheet.absoluteFill}
+        onError={(event) => {
+          setFailed(true);
+          setLoading(false);
+          props.onError?.(event);
+        }}
+        onLoad={(event) => {
+          setFailed(false);
+          setLoading(false);
+          props.onLoad?.(event);
+        }}
       />
+      {loading ? (
+        <View
+          pointerEvents="none"
+          style={[StyleSheet.absoluteFill, { alignItems: 'center', justifyContent: 'center' }]}
+        >
+          <ActivityIndicator testID="remote-image-loading" />
+        </View>
+      ) : null}
       {failed ? (
         <View
           style={{
@@ -40,6 +57,7 @@ function RetryableImage({ style, onRetry, ...props }: ImageProps & { onRetry?: (
             variant="secondary"
             onPress={() => {
               setFailed(false);
+              setLoading(true);
               setAttempt((value) => value + 1);
               onRetry?.();
             }}

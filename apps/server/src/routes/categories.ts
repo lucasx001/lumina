@@ -105,34 +105,29 @@ async function createPrismaCategoryRepository(
       const categories = await prisma.category.findMany({
         orderBy: { name: 'asc' },
         where: { userId },
+        include: {
+          wallpapers: {
+            orderBy: { createdAt: 'desc' },
+            select: { resultImageKey: true },
+            take: 2,
+            where: { resultImageKey: { not: null }, status: 'succeeded', userId },
+          },
+          _count: {
+            select: {
+              wallpapers: {
+                where: { resultImageKey: { not: null }, status: 'succeeded', userId },
+              },
+            },
+          },
+        },
       });
 
       return Promise.all(
         categories.map(async (category) => {
-          const wallpapers = await prisma.wallpaper.findMany({
-            orderBy: { createdAt: 'desc' },
-            select: { resultImageKey: true },
-            take: 2,
-            where: {
-              categoryId: category.id,
-              resultImageKey: { not: null },
-              status: 'succeeded',
-              userId,
-            },
-          });
-          const count = await prisma.wallpaper.count({
-            where: {
-              categoryId: category.id,
-              resultImageKey: { not: null },
-              status: 'succeeded',
-              userId,
-            },
-          });
-
           return {
-            count,
+            count: category._count.wallpapers,
             coverImageUrls: await Promise.all(
-              wallpapers.flatMap((wallpaper) =>
+              category.wallpapers.flatMap((wallpaper) =>
                 wallpaper.resultImageKey ? [storage.getUrl(wallpaper.resultImageKey)] : [],
               ),
             ),

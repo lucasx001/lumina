@@ -20,7 +20,6 @@ const envSchema = z
     PORT: z.coerce.number().int().min(1).max(65535).default(3000),
     DATABASE_URL: nonEmptyString,
     CLERK_SECRET_KEY: nonEmptyString,
-    CLERK_PUBLISHABLE_KEY: nonEmptyString,
     R2_ACCOUNT_ID: nonEmptyString,
     R2_BUCKET: nonEmptyString,
     R2_ACCESS_KEY_ID: nonEmptyString,

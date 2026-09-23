@@ -45,7 +45,7 @@ describe('SiliconFlowImageProvider', () => {
       seed: 42,
     });
     expect(fetch).toHaveBeenCalledWith(
-      'https://api.siliconflow.cn/v1/images/generations',
+      'https://api.siliconflow.com/v1/images/generations',
       expect.objectContaining({
         headers: expect.objectContaining({ Authorization: 'Bearer test-api-key' }),
         method: 'POST',

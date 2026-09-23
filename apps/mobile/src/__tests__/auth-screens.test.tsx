@@ -102,7 +102,9 @@ describe('authentication screens', () => {
 
     expect(screen.getByText('Welcome back')).toBeTruthy();
     expect(screen.getByText('Let the idea keep growing.')).toBeTruthy();
-    expect(screen.queryByLabelText('Continue with Google')).toBeNull();
+    expect(screen.getByLabelText('Continue with Google')).toBeTruthy();
+    fireEvent.press(screen.getByLabelText('Continue with Google'));
+    expect(mockSignInWithGoogle).toHaveBeenCalledTimes(1);
 
     fireEvent.changeText(screen.getByTestId('sign-in-email'), 'person@example.com');
     fireEvent.changeText(screen.getByTestId('sign-in-password'), 'correct-horse-battery');
@@ -134,6 +136,10 @@ describe('authentication screens', () => {
       return { error: null };
     });
     const screen = render(<SignUpScreen />);
+
+    expect(screen.getByLabelText('Sign up with Google')).toBeTruthy();
+    fireEvent.press(screen.getByLabelText('Sign up with Google'));
+    expect(mockSignInWithGoogle).toHaveBeenCalledTimes(1);
 
     fireEvent.changeText(screen.getByTestId('sign-up-name'), 'Lumina creator');
     fireEvent.changeText(screen.getByTestId('sign-up-email'), 'new@example.com');
@@ -184,6 +190,7 @@ describe('authentication screens', () => {
     );
 
     fireEvent.changeText(screen.getByTestId('password-reset-new-password'), 'new-password');
+    expect(screen.getByText('Password strength: fair')).toBeTruthy();
     fireEvent.press(screen.getByTestId('password-reset-submit'));
     await waitFor(() =>
       expect(mockSignIn.resetPasswordEmailCode.submitPassword).toHaveBeenCalledWith({
@@ -191,5 +198,38 @@ describe('authentication screens', () => {
       }),
     );
     expect(mockSignIn.finalize).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows password strength live without showing a policy toast', async () => {
+    mockSignIn.create.mockResolvedValue({ error: null });
+    mockSignIn.resetPasswordEmailCode.verifyCode.mockImplementation(async () => {
+      mockSignIn.status = 'needs_new_password';
+      return { error: null };
+    });
+    mockSignIn.resetPasswordEmailCode.submitPassword.mockResolvedValue({
+      error: { message: 'Password is not strong enough' },
+    });
+
+    const screen = render(<PasswordResetScreen />);
+
+    fireEvent.changeText(screen.getByTestId('password-reset-email'), 'person@example.com');
+    fireEvent.press(screen.getByTestId('password-reset-request'));
+    await waitFor(() => expect(mockSignIn.resetPasswordEmailCode.sendCode).toHaveBeenCalled());
+
+    fireEvent.changeText(screen.getByTestId('password-reset-code'), '123456');
+    fireEvent.press(screen.getByTestId('password-reset-verify'));
+    await waitFor(() => expect(screen.getByTestId('password-reset-new-password')).toBeTruthy());
+
+    fireEvent.changeText(screen.getByTestId('password-reset-new-password'), '123');
+    expect(screen.getByText('Password strength: weak')).toBeTruthy();
+    fireEvent.press(screen.getByTestId('password-reset-submit'));
+
+    await waitFor(() =>
+      expect(mockSignIn.resetPasswordEmailCode.submitPassword).toHaveBeenCalledWith({
+        password: '123',
+      }),
+    );
+    expect(Toast.show).not.toHaveBeenCalled();
+    expect(mockSignIn.finalize).not.toHaveBeenCalled();
   });
 });

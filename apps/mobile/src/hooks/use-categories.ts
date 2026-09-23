@@ -16,6 +16,7 @@ export function useCategories() {
     enabled: Boolean(userId),
     queryFn: getCategories,
     queryKey: ['categories', userId],
+    retry: false,
   });
   const createMutation = useMutation({
     mutationFn: ({ name, account }: { name: string; account: AccountSession }) => {

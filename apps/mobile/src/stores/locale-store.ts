@@ -1,5 +1,5 @@
 import { defaultLocale, resolveLocale, type AppLocale } from '@lumina/i18n';
-import { createMobileI18n, mobileLocaleStorageKey } from '@lumina/i18n/mobile';
+import { createMobileI18n, loadMobileMessages, mobileLocaleStorageKey } from '@lumina/i18n/mobile';
 import { getLocales } from 'expo-localization';
 import * as SecureStore from 'expo-secure-store';
 import { create } from 'zustand';
@@ -28,6 +28,7 @@ const initialLocaleState: LocaleState = {
 };
 
 let initializationPromise: Promise<void> | undefined;
+let localeRequest = 0;
 
 export const useLocaleStore = create<LocaleStore>()((set, get) => ({
   ...initialLocaleState,
@@ -61,12 +62,20 @@ export const useLocaleStore = create<LocaleStore>()((set, get) => ({
     }
   },
   reset: () => {
+    localeRequest += 1;
     initializationPromise = undefined;
     set(initialLocaleState);
   },
   setLocale: async (locale) => {
-    const i18n = await createMobileI18n(locale);
-    set({ i18n, locale });
+    const request = ++localeRequest;
+    await get().initialize();
+    const i18n = get().i18n;
+    if (!i18n) return;
+    const messages = await loadMobileMessages(locale);
+    if (request !== localeRequest) return;
+    i18n.load(locale, messages);
+    i18n.activate(locale);
+    set({ locale });
     await SecureStore.setItemAsync(mobileLocaleStorageKey, locale).catch(() => {});
   },
 }));

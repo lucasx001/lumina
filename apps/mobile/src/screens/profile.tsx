@@ -82,12 +82,23 @@ export function ProfileScreen() {
             </View>
           )}
         </View>
-        <ThemedText numberOfLines={1} style={{ textAlign: 'center' }} variant="title">
+        <ThemedText
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{
+            fontFamily: theme.fontFamily,
+            letterSpacing: 0,
+            lineHeight: 40,
+            textAlign: 'center',
+            width: '100%',
+          }}
+          variant="title"
+        >
           {displayName}
         </ThemedText>
         <ThemedText
           numberOfLines={1}
-          style={{ color: theme.mutedText, textAlign: 'center' }}
+          style={{ color: theme.mutedText, textAlign: 'center', width: '100%' }}
           variant="caption"
         >
           {accountDetail}
@@ -106,7 +117,7 @@ export function ProfileScreen() {
         <ProfileMenuRow
           icon="library"
           label={t`My wallpapers`}
-          onPress={() => router.navigate('/')}
+          onPress={() => router.navigate('/(tabs)/(create)')}
         />
         <ProfileMenuRow
           expanded={expandedInformation === 'about'}

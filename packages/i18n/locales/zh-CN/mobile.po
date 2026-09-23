@@ -1038,6 +1038,27 @@ msgstr "使用 Google 登录，随时进入你的私有壁纸空间。"
 msgid "Wallpaper saved to Photos."
 msgstr "壁纸已保存到相册。"
 
+#: apps/mobile/src/screens/sign-in.tsx
+#: apps/mobile/src/screens/sign-up.tsx
+msgid "Or continue with"
+msgstr "或继续使用"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Use at least 8 characters with a mix of letters, numbers, and symbols."
+msgstr "建议使用至少 8 个字符，并混合字母、数字和符号。"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Password strength: weak"
+msgstr "密码强度：弱"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Password strength: fair"
+msgstr "密码强度：一般"
+
+#: apps/mobile/src/screens/password-reset.tsx
+msgid "Password strength: strong"
+msgstr "密码强度：强"
+
 #: apps/mobile/src/components/create/preset-grid.tsx
 msgid "No styles are available. Refresh to try again."
 msgstr "暂无可用风格，请刷新重试。"

@@ -144,6 +144,8 @@ export function SignUpScreen() {
         ) : undefined
       }
       onGooglePress={() => void signInWithGoogle()}
+      showGoogle={!isVerifying}
+      socialLabel={t`Or continue with`}
       title={isVerifying ? t`Check your inbox.` : t`Give inspiration a place to stay.`}
     >
       {isVerifying ? (

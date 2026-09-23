@@ -6,7 +6,7 @@ import {
 } from './types.js';
 
 export const DEFAULT_SILICONFLOW_IMAGE_MODEL = 'black-forest-labs/FLUX.2-pro';
-const SILICONFLOW_IMAGE_ENDPOINT = 'https://api.siliconflow.cn/v1/images/generations';
+const SILICONFLOW_IMAGE_ENDPOINT = 'https://api.siliconflow.com/v1/images/generations';
 
 type SiliconFlowImageResponse = {
   images?: Array<{ url?: unknown }>;

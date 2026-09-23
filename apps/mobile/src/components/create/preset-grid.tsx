@@ -1,7 +1,8 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { RemoteImage } from '@/components/remote-image';
 import { useCallback } from 'react';
-import { FlatList, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
@@ -9,6 +10,7 @@ import { AppIcon } from '@/components/ui';
 import { radius, shadows, spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { usePresets } from '@/hooks/use-presets';
+import { builtInPresetCovers } from '@/lib/preset-covers';
 
 type PresetGridProps = {
   onSelect: (presetId: string) => void;
@@ -58,6 +60,7 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
   const renderPreset = useCallback(
     ({ item: preset }: { item: (typeof presets)[number] }) => {
       const selected = preset.id === selectedPresetId;
+      const cover = builtInPresetCovers[preset.id] ?? preset.coverImageUrl;
 
       return (
         <Pressable
@@ -81,12 +84,13 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
           })}
           testID={`preset-${preset.id}`}
         >
-          {preset.coverImageUrl ? (
+          {cover ? (
             <RemoteImage
+              testID={`preset-cover-${preset.id}`}
               onRetry={() => void presetsQuery.refetch()}
               accessibilityLabel={t`${preset.name} preset cover`}
               contentFit="cover"
-              source={preset.coverImageUrl}
+              source={cover}
               style={{ borderRadius: radius.sm, height: 112, width: '100%' }}
             />
           ) : (
@@ -147,9 +151,15 @@ export function PresetGrid({ onSelect, selectedPresetId }: PresetGridProps) {
         />
       ) : (
         <FlatList
+          testID="preset-carousel"
+          style={{ flexGrow: 0, width: '100%' }}
           contentContainerStyle={{ gap: spacing.sm, paddingRight: spacing.sm }}
           data={presets}
           horizontal
+          nestedScrollEnabled
+          directionalLockEnabled
+          showsHorizontalScrollIndicator
+          extraData={selectedPresetId}
           keyExtractor={(preset) => preset.id}
           renderItem={renderPreset}
         />

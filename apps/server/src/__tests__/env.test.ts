@@ -3,7 +3,6 @@ import { describe, expect, it } from 'vite-plus/test';
 import { EnvValidationError, getCorsOrigins, loadEnv, loadSiliconFlowEnv } from '../config/env.js';
 
 const validEnv = {
-  CLERK_PUBLISHABLE_KEY: 'pk_test_example',
   CLERK_SECRET_KEY: 'sk_test_example',
   DATABASE_URL: 'postgresql://postgres:password@localhost:5432/lumina',
   R2_ACCESS_KEY_ID: 'access-key',

@@ -46,6 +46,7 @@ export function GoogleSignInButton({
         minHeight: 48,
         opacity: pressed || isLoading ? 0.72 : 1,
         paddingHorizontal: iconOnly ? 0 : spacing.lg,
+        alignSelf: iconOnly ? 'center' : undefined,
         transform: [{ scale: pressed && !isLoading ? 0.985 : 1 }],
         width: iconOnly ? 52 : undefined,
       })}

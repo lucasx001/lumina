@@ -10,8 +10,30 @@ import { Button } from '@/components/ui';
 import { AuthScreenLayout, AuthTextField } from '@/components/auth';
 import { radius } from '@/constants/theme';
 import { getAuthFlowError, throwIfClerkError } from '@/lib/clerk-flow-error';
+import { getPasswordStrength } from '@/lib/password-strength';
 import { useTheme } from '@/hooks/use-theme';
 import { usePasswordResetStore } from '@/stores/password-reset-store';
+
+function isPasswordPolicyError(error: unknown): boolean {
+  if (!error || typeof error !== 'object') {
+    return false;
+  }
+
+  const clerkError = error as {
+    code?: unknown;
+    longMessage?: unknown;
+    message?: unknown;
+  };
+  const details = [clerkError.code, clerkError.longMessage, clerkError.message]
+    .filter((value): value is string => typeof value === 'string')
+    .join(' ')
+    .toLowerCase();
+
+  return (
+    details.includes('password') &&
+    /(strong|weak|length|character|common|compromised|pwned)/.test(details)
+  );
+}
 
 export function PasswordResetScreen() {
   const { errors, fetchStatus, signIn } = useSignIn();
@@ -31,6 +53,15 @@ export function PasswordResetScreen() {
   const theme = useTheme();
   const busy = fetchStatus === 'fetching';
   const fallbackError = t`Password reset failed.`;
+  const passwordStrength = getPasswordStrength(password);
+  const passwordStrengthMessage =
+    passwordStrength === 'weak'
+      ? t`Password strength: weak`
+      : passwordStrength === 'fair'
+        ? t`Password strength: fair`
+        : passwordStrength === 'strong'
+          ? t`Password strength: strong`
+          : t`Use at least 8 characters with a mix of letters, numbers, and symbols.`;
 
   useEffect(() => {
     reset();
@@ -76,6 +107,9 @@ export function PasswordResetScreen() {
   const submitNewPassword = async () => {
     try {
       const { error } = await signIn.resetPasswordEmailCode.submitPassword({ password });
+      if (isPasswordPolicyError(error)) {
+        return;
+      }
       throwIfClerkError(error);
       if (signIn.status !== 'complete') {
         throw new Error(fallbackError);
@@ -214,6 +248,21 @@ export function PasswordResetScreen() {
             textContentType="newPassword"
             value={password}
           />
+          <ThemedText
+            style={{
+              color:
+                passwordStrength === 'strong'
+                  ? theme.primary
+                  : passwordStrength === 'weak'
+                    ? theme.error
+                    : theme.mutedText,
+              marginTop: -12,
+            }}
+            testID="password-reset-strength"
+            variant="caption"
+          >
+            {passwordStrengthMessage}
+          </ThemedText>
           <Button
             disabled={busy || !password}
             fullWidth

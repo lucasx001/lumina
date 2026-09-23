@@ -1,7 +1,7 @@
 import { Trans, useLingui } from '@lingui/react/macro';
 import { RemoteImage } from '@/components/remote-image';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import { FlatList, Pressable, RefreshControl, View } from 'react-native';
+import { FlatList, Pressable, RefreshControl, useWindowDimensions, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { ErrorState, LoadingState } from '@/components/feedback';
@@ -16,6 +16,8 @@ import type { WallpaperListItem } from '@/lib/api';
 export function CategoryDetailScreen() {
   const { t } = useLingui();
   const theme = useTheme();
+  const { width: windowWidth } = useWindowDimensions();
+  const tileWidth = Math.max(1, (windowWidth - spacing.md * 2 - spacing.sm) / 2);
   const router = useRouter();
   const params = useLocalSearchParams<{ category: string }>();
   const categoryId = Array.isArray(params.category) ? params.category[0] : params.category;
@@ -45,7 +47,20 @@ export function CategoryDetailScreen() {
           <AppIcon color={theme.text} name="arrow-left" size={20} />
         </Pressable>
         <View style={{ alignItems: 'center', flex: 1 }}>
-          <ThemedText numberOfLines={1} variant="title">
+          <ThemedText
+            numberOfLines={1}
+            ellipsizeMode="tail"
+            style={{
+              fontFamily: theme.fontFamily,
+              includeFontPadding: true,
+              letterSpacing: 0,
+              lineHeight: 42,
+              paddingHorizontal: spacing.xs,
+              textAlign: 'center',
+              width: '100%',
+            }}
+            variant="title"
+          >
             {category?.name ?? t`Wallpaper category`}
           </ThemedText>
           <ThemedText style={{ color: theme.mutedText }} variant="caption">
@@ -117,6 +132,7 @@ export function CategoryDetailScreen() {
               {row.map((wallpaper, index) => (
                 <View key={wallpaper.id} style={{ flex: 1 }}>
                   <WallpaperTile
+                    width={tileWidth}
                     index={index}
                     onPress={() =>
                       router.push({
@@ -144,11 +160,13 @@ function WallpaperTile({
   index,
   onPress,
   wallpaper,
+  width,
 }: {
   onRetryImage: () => void;
   index: number;
   onPress: () => void;
   wallpaper: WallpaperListItem;
+  width: number;
 }) {
   const { t } = useLingui();
   const theme = useTheme();
@@ -171,7 +189,7 @@ function WallpaperTile({
           accessibilityLabel={t`Generated wallpaper`}
           contentFit="cover"
           source={{ uri: wallpaper.resultImageUrl }}
-          style={{ aspectRatio, borderRadius: radius.md, width: '100%' }}
+          style={{ height: width / aspectRatio, borderRadius: radius.md, width }}
           transition={180}
         />
       ) : (

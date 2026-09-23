@@ -54,7 +54,8 @@ export function WallpaperPreview({
           backgroundColor: theme.surface,
           borderCurve: 'continuous',
           borderRadius: cornerRadius,
-          flex: 1,
+          height: previewHeight - 2,
+          width: previewWidth - 2,
           overflow: 'hidden',
         }}
       >

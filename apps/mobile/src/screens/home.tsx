@@ -2,9 +2,9 @@ import { Trans, useLingui } from '@lingui/react/macro';
 import { RemoteImage } from '@/components/remote-image';
 import { GenerationTasks } from '@/components/generation-tasks';
 import { useRouter } from 'expo-router';
-import { Pressable, RefreshControl, ScrollView, View } from 'react-native';
+import { ActivityIndicator, Pressable, RefreshControl, ScrollView, View } from 'react-native';
 
-import { ErrorState, LoadingState } from '@/components/feedback';
+import { ErrorState } from '@/components/feedback';
 import { ThemedText } from '@/components/themed-text';
 import { AppIcon } from '@/components/ui';
 import { radius, spacing } from '@/constants/theme';
@@ -68,9 +68,18 @@ export function HomeScreen() {
         ) : null}
       </View>
 
-      {error ? <ErrorState message={error} onRetry={() => void categoriesQuery.refetch()} /> : null}
+      {error && !categoriesQuery.isFetching ? (
+        <ErrorState message={error} onRetry={() => void categoriesQuery.refetch()} />
+      ) : null}
       <GenerationTasks />
-      {categoriesQuery.isLoading ? <LoadingState label={t`Loading categories…`} /> : null}
+      {categoriesQuery.isLoading && !categories.length ? (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', gap: spacing.md }}>
+          <ActivityIndicator color={theme.primary} size="large" />
+          <ThemedText style={{ color: theme.mutedText }} variant="caption">
+            {t`Loading categories…`}
+          </ThemedText>
+        </View>
+      ) : null}
       {!error && !categoriesQuery.isLoading && !categories.length ? (
         <HomeEmptyState onCreate={() => router.push('/create-wallpaper')} />
       ) : null}
